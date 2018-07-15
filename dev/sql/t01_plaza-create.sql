@@ -1,0 +1,27 @@
+
+CREATE TABLE IF NOT EXISTS syslog.t01_plaza (
+    clave VARCHAR(25) NOT NULL,
+    descr VARCHAR(55),
+    tipo ENUM('DEFINITIVO', 'TEMPORAL') NOT NULL, 
+    clave_puesto INTEGER UNSIGNED NOT NULL,
+    activa TINYINT NOT NULL DEFAULT 1,
+    depto INTEGER,
+    clave_descanso VARCHAR(2) NOT NULL,
+    clave_jornada INTEGER UNSIGNED NOT NULL,
+    fec_creacion DATE,
+    residencia VARCHAR(60),
+    localidad VARCHAR(60),
+    taller VARCHAR(60),
+    instalacion VARCHAR(60),
+    funcion VARCHAR(60),
+    grupo VARCHAR(40),
+    sirhn INTEGER,
+    posfin INTEGER,
+    PRIMARY KEY (clave),
+    INDEX IDX_clave_puesto(clave_puesto ASC),
+    CONSTRAINT FK_puesto FOREIGN KEY(clave_puesto) REFERENCES t01_puesto(clave) ON DELETE CASCADE ON UPDATE NO ACTION,
+    INDEX IDX_clave_descanso(clave_descanso ASC),
+    CONSTRAINT FK_descanso FOREIGN KEY(clave_descanso) REFERENCES t01_descanso(clave) ON DELETE CASCADE ON UPDATE NO ACTION,
+    INDEX IDX_clave_jornada(clave_jornada ASC),
+    CONSTRAINT FK_jornada FOREIGN KEY(clave_jornada) REFERENCES t01_jornada(clave) ON DELETE CASCADE ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_spanish_ci;
