@@ -1,6 +1,0 @@
-CREATE TABLE IF NOT EXISTS syslog.t01_jornada (
-    clave INTEGER UNSIGNED NOT NULL,
-    descr VARCHAR(20) NOT NULL,
-    clave_texto VARCHAR(2) NOT NULL,
-    PRIMARY KEY (clave)
-) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
