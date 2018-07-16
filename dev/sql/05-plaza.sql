@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS syslog.rh_plaza (
     tipo ENUM('DEFINITIVA', 'TEMPORAL') NOT NULL DEFAULT 'TEMPORAL',
     clave_puesto INT UNSIGNED NOT NULL,
     activa TINYINT NOT NULL DEFAULT 1,
+    visible TINYINT NOT NULL DEFAULT 1,
     depto INT UNSIGNED,
     clave_descanso CHAR(2) NOT NULL,
     clave_jornada INT UNSIGNED NOT NULL,
@@ -137,3 +138,7 @@ INSERT INTO syslog.rh_plaza (clave, descr, tipo, clave_puesto, activa, depto, cl
 INSERT INTO syslog.rh_plaza (clave, descr, tipo, clave_puesto, activa, depto, clave_descanso, clave_jornada, fec_creacion, residencia, localidad, taller, instalacion, funcion, grupo, sirhn, posfin) VALUES ('112410002AL20903229', 'ESPECIALISTA TECNICO "B" F-814982 SAMUEL RICARDO MORALES CARETA', 'DEFINITIVA', 371102, 1, 23816100, 'SD', 0, '', '', '', '', '', 'ADMINISTRATIVO', '', 20903229, 0);
 INSERT INTO syslog.rh_plaza (clave, descr, tipo, clave_puesto, activa, depto, clave_descanso, clave_jornada, fec_creacion, residencia, localidad, taller, instalacion, funcion, grupo, sirhn, posfin) VALUES ('112410002AL20903304', 'ESPECIALISTA TÉCNICO "C" F-593898 SERGIO OSIEL PIMIENTA ALARCON', 'DEFINITIVA', 351102, 1, 23816100, 'SD', 0, '', '', '', '', '', 'ADMINISTRATIVO', '', 20903304, 0);
 INSERT INTO syslog.rh_plaza (clave, descr, tipo, clave_puesto, activa, depto, clave_descanso, clave_jornada, fec_creacion, residencia, localidad, taller, instalacion, funcion, grupo, sirhn, posfin) VALUES ('20926100PR10073243', 'ESPECIALISTA TÉCNICO "D" F-379073 ALBERTO GUDINI GUERRERO', 'DEFINITIVA', 331102, 1, 23816100, 'SD', 0, '', '', '', '', '', 'ADMINISTRATIVO', '', 20903338, 0);
+
+UPDATE syslog.rh_plaza SET visible=0 WHERE activa=0;
+UPDATE syslog.rh_plaza SET visible=0 WHERE clave='238161003000050904';
+

@@ -4,9 +4,9 @@ CREATE TABLE IF NOT EXISTS syslog.rh_ausencia_tipo (
 	nombre VARCHAR(15) NOT NULL, 
 	descr VARCHAR(50) NOT NULL, 
 	clave_clase CHAR(2) NOT NULL, 
-	PRIMARY KEY(clave), 
+	PRIMARY KEY(id), 
 	INDEX IDX_CLAVE (clave ASC),
-	CONSTRAINT FK_clave_clase FOREIGN KEY clave_clase REFERENCES syslog.rh_ausencia_clase(clave) 
+	CONSTRAINT FK_clave_clase FOREIGN KEY (clave_clase) REFERENCES syslog.rh_ausencia_clase(clave) 
 		ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_spanish_ci;
 
