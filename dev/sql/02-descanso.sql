@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS syslog.rh_descanso (
-    clave CHAR(2) NOT NULL,
-    descr VARCHAR(45) NOT NULL,
-    valor INT UNSIGNED NOT NULL,
-    abrevn VARCHAR(10),
+    clave CHAR(2) NOT NULL COMMENT 'Código Descanso',
+    descr VARCHAR(45) NOT NULL COMMENT 'Descripción',
+    valor INT UNSIGNED NOT NULL COMMENT 'Valor',
+    abrevn VARCHAR(10) COMMENT 'Código como Número',
     PRIMARY KEY(clave)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_spanish_ci;
 

@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS syslog.rh_jornada (
-    clave INT UNSIGNED NOT NULL,
-    descr VARCHAR(40) NOT NULL,
-    clave_texto CHAR(2) NOT NULL,
+    clave INT UNSIGNED NOT NULL COMMENT 'Clave de Jornada',
+    descr VARCHAR(40) NOT NULL COMMENT 'Descripción',
+    clave_texto CHAR(2) NOT NULL COMMENT 'Clave como text',
     PRIMARY KEY (clave)
 ) ENGINE=InnoDB DEFAULT CHARACTER SET=utf8 COLLATE=utf8_spanish_ci;
 
