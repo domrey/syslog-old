@@ -432,6 +432,13 @@ $I->dontSeeElement('input', ['value' => '123456']);
  * `param array` $attributes
 
 
+### dontSeeEmailIsSent
+ 
+Checks that no email was sent. This is an alias for seeEmailIsSent(0).
+
+ * `[Part]` email
+
+
 ### dontSeeInCurrentUrl
  
 Checks that the current URI doesn't contain the given string.
@@ -933,9 +940,16 @@ $I->seeElement(['css' => 'form input'], ['name' => 'login']);
 
 ### seeEmailIsSent
  
-Checks if any email were sent by last request
+Checks if the desired number of emails was sent.
+If no argument is provided then at least one email must be sent to satisfy the check.
 
-@throws \LogicException
+``` php
+<?php
+$I->seeEmailIsSent(2);
+?>
+```
+
+ * `param null|int` $expectedCount
 
 
 ### seeInCurrentRoute
@@ -1141,6 +1155,34 @@ $I->seeResponseCodeIs(\Codeception\Util\HttpCode::OK);
 ```
 
  * `param` $code
+
+
+### seeResponseCodeIsBetween
+ 
+Checks that response code is between a certain range. Between actually means [from <= CODE <= to]
+
+ * `param` $from
+ * `param` $to
+
+
+### seeResponseCodeIsClientError
+ 
+Checks that the response code is 4xx
+
+
+### seeResponseCodeIsRedirection
+ 
+Checks that the response code 3xx
+
+
+### seeResponseCodeIsServerError
+ 
+Checks that the response code is 5xx
+
+
+### seeResponseCodeIsSuccessful
+ 
+Checks that the response code 2xx
 
 
 ### selectOption

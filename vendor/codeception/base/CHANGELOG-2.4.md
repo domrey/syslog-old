@@ -1,8 +1,29 @@
+#### 2.4.4
+
+* Recently added `extends` property in the `codeception.yml` and `*.suite.yml` files now support absolute paths; by @silverfire
+* Fixed absolute paths handling on Windows in ParamLoader; by @silverfire
+* [Yii2] Refactored database connection handling by @SamMousa. Database connections should now always be closed after tests no matter how you have opened them or who is holding references to them. See  #5045
+* [Symfony] Email handling improved by @mbohal. Fixes #5058.  
+    * Added optional argument `$expectedCount` to `seeEmailIsSent`
+    * Added `dontSeeEmailIsSent`
+* [Recorder Extension] Added `ignore_steps` option to disable recording of specific steps. By @sspat.
+* [WebDriver] Fixed "No Session Timeout" fatal error by @davertmik.
+* [WebDriver] Added ability to locate clickable element by its title. See #5065 by @gimler  
+* [Db] Add `waitlock` config option for the database session to wait for lock in Oracle. By @ashnazg. See #5069
+* [REST] Fixed `seeXmlResponseEquals` by @Voziv
+
+#### 2.4.3
+
+* [Create your own test formats](https://codeception.com/docs/07-AdvancedUsage#Formats) (e.g., Cept, Cest, ...); by @mlambley
+* [Symfony] Fixed a bug in order to use multiple Kernels; by @alefcastelo
+* [Asserts] Added new methods `assertNotTrue` and `assertNotFalse` methods; by @johannesschobel
+* [REST][PhpBrowser][Frameworks] Added new methods to check for `Http Status Ranges` with nice "wrappers" (e.g., `seeHttpStatusCodeIsSuccessful()` checks the code between 200 and 299); by @johannesschobel
+* Improved the docs; by community
+
 #### 2.4.2
 
 * Added support for `extends` in the `codeception.yml` and `*.suite.yml` files; by @johannesschobel.
  Allows to inherit current config from a provided file. See example for `functional.suite.yml`:
-
 
 ```yml
 actor: FunctionalTester
