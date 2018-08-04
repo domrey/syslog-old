@@ -128,11 +128,4 @@ class SiteController extends Controller
     {
         return $this->render('about');
     }
-
-
-    /* action para visualizar paginas estaticas */
-    public function actionView($page)
-    {
-        return $this->render('static/' . $page);
-    }
 }

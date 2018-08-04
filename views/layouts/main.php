@@ -38,9 +38,9 @@ AppAsset::register($this);
     echo Nav::widget([
         'options' => ['class' => 'navbar-nav navbar-right'],
         'items' => [
-            ['label' => 'Home', 'url' => ['/site/index']],
-            ['label' => 'About', 'url' => ['/site/about']],
-            ['label' => 'Contact', 'url' => ['/site/contact']],
+            ['label' => 'Inicio', 'url' => ['/site/index']],
+            ['label' => 'Acerca de', 'url' => ['/site/about']],
+            ['label' => 'Contacto', 'url' => ['/site/contact']],
             Yii::$app->user->isGuest ? (
                 ['label' => 'Login', 'url' => ['/site/login']]
             ) : (
@@ -71,7 +71,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; Pemex Exploración y Producción <?= date('Y') ?></p>
 
-        <p class="pull-right"><?= Yii::powered() ?></p>
+        <p class="pull-right">Departamento de Logística</p>
     </div>
 </footer>
 

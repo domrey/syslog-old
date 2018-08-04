@@ -4,13 +4,13 @@ use yii\helpers\Html;
 
 
 /* @var $this yii\web\View */
-/* @var $model app\models\RhTrab */
+/* @var $model app\models\RhMovimiento */
 
-$this->title = 'Registrar Nuevo Trabajador';
-$this->params['breadcrumbs'][] = ['label' => 'Rh Trabs', 'url' => ['index']];
+$this->title = 'Registrar Movimiento';
+$this->params['breadcrumbs'][] = ['label' => 'Movimientos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="rh-trab-create">
+<div class="rh-movimiento-create">
 
     <h1><?= Html::encode($this->title) ?></h1>
 

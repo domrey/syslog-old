@@ -73,14 +73,14 @@ class RhTrab extends \yii\db\ActiveRecord
     {
         return [
             'clave' => 'Ficha',
-            'nombre' => 'Nombre del trabajador',
+            'nombre' => 'Nombre', 
             'ap_pat' => 'Apellido Paterno',
             'ap_mat' => 'Apellido Materno',
             'ncorto' => 'Nombre Corto',
             'apodo' => 'Sobrenombre',
             'activo' => 'Activo',
-            'curp' => 'Clave Unica de Registro de Poblacion',
-            'rfc' => 'Registro Federal de Causantes',
+            'curp' => 'CURP',
+            'rfc' => 'RFC',
             'calle_no' => 'Calle y núm.',
             'colonia' => 'Colonia',
             'ciudad' => 'Ciudad/Municipio',

@@ -4,12 +4,10 @@ namespace app\controllers;
 
 use Yii;
 use app\models\RhTrab;
-use app\models\RhTrabSimpleSearch;
 use app\models\RhTrabSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\data\SqlDataProvider;
 
 /**
  * RhTrabController implements the CRUD actions for RhTrab model.
@@ -111,40 +109,19 @@ class RhTrabController extends Controller
         return $this->redirect(['index']);
     }
 
-
-    /**
-        ** Acción para mostrar el fichero de trabajadores
-        ** inicialmente se había pensado en utilizar el SqlDataProvider
-        ** 
-     */
-
-    public function actionListTrabs()
-    {
-        $searchModel = new RhTrabSimpleSearch();
-        $dataProvider = $searchModel -> search(Yii::$app->request->queryParams);
-        
-        return $this->render('list-trabs', [
-            'searchModel' => $searchModel,
-            'provider' => $dataProvider
-        ]);
-    }
     /**
      * Lista los trabajadores - Fichero
      */
     public function actionList()
     {
-        $searchModel = new RhTrabSimpleSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM rh_trab WHERE activo=:active', [':active' => 1])->queryScalar();
+        $searchModel = new RhTrabSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $workers = RhTrab::find()->all();
 
-        $provider = new SqlDataProvider ([
-            'sql' => 'SELECT clave, CONCAT(nombre, " ", ap_pat, " ", ap_mat) AS trab, curp FROM rh_trab WHERE activo=:active ORDER BY trab ASC',
-            'params' => [':active' => 1],
-            'totalCount' => $count
+        return $this->render('fichero', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider
         ]);
-
-        return $this->render('fichero', ['searchModel' => $searchModel, 'provider'=>$provider]);
-        
     }
     /**
      * Finds the RhTrab model based on its primary key value.

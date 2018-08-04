@@ -57,7 +57,8 @@ class RhPlaza extends \yii\db\ActiveRecord
             [['clave_descanso'], 'string', 'max' => 2],
             [['residencia', 'localidad', 'taller', 'instalacion', 'funcion'], 'string', 'max' => 60],
             [['grupo'], 'string', 'max' => 40],
-            [['clave_descanso'], 'exist', 'skipOnError' => true, 'targetClass' => RhDescanso::className(), 'targetAttribute' => ['clave_descanso' => 'clave']],
+            [['clave_descanso'], 'in', 'range'=>['L', 'M', 'X', 'J', 'V', 'S', 'D'], 'message'=>'Valor para {attribute} inválido'],
+            [['clave_descanso'], 'exist', 'skipOnError' => true, 'targetClass' => RhDescanso::className(), 'targetAttribute' => ['clave_descanso' => 'clave'], 'message'=>'El valor para {attribute} no es válido'],
             [['clave_jornada'], 'exist', 'skipOnError' => true, 'targetClass' => RhJornada::className(), 'targetAttribute' => ['clave_jornada' => 'clave']],
             [['clave_puesto'], 'exist', 'skipOnError' => true, 'targetClass' => RhPuesto::className(), 'targetAttribute' => ['clave_puesto' => 'clave']],
         ];
@@ -71,7 +72,7 @@ class RhPlaza extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'clave' => 'Clave',
-            'descr' => 'Descr',
+            'descr' => 'Descripción',
             'tipo' => 'Tipo',
             'clave_puesto' => 'Clave Puesto',
             'activa' => 'Activa',
@@ -79,7 +80,7 @@ class RhPlaza extends \yii\db\ActiveRecord
             'depto' => 'Depto',
             'clave_descanso' => 'Clave Descanso',
             'clave_jornada' => 'Clave Jornada',
-            'fec_creacion' => 'Fec Creacion',
+            'fec_creacion' => 'Fecha Creación',
             'residencia' => 'Residencia',
             'localidad' => 'Localidad',
             'taller' => 'Taller',
@@ -87,7 +88,7 @@ class RhPlaza extends \yii\db\ActiveRecord
             'funcion' => 'Funcion',
             'grupo' => 'Grupo',
             'sirhn' => 'Sirhn',
-            'posfin' => 'Posfin',
+            'posfin' => 'Posicion Fianciera',
         ];
     }
 

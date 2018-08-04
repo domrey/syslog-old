@@ -3,18 +3,16 @@
 namespace app\controllers;
 
 use Yii;
-use app\models\RhTrab;
-use app\models\RhTrabSimpleSearch;
-use app\models\RhTrabSearch;
+use app\models\RhMovimiento;
+use app\models\RhMovimientoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
-use yii\data\SqlDataProvider;
 
 /**
- * RhTrabController implements the CRUD actions for RhTrab model.
+ * RhMovimientoController implements the CRUD actions for RhMovimiento model.
  */
-class RhTrabController extends Controller
+class RhMovimientoController extends Controller
 {
     /**
      * {@inheritdoc}
@@ -32,12 +30,12 @@ class RhTrabController extends Controller
     }
 
     /**
-     * Lists all RhTrab models.
+     * Lists all RhMovimiento models.
      * @return mixed
      */
     public function actionIndex()
     {
-        $searchModel = new RhTrabSearch();
+        $searchModel = new RhMovimientoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -47,7 +45,7 @@ class RhTrabController extends Controller
     }
 
     /**
-     * Displays a single RhTrab model.
+     * Displays a single RhMovimiento model.
      * @param integer $id
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
@@ -60,16 +58,16 @@ class RhTrabController extends Controller
     }
 
     /**
-     * Creates a new RhTrab model.
+     * Creates a new RhMovimiento model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
     public function actionCreate()
     {
-        $model = new RhTrab();
+        $model = new RhMovimiento();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->clave]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('create', [
@@ -78,7 +76,7 @@ class RhTrabController extends Controller
     }
 
     /**
-     * Updates an existing RhTrab model.
+     * Updates an existing RhMovimiento model.
      * If update is successful, the browser will be redirected to the 'view' page.
      * @param integer $id
      * @return mixed
@@ -89,7 +87,7 @@ class RhTrabController extends Controller
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->clave]);
+            return $this->redirect(['view', 'id' => $model->id]);
         }
 
         return $this->render('update', [
@@ -98,7 +96,7 @@ class RhTrabController extends Controller
     }
 
     /**
-     * Deletes an existing RhTrab model.
+     * Deletes an existing RhMovimiento model.
      * If deletion is successful, the browser will be redirected to the 'index' page.
      * @param integer $id
      * @return mixed
@@ -111,51 +109,16 @@ class RhTrabController extends Controller
         return $this->redirect(['index']);
     }
 
-
     /**
-        ** Acción para mostrar el fichero de trabajadores
-        ** inicialmente se había pensado en utilizar el SqlDataProvider
-        ** 
-     */
-
-    public function actionListTrabs()
-    {
-        $searchModel = new RhTrabSimpleSearch();
-        $dataProvider = $searchModel -> search(Yii::$app->request->queryParams);
-        
-        return $this->render('list-trabs', [
-            'searchModel' => $searchModel,
-            'provider' => $dataProvider
-        ]);
-    }
-    /**
-     * Lista los trabajadores - Fichero
-     */
-    public function actionList()
-    {
-        $searchModel = new RhTrabSimpleSearch();
-        //$dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $count = Yii::$app->db->createCommand('SELECT COUNT(*) FROM rh_trab WHERE activo=:active', [':active' => 1])->queryScalar();
-
-        $provider = new SqlDataProvider ([
-            'sql' => 'SELECT clave, CONCAT(nombre, " ", ap_pat, " ", ap_mat) AS trab, curp FROM rh_trab WHERE activo=:active ORDER BY trab ASC',
-            'params' => [':active' => 1],
-            'totalCount' => $count
-        ]);
-
-        return $this->render('fichero', ['searchModel' => $searchModel, 'provider'=>$provider]);
-        
-    }
-    /**
-     * Finds the RhTrab model based on its primary key value.
+     * Finds the RhMovimiento model based on its primary key value.
      * If the model is not found, a 404 HTTP exception will be thrown.
      * @param integer $id
-     * @return RhTrab the loaded model
+     * @return RhMovimiento the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
     protected function findModel($id)
     {
-        if (($model = RhTrab::findOne($id)) !== null) {
+        if (($model = RhMovimiento::findOne($id)) !== null) {
             return $model;
         }
 
