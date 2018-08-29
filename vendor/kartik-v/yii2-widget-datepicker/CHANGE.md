@@ -1,6 +1,18 @@
 Change Log: `yii2-widget-datepicker`
 ====================================
 
+## Version 1.4.6
+
+**Date:** 29-Aug-2018
+
+- Correct Asset Bundle registration to validate `bsVersion`.
+- (enh #170): Add Bootstrap 4.x support.
+- Reorganize source code in `src` directory.
+
+## Version 1.4.5
+
+- (no changes) - bump up version
+
 ## version 1.4.4
 
 **Date:** 13-Jul-2018
