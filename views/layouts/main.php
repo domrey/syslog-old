@@ -71,7 +71,7 @@ AppAsset::register($this);
     <div class="container">
         <p class="pull-left">&copy; Pemex Exploración y Producción <?= date('Y') ?></p>
 
-        <p class="pull-right">Departamento de Logística</p>
+        <p class="pull-right">AIPBN02 Altamira</p>
     </div>
 </footer>
 

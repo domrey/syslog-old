@@ -9,9 +9,9 @@ $this->title = 'SYSLOG';
 <div class="site-index">
 
     <div class="jumbotron">
-        <h2>Sistema de Información de Logística</h2>
+        <h1>Sistema de Información</h1>
 
-        <p class="lead">AIPBN02 Area Altamira.</p>
+        <p class="lead">Servicios Logísticos a la Operación Terrestre</p>
 
         <p><a class="btn btn-lg btn-success" href="">Ver Dashboard</a></p>
     </div>
@@ -24,7 +24,7 @@ $this->title = 'SYSLOG';
 
                 <p>Acceso a módulos de personal y su rotación, así como plazas, jornadas de trabajo, categorías, etc.</p>
 
-                <p><?= Html::a('Personal', ['page/view/home'], ['class' => 'btn btn-primary']); ?></p>
+                <p><?= Html::a('Personal', ['rh/default'], ['class' => 'btn btn-primary']); ?></p>
 
             </div>
             <div class="col-lg-4">
@@ -46,7 +46,7 @@ $this->title = 'SYSLOG';
                 <p>Programa Operacional Anual, metas físicas e informes de actividades.</p>
                 <p><?= Html::a('Métricos', ['metricos/index'], ['class' => 'btn btn-primary']); ?></p>
             </div>
-            
+
             <div class="col-lg-4">
                 <h3>Disciplina Operativa</h3>
                 <p>Seguimiento a los requerimentos</p>
@@ -55,7 +55,7 @@ $this->title = 'SYSLOG';
             <div class="col-lg-4">
                 <h3>Enlaces rápidos</h3>
                 <?= Html::a('Lista de Asistencia', [''], ['class' => 'btn btn-link']); ?>
-                <?= Html::a('Fichero', ['rh-trab/list-trabs'], ['class' => 'btn btn-link']); ?>
+                <?= Html::a('Fichero', ['rh/rh-trab/list'], ['class' => 'btn btn-link']); ?>
                 <?= Html::a('Escalafón', [''], ['class' => 'btn btn-link']); ?>
                 <?= Html::a('Cumpleaños', [''], ['class' => 'btn btn-link']); ?>
                 <?= Html::a('Orden de Taller', [''], ['class' => 'btn btn-link']); ?>
