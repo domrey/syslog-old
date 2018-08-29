@@ -4,7 +4,9 @@ $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
 $config = [
-    'id' => 'basic',
+    'id' => 'syslog_app',
+    'name' => 'Departamento de Logística',
+    'language' => 'es-MX',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -43,15 +45,23 @@ $config = [
             ],
         ],
         'db' => $db,
-        
+
         'urlManager' => [
-            'enablePrettyUrl' => true
-            /*
+            'enablePrettyUrl' => true,
+
             'showScriptName' => false,
             'rules' => [
-            ],*/
+            ],
         ],
-        
+
+    ],
+    'modules' => [
+          'rh' => [
+                   'class' => 'app\modules\rh\Module',
+           ],
+           'gridview' => [
+             'class' => '\kartik\grid\Module'
+           ]
     ],
     'params' => $params,
 ];
@@ -61,7 +71,7 @@ if (YII_ENV_DEV) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        // uncomment the following to add your IP if you are not connecting from localhost.
+        'allowedIPs' => ['*'],
         //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 
@@ -69,7 +79,7 @@ if (YII_ENV_DEV) {
     $config['modules']['gii'] = [
         'class' => 'yii\gii\Module',
         // uncomment the following to add your IP if you are not connecting from localhost.
-        'allowedIPs' => ['127.0.0.1', '::1'],
+        //'allowedIPs' => ['127.0.0.1', '::1'],
     ];
 }
 

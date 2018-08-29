@@ -1,0 +1,14 @@
+Options +FollowSymLinks
+IndexIgnore */*
+
+<IfModule mod_rewrite.c>
+    RewriteEngine on
+    #RewriteBase /logistica.info/web
+
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ index.php [L]
+    #RewriteRule . index.php 
+</IfModule>
+
+
