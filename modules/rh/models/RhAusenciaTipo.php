@@ -75,4 +75,5 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
     {
       return $this->nombre;
     }
+
 }

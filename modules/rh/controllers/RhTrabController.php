@@ -6,9 +6,13 @@ use Yii;
 use app\modules\rh\models\RhTrab;
 use app\modules\rh\models\RhTrabSearch;
 use app\modules\rh\models\RhTrabSimpleSearch;
+use app\modules\rh\models\RhTrabActivo;
+use app\modules\rh\models\RhMovimiento;
+use app\modules\rh\models\RhPlaza;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * RhTrabController implements the CRUD actions for RhTrab model.
@@ -159,5 +163,67 @@ class RhTrabController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    /**
+    * Obtiene la situacion actual del trabajador dada su clave
+    * @param integer $clave_trab
+    * @return Array: [nombre, plaza_actual, puesto_actual, jornada_actual, descanso_actual]
+    *
+    */
+    public function actionGetSituacionTrab()
+    {
+      $datos['ficha']='';
+      $datos['nombre']='';
+      $datos['plaza']='';
+      $datos['id_plaza']='';
+      $datos['puesto']='';
+      $datos['jornada']='';
+      $datos['descanso']='';
+
+      $trab;        // model RhTrab
+      $movimiento; // modelo RhMovimiento
+      $plaza;       // modelo RhPlaza
+      $nombre_completo='';
+      $plaza_actual='';
+      $puesto_actual='';
+      $jornada_actual='';
+      $descanso_actual='';
+
+      // Buscar la clave
+      $clave_trab=Yii::$app->request->get('clave_trab');
+      if ($clave_trab === null || ($trab=RhTrab::findOne($clave_trab))===null) {
+        return null;
+      }
+      else {
+        $nombre_completo=$trab->getFullName();
+        $datos['ficha']=$clave_trab;
+        $datos['nombre']=$nombre_completo;
+        // Ahora averiguar en qué plaza se encuentra actualmente este Trabajador
+        $movimiento = RhMovimiento::UltimoMovimientoTrab($trab);
+        // De ese movimiento se deduce la plaza actual del Trabajador
+        if ($movimiento !== null){
+          $plaza=$movimiento->plaza;
+          // Determinar los detalles de la plaza supuesta - jornada y descanso
+          if ($plaza !== null) {
+            $plaza_actual=$plaza->clave;
+            $descanso_actual = $plaza->descanso->strDescanso();
+            $jornada_actual = $plaza->jornada->StrJornada();
+            $puesto_actual = $plaza->puesto->StrPuesto();
+
+            // Llenar la información
+            $datos['puesto'] = $puesto_actual;
+            $datos['plaza'] = $plaza_actual;
+            $datos['id_plaza'] = $plaza->id;
+            $datos['jornada']=$jornada_actual;
+            $datos['descanso']=$descanso_actual;
+          }
+        }
+        Yii::$app->response->format=Response::FORMAT_JSON;
+        return $datos;
+      }
+      //return $this->renderPartial('situacion-actual', ['datos'=>$datos]);
+      //return $datos;
     }
 }

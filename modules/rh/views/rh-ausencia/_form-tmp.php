@@ -30,75 +30,55 @@ use yii\helpers\Url;
   $('#btn-lookup-click').click(function(e) {
     $('#popup1').modal('show').find('#popup-content').load($(this).attr('value'));
   });
+
+  // register jQuery extension
+  jQuery.extend(jQuery.expr[':'], {
+    focusable: function (el, index, selector) {
+        return $(el).is('a, button, :input, [tabindex]');
+    }
+  });
+
+  $(document).on('keypress', 'input,select', function (e) {
+    if (e.which == 13) {
+        e.preventDefault();
+        // Get all focusable elements on the page
+        var canfocus = $(':focusable');
+        var index = canfocus.index(this) + 1;
+        if (index >= canfocus.length) index = 0;
+        canfocus.eq(index).focus();
+    }
+});
+
   ", \yii\web\View::POS_READY); ?>
 
 <div class="container">
 <?php
   $form = ActiveForm::begin([
+    'action'=>Url::to(['rh-ausencia/create']),
     'type' => ActiveForm::TYPE_HORIZONTAL,
     'formConfig' => ['labelSpan' => 2, 'deviceSize' => ActiveForm::SIZE_SMALL],
   ]);
 ?>
-<!--
   <div class="row">
-    <div class="col-md-1" style="display:grid;">
-      Col 1
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 2
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 3
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 4
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 5
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 6
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 7
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 8
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 9
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 10
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 11
-    </div>
-    <div class="col-md-1" style="display:grid;">
-      Col 12
-    </div>
-  </div>
--->
-  <div class="row">
-    <div class="col-md-2" style="display:grid;">
+    <div class="col-lg-2 col-md-2" style="display:grid;">
         <?= Html::activeLabel($model_trab, 'clave', ['label'=>'Para el trabajador:', 'class'=>'control-label']) ?>
     </div>
-    <div class="col-md-2" style="display: grid;">
+    <div class="col-lg-2 col-md-2" style="display: grid;">
           <div class="input-group">
             <?= $form->field($model_trab, 'clave', [
               'showLabels' => false,
               'template'=>'{label}{input}{hint}{error}',
               'addon' => [
                 'append' => [
-                  'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', ['id'=>'btn-lookup-click', 'class'=>'btn btn-default', 'value'=>Url::to(['rh-trab/lookup'])]),
+                  'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', ['id'=>'btn-lookup-click', 'class'=>'btn btn-default', 'value'=>Url::to(['rh-trab/lookup']), 'tabstop'=>-1]),
                   'asButton'=>true,
                 ]
               ],
-            ])->textInput(['id'=>'clave_trab', 'placeholder' => 'Ficha', 'data-toggle' => 'tooltip', 'title'=>'Introduzca la ficha del trabajador que se ausenta', 'style'=>'width:100%;']) ?>
+            ])->textInput(['id'=>'clave_trab', 'tabstop'=>1, 'placeholder' => 'Ficha', 'data-toggle' => 'tooltip', 'title'=>'Introduzca la ficha del trabajador que se ausenta', 'style'=>'width:100%;']) ?>
           </div>
       </div>
       <div class="col-md-6" style="display:grid;">
-        <?= Html::textInput('nombre_trab', $nombreTrab, ['style'=>'width:100%; border: 0px;', 'class' => 'form-control', 'readonly'=>true]) ?>
+        <?= Html::textInput('nombre_trab', $nombreTrab, ['tabstop'=>-1, 'style'=>'width:100%; border: 0px;', 'class' => 'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
       </div>
       <div class="col-md-2" style="display:grid;">
         &nbsp;
@@ -112,7 +92,7 @@ use yii\helpers\Url;
       <div class="col-md-3" style="display:grid;">
        <?= $form->field($model, 'id_plaza', ['showLabels'=>false])->widget(Select2::classname(), [
                 'data'=>$plazas,
-                'options'=>['showLabels'=>false, 'placeholder'=>'Plaza actual...'],
+                'options'=>['tabstop'=>2, 'showLabels'=>false, 'placeholder'=>'Plaza actual...'],
                 'initValueText'=>$plaza_actual,
                 'pluginOptions'=> [
                     'allowClear'=>true,
@@ -120,7 +100,7 @@ use yii\helpers\Url;
             ]); ?>
       </div>
       <div class="col-md-5" style="display: grid;">
-          <?= Html::textArea('info', $puesto . PHP_EOL . 'JORNADA: ' . $jornada . '    DESCANSO: ' . $descanso, ['class'=>'form-control', 'style'=>'border: 0px;', 'template'=>'{label}{input}{hint}{error}', 'readonly'=>true]) ?>
+          <?= Html::textArea('info', $puesto . PHP_EOL . 'JORNADA: ' . $jornada . '    DESCANSO: ' . $descanso, ['class'=>'form-control', 'style'=>'border: 0px;', 'template'=>'{label}{input}{hint}{error}', 'readonly'=>true, 'disabled'=>'disabled', 'tabstop'=>-1]) ?>
       </div>
       <div class="col-md-2" style="display:grid;">
       </div>
@@ -144,6 +124,7 @@ use yii\helpers\Url;
               'placeholder'=>'Del...',
               'showLabels'=>false,
               'style'=>'width:100%',
+              'tabstop'=>3,
             ],
             'language'=>'es',
             'type'=>3,
@@ -166,6 +147,7 @@ use yii\helpers\Url;
                 'placeholder'=>'Al...',
                 'showLabels'=>false,
                 'style'=>'width:100%',
+                'tabstop'=>4,
             ],
             'language'=>'es',
             'removeButton'=>false,
@@ -190,6 +172,7 @@ use yii\helpers\Url;
         <?= $form->field($model, 'fec_reanuda', ['showLabels'=>false])->widget(DatePicker::classname(), [
         'options'=> [
           'placeholder'=>'El...',
+          'tabstop'=>5,
         ],
         'language'=>'es',
         'type'=>3,
@@ -222,7 +205,7 @@ use yii\helpers\Url;
             <?= Html::activeLabel($model, 'req_cobertura', ['label' => 'Cobertura?:', 'class' => 'control-label']) ?>
         </div>
         <div class="col-md-2">
-             <?= Html::activeDropDownList($model, 'req_cobertura', $status_cobertura, ['class'=>'form-control']); ?>
+             <?= Html::activeDropDownList($model, 'req_cobertura', $status_cobertura, ['class'=>'form-control', 'tabstop'=>6]); ?>
         </div>
         <div class="col-md-2">
             &nbsp;
@@ -234,10 +217,10 @@ use yii\helpers\Url;
                 <?= Html::activeLabel($model, 'docs', ['label'=>'Datos Adicionales:', 'class'=>'control-label']) ?>
             </div>
             <div class="col-md-4">
-                <?= $form->field($model, 'docs', ['showLabels'=>false])->textInput(['placeholder'=>'Documento...']) ?>
+                <?= $form->field($model, 'docs', ['showLabels'=>false])->textInput(['placeholder'=>'Documento...', 'tabstop'=>7]) ?>
             </div>
             <div class="col-md-4">
-                 <?= $form->field($model, 'obs', ['showLabels'=>false])->textarea(['rows' => '2', 'placeholder' => 'Observaciones']) ?>
+                 <?= $form->field($model, 'obs', ['showLabels'=>false])->textarea(['rows' => '2', 'placeholder' => 'Observaciones', 'tabstop'=>8]) ?>
             </div>
             <div class="col-md-2">
             </div>
@@ -256,5 +239,3 @@ use yii\helpers\Url;
 
 <?php ActiveForm::end(); ?>
 </div>
-
-

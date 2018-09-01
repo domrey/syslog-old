@@ -59,6 +59,6 @@ class RhJornada extends \yii\db\ActiveRecord
 
     public function StrJornada()
     {
-      return "J-" . $this->clave_texto;
+      return $this->clave_texto;
     }
 }

@@ -69,9 +69,25 @@ class RhAusenciaController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate($id=null)
+
+     public function actionCreate()
+     {
+       $model = new RhAusencia();
+
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
+
+        return $this->render('create', [
+          'model'=>$model,
+        ]);
+     }
+    public function actionCreate2($id=null)
     {
         $model = new RhAusencia();
+        if ($model->load(Yii::$app->request->post()) && $model->save()) {
+            return $this->redirect(['view', 'id' => $model->id]);
+        }
         $model_trab = new RhTrab();
         $model_plaza = new RhPlaza();
         $model_motivo = new RhAusenciaTipo();
@@ -85,9 +101,6 @@ class RhAusenciaController extends Controller
         $nombreTrab='';
         $plaza_actual='';
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
         // Verificar si se está solicitando un trabajador en particular
         //$clave_trab=Yii::$app->request->get('id');
         if ($id !== null) {
