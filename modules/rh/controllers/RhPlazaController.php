@@ -141,4 +141,14 @@ class RhPlazaController extends Controller
       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
       return $data;
     }
+
+    public function actionGetIdPlaza()
+    {
+      $data=[];
+      $clave = Yii::$app->request->get('clave');
+      $data = Yii::$app->db->createCommand("SELECT id FROM rh_plaza WHERE clave = :key")
+      ->bindValue(':key', $clave)->queryOne();
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+    }
 }

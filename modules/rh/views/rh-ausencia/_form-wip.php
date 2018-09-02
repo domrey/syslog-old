@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\web\Request;
 use yii\bootstrap\Modal;
+use yii\jui\AutoComplete;
 use app\modules\rh\models\RhTrab;
 use app\modules\rh\models\RhPlaza;
 use app\modules\rh\models\RhTrabActivo;
@@ -99,6 +100,31 @@ use kartik\widgets\DatePicker;
     })
   });
 
+  $('#plaza_actual').on('change', function(e) {
+    var obj = $(this);
+    var val = obj.val();
+    var url = '" . Url::to(['rh-plaza/get-id-plaza']) . "';
+    if(val==='') {
+      $('#id_plaza').val('');
+    }
+    else {
+        jQuery.ajax(url, {
+          'dataType': 'json',
+          'method': 'get',
+          'success': function(result) {
+            console.log(result);
+            $('#id_plaza').val(result.id);
+          },
+          'error': function(e) {
+            console.log('Error');
+            $('#id_plaza').val('');
+          },
+          'cache': false,
+          'data': {clave: val},
+        });
+    }
+  });
+
   $('#clave_tipo').on('change', function(e) {
     console.log(e.target.value);
     var url='". Url::to(['rh-ausencia-tipo/get-nombre-ausencia']) . "';
@@ -133,18 +159,31 @@ use kartik\widgets\DatePicker;
           'asButton'=>true,
         ]
       ],
-      ])->textInput(['id'=>'clave_trab', 'tabstop'=>1, 'placeholder'=>'Ficha', 'title'=>'Introduzca la ficha', 'data-toggle'=>'tooltip']) ?>
+      ])->textInput(['id'=>'clave_trab', 'autofocus'=>'autofocus', 'tabstop'=>1, 'placeholder'=>'Ficha', 'title'=>'Introduzca la ficha', 'data-toggle'=>'tooltip']) ?>
     </div>
     <?= Html::textInput('nombre_trab', '', ['id'=>'nombre_trab', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
     <div class="help-block"></div>
     <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>3, 'disabled'=>'disabled']) ?>
     <div class="help-block"></div>
         <?= Html::activeLabel($model, 'clave', ['label'=>'En Plaza:', 'class'=>'control-label']) ?>
-    <?= Html::textInput('plaza', '', ['id'=>'plaza_actual', 'tabstop'=>2, 'class'=>'form-control']) ?>
+    <?= AutoComplete::widget([
+      'name'=>'plaza_actual',
+      'options'=>['placeholder'=>'En plaza', 'id'=>'plaza_actual', 'class'=>'form-control', 'tabstop'=>2],
+      'clientOptions'=>[
+        'minLength'=>2,
+        'type'=>'get',
+        'source'=>Url::to(['rh-plaza/get-clave-plaza']),
+        'select'=>'function(event, ui) {
+          $("#laPlaza").text(ui.item.value);
+        }',
+      ],
+    ]);
+    ?>
+
     <div class="help-block"></div>
     <?= $form->field($model, 'id_plaza')->textInput(['id'=>'id_plaza']) ?>
 
-            <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Motivo:', 'class' => 'control-label']) ?>
+    <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Motivo:', 'class' => 'control-label']) ?>
     <?= $form->field($model, 'clave_tipo', ['showLabels'=>false])->textInput(['maxlength' => true, 'id'=>'clave_tipo']) ?>
     <?= Html::textInput('tipo_ausencia', '', ['showLabels'=>false, 'id'=>'tipo_ausencia', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
     <div class="help-block"></div>
