@@ -102,10 +102,30 @@ use kartik\datecontrol\DateControl;
     })
   });
 
+  function actualizaDatosPlaza(id_plaza)
+  {
+    url='" . Url::to(['rh-plaza/get-datos-plaza-por-id']) . "';
+    console.log('Actualizar la plaza con id='+id_plaza);
+    jQuery.ajax(url, {
+      'dataType': 'json',
+      'method': 'get',
+      'success': function (r) {
+        $('#info').val(r.Categoria + '\\r\\n' + 'Clasificación: ' + r.Clasificacion + '\\r\\n' + 'Jornada ' + r.Jornada + '\\r\\n' + 'Descanso: ' + r.Descanso);
+
+      },
+      'error': function(e) {
+        alert (e);
+      },
+      'cache': false,
+      'data': {id:id_plaza},
+    });
+  }
+
   $('#plaza_actual').on('change', function(e) {
     var obj = $(this);
     var val = obj.val();
     var url = '" . Url::to(['rh-plaza/get-id-plaza']) . "';
+    console.log ('Controlador: ' + url);
     if(val==='') {
       $('#id_plaza').val('');
     }
@@ -116,6 +136,8 @@ use kartik\datecontrol\DateControl;
           'success': function(result) {
             console.log(result);
             $('#id_plaza').val(result.id);
+            // Ahora actualizar el campo Info para la nueva plaza
+            actualizaDatosPlaza(result.id);
           },
           'error': function(e) {
             console.log('Error');

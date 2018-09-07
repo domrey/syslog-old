@@ -151,4 +151,18 @@ class RhPlazaController extends Controller
       Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
       return $data;
     }
+
+    // Para ser utilizada con ajaxConversion
+    // Obtiene la información de jornada, clasificacion, categoria y descanso para la plaza_actual'
+    // especificada en el parámetro
+    public function actionGetDatosPlazaPorId()
+    {
+      $data=[];
+      $id_plaza = Yii::$app->request->get('id');
+      $data = Yii::$app->db->createCommand("SELECT a.tipo AS Tipo, c.descr AS Descanso, a.clave_jornada AS Jornada, b.descr AS Categoria, b.clasif As Clasificacion FROM rh_plaza a INNER JOIN rh_puesto b ON a.clave_puesto=b.clave INNER JOIN rh_descanso c ON a.clave_descanso=c.clave  WHERE a.id=:ID")
+        ->bindValue(":ID", $id_plaza)->queryOne();
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+
+    }
 }
