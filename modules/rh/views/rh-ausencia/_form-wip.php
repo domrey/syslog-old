@@ -60,7 +60,7 @@ use kartik\datecontrol\DateControl;
 
 
   // Buscar los datos del trabajador por su ficha
-  $('#clave_trab').on('change', function(e) {
+  $('#clave_trab').on('change blue', function(e) {
     //console.log(e.target.value);
     var url='". Url::to(['rh-trab/get-situacion-trab']) . "';
     //console.log('Url=' + url);
@@ -105,27 +105,29 @@ use kartik\datecontrol\DateControl;
   function actualizaDatosPlaza(id_plaza)
   {
     url='" . Url::to(['rh-plaza/get-datos-plaza-por-id']) . "';
-    console.log('Actualizar la plaza con id='+id_plaza);
     jQuery.ajax(url, {
       'dataType': 'json',
       'method': 'get',
       'success': function (r) {
-        $('#info').val(r.Categoria + '\\r\\n' + 'Clasificación: ' + r.Clasificacion + '\\r\\n' + 'Jornada ' + r.Jornada + '\\r\\n' + 'Descanso: ' + r.Descanso);
-
+        info=r.Categoria + '\\r\\n';
+        info+='Clasificación: ' + r.Clasificacion + '\\r\\n';
+        info+='Jornada: ' + r.Jornada + '\\r\\n';
+        info+='Descanso: ' + r.Descanso;
+        $('#info').val(info);
       },
       'error': function(e) {
-        alert (e);
+        console.log('Error!');
       },
       'cache': false,
       'data': {id:id_plaza},
     });
   }
 
-  $('#plaza_actual').on('change', function(e) {
+  $('#plaza_actual').on('change blur', function(e) {
     var obj = $(this);
     var val = obj.val();
     var url = '" . Url::to(['rh-plaza/get-id-plaza']) . "';
-    console.log ('Controlador: ' + url);
+    //console.log ('Controlador: ' + url);
     if(val==='') {
       $('#id_plaza').val('');
     }
@@ -134,13 +136,13 @@ use kartik\datecontrol\DateControl;
           'dataType': 'json',
           'method': 'get',
           'success': function(result) {
-            console.log(result);
+            //console.log(result);
             $('#id_plaza').val(result.id);
             // Ahora actualizar el campo Info para la nueva plaza
             actualizaDatosPlaza(result.id);
           },
           'error': function(e) {
-            console.log('Error');
+            console.log('Error: Plaza no válida!');
             $('#id_plaza').val('');
           },
           'cache': false,

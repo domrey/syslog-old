@@ -165,6 +165,24 @@ class RhTrabController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
+    public function actionGetPlazaActual()
+    {
+      $datos=[];
+      $trab=null;
+      $movimiento=null;
+      $clave_trab = Yii::$app->request->get('clave_trab');
+      if ($clave_trab === null || ($trab=RhTrab::findOne($clave_trab))===null) {
+        return null;
+      }
+      $movimiento = RhMovimiento::UltimoMovimientoTrab($trab);
+      if ($movimiento != null) {
+        $plaza_actual = $movimiento->plaza;
+        $datos['Id'] = $plaza_actual->id;
+        $datos['Clave'] = $plaza_actual->clave;
+      }
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      return $datos;
+    }
 
     /**
     * Obtiene la situacion actual del trabajador dada su clave
