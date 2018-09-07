@@ -139,4 +139,6 @@ class RhAusenciaTipoController extends Controller
       //]);
       return $tipo_ausencia;
     }
+
+    
 }

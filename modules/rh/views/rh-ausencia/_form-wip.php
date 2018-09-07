@@ -80,7 +80,7 @@ use kartik\datecontrol\DateControl;
           else {
             $('#id_plaza').val(result.id_plaza);
             $('#nombre_trab').val(result.nombre);
-            $('#info').val(result.puesto + '\\r\\n' + 'Jornada ' + result.jornada + '\\r\\n' + 'Descanso: ' + result.descanso);
+            $('#info').val(result.puesto + '\\r\\n' + 'Clasificación: ' + result.clasif + '\\r\\n' + 'Jornada ' + result.jornada + '\\r\\n' + 'Descanso: ' + result.descanso);
             $('#plaza_actual').val(result.plaza);
           }
         }
@@ -185,7 +185,7 @@ use kartik\datecontrol\DateControl;
       &nbsp;
     </div>
     <div class="col-lg-8 col-md-8 col-md-8">
-      <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>3, 'disabled'=>'disabled']) ?>
+      <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>4, 'disabled'=>'disabled']) ?>
       <div class="help-block"></div>
     </div>
   </div>

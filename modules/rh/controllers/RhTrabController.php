@@ -181,6 +181,7 @@ class RhTrabController extends Controller
       $datos['puesto']='';
       $datos['jornada']='';
       $datos['descanso']='';
+      $datos['clasif']='';
 
       $trab;        // model RhTrab
       $movimiento; // modelo RhMovimiento
@@ -190,6 +191,7 @@ class RhTrabController extends Controller
       $puesto_actual='';
       $jornada_actual='';
       $descanso_actual='';
+      $clasif_actual='';
 
       // Buscar la clave
       $clave_trab=Yii::$app->request->get('clave_trab');
@@ -211,6 +213,7 @@ class RhTrabController extends Controller
             $descanso_actual = $plaza->descanso->strDescanso();
             $jornada_actual = $plaza->jornada->StrJornada();
             $puesto_actual = $plaza->puesto->StrPuesto();
+            $clasif_actual = $plaza->puesto->StrClasif();
 
             // Llenar la información
             $datos['puesto'] = $puesto_actual;
@@ -218,6 +221,7 @@ class RhTrabController extends Controller
             $datos['id_plaza'] = $plaza->id;
             $datos['jornada']=$jornada_actual;
             $datos['descanso']=$descanso_actual;
+            $datos['clasif']=$clasif_actual;
           }
         }
         Yii::$app->response->format=Response::FORMAT_JSON;
