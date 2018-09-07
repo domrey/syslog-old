@@ -4,7 +4,7 @@ namespace app\modules\rh\models;
 
 use Yii;
 use yii\db\Expression;
-use app\modules\models\RhTrab;
+//use app\modules\models\RhTrab;
 /**
  * This is the model class for table "rh_movimiento".
  *

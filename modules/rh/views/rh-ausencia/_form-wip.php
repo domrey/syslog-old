@@ -10,6 +10,8 @@ use app\modules\rh\models\RhPlaza;
 use app\modules\rh\models\RhTrabActivo;
 use kartik\widgets\ActiveForm;
 use kartik\widgets\DatePicker;
+use kartik\DateControl\Module;
+use kartik\datecontrol\DateControl;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhAusencia */
@@ -148,123 +150,214 @@ use kartik\widgets\DatePicker;
 
 <div class="rh-ausencia-form">
 
-    <?php $form = ActiveForm::begin(); ?>
-    <div class="input-group">
-        <?= Html::activeLabel($model, 'clave', ['label'=>'Para el trabajador:', 'class'=>'control-label']) ?>
-    <?= $form->field($model, 'clave_trab', [
-      'showLabels'=>false,
-      'addon'=>[
-        'append'=> [
-          'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', ['id'=>'btn_lookup_click', 'class'=>'btn btn-default', 'value'=>Url::to(['rh-trab/lookup']), 'tabstop'=>-1]),
-          'asButton'=>true,
-        ]
+    <?php $form = ActiveForm::begin([
+      'id'=>'frm_add_ausencia',
+      'type' => ActiveForm::TYPE_HORIZONTAL,
+      'formConfig' => [
+        'deviceSize' => ActiveForm::SIZE_SMALL,
+        'showLabels'=>false,
       ],
-      ])->textInput(['id'=>'clave_trab', 'autofocus'=>'autofocus', 'tabstop'=>1, 'placeholder'=>'Ficha', 'title'=>'Introduzca la ficha', 'data-toggle'=>'tooltip']) ?>
+    ]); ?>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'clave', ['label'=>'Para el trabajador:', 'class'=>'control-label']) ?>
     </div>
-    <?= Html::textInput('nombre_trab', '', ['id'=>'nombre_trab', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
-    <div class="help-block"></div>
-    <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>3, 'disabled'=>'disabled']) ?>
-    <div class="help-block"></div>
-        <?= Html::activeLabel($model, 'clave', ['label'=>'En Plaza:', 'class'=>'control-label']) ?>
-    <?= AutoComplete::widget([
-      'name'=>'plaza_actual',
-      'options'=>['placeholder'=>'En plaza', 'id'=>'plaza_actual', 'class'=>'form-control', 'tabstop'=>2],
-      'clientOptions'=>[
-        'minLength'=>2,
-        'type'=>'get',
-        'source'=>Url::to(['rh-plaza/get-clave-plaza']),
-        'select'=>'function(event, ui) {
-          $("#laPlaza").text(ui.item.value);
-        }',
-      ],
-    ]);
-    ?>
-
-    <div class="help-block"></div>
-    <?= $form->field($model, 'id_plaza')->textInput(['id'=>'id_plaza']) ?>
-
-    <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Motivo:', 'class' => 'control-label']) ?>
-    <?= $form->field($model, 'clave_tipo', ['showLabels'=>false])->textInput(['maxlength' => true, 'id'=>'clave_tipo']) ?>
-    <?= Html::textInput('tipo_ausencia', '', ['showLabels'=>false, 'id'=>'tipo_ausencia', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
-    <div class="help-block"></div>
-
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <div class="input-group">
+        <?= $form->field($model, 'clave_trab', [
+          'showLabels'=>false,
+          'addon'=>[
+              'append'=> [
+                'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', ['id'=>'btn_lookup_click', 'class'=>'btn btn-default', 'value'=>Url::to(['rh-trab/lookup']), 'tabstop'=>-1]),
+                'asButton'=>true,
+              ],
+          ],
+        ])->textInput(['id'=>'clave_trab', 'autofocus'=>'autofocus', 'tabstop'=>1, 'placeholder'=>'Ficha', 'title'=>'Introduzca la ficha', 'data-toggle'=>'tooltip']) ?>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-6">
+      <?= Html::textInput('nombre_trab', '', ['id'=>'nombre_trab', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
+      <div class="help-block"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      &nbsp;
+    </div>
+    <div class="col-lg-8 col-md-8 col-md-8">
+      <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>3, 'disabled'=>'disabled']) ?>
+      <div class="help-block"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'clave', ['label'=>'En Plaza:', 'class'=>'control-label']) ?>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <?= AutoComplete::widget([
+        'name'=>'plaza_actual',
+        'options'=>['placeholder'=>'En plaza', 'id'=>'plaza_actual', 'class'=>'form-control', 'tabstop'=>2],
+        'clientOptions'=>[
+          'minLength'=>2,
+          'type'=>'get',
+          'source'=>Url::to(['rh-plaza/get-clave-plaza']),
+          'select'=>'function(event, ui) {
+            $("#laPlaza").text(ui.item.value);
+          }',
+        ],
+      ]);
+      ?>
+      <div class="col-lg-5 col-md-5 col-sm-5">
+    <!--  <div class="help-block"></div>  -->
+        <?= $form->field($model, 'id_plaza')->hiddenInput(['id'=>'id_plaza']) ?>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Motivo:', 'class' => 'control-label']) ?>
+    </div>
+    <div class="col-lg-3 col-md-3 col-sm-3">
+      <?= $form->field($model, 'clave_tipo', ['showLabels'=>false])->textInput(['maxlength' => true, 'id'=>'clave_tipo']) ?>
+    </div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+      <?= Html::textInput('tipo_ausencia', '', ['showLabels'=>false, 'id'=>'tipo_ausencia', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
+      <div class="help-block"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
         <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'Período de Ausencia:', 'class'=>'control-label']) ?>
-          <?= $form->field($model, 'fec_inicio',['showLabels'=>false])->widget(DatePicker::classname(), [
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <?= $form->field($model, 'fec_inicio', ['showLabels'=>false])->widget(DateControl::classname(), [
+            'ajaxConversion'=>true,
+            'type'=>'date',
+            'autoWidget'=>true,
+            'widgetClass'=>'',
+            'displayFormat'=>'php:d-M-Y',
+            'saveFormat'=>'php:Y-m-d',
+            'saveTimezone'=>'America/Mexico_City',
+            'displayTimezone'=>'America/Mexico_City',
             'options'=>[
-              'placeholder'=>'Del...',
-              'showLabels'=>false,
-              'style'=>'width:100%',
-              'tabstop'=>3,
-              'id'=>'fec_inicio',
+                'placeholder'=>'Del...',
             ],
             'language'=>'es',
-            'type'=>3,
-            'size'=>'md',
-            'removeButton' => false,
-            'pluginOptions'=> [
-              'autoclose'=>true,
-              'format'=>'dd/mm/yyyy',
-              'todayHighlight'=>true,
-              'todayBtn'=>false,
-              'calendarWeeks'=>true,
-              'daysOfWeekHighlighted'=>[0,6],
-              //'daysOfWeekDisabled'=>[0,6],
-            ]
-          ]) ?>
-
-            <?= $form->field($model, 'fec_termino', ['showLabels'=>false])->widget(DatePicker::classname(), [
-            'options'=> [
-                'placeholder'=>'Al...',
-                'showLabels'=>false,
-                'style'=>'width:100%',
-                'tabstop'=>4,
-                'id' => 'fec_termino',
-            ],
-            'language'=>'es',
-            'removeButton'=>false,
-            'type'=>3,
-            'size'=>'md',
-            'pluginOptions'=>[
+            'widgetOptions'=>[
+              'removeButton'=>false,
+              'type'=>DatePicker::TYPE_COMPONENT_APPEND,
+              'pluginOptions'=> [
                 'autoclose'=>true,
-                'format'=>'dd/mm/yyyy',
                 'todayHighlight'=>true,
                 'todayBtn'=>false,
                 'calendarWeeks'=>true,
                 'daysOfWeekHighlighted'=>[0,6],
-            ]
+              ],
+            ],
       ]) ?>
-            <?= Html::activeLabel($model, 'fec_reanuda', ['label' => "Reanudando:", 'class' => 'control-label']) ?>
-
-        <?= $form->field($model, 'fec_reanuda', ['showLabels'=>false])->widget(DatePicker::classname(), [
-        'options'=> [
-          'placeholder'=>'El...',
-          'tabstop'=>5,
-          'id'=>'fec_reanuda',
-        ],
-        'language'=>'es',
-        'type'=>3,
-        'size'=>'md',
-        'removeButton'=>false,
-        'pluginOptions'=>[
-          'autoclose'=>true,
-          'format'=>'dd/mm/yyyy',
-          'todayHighlight'=>true,
-          'todayBtn'=>true,
-          'calendarWeeks'=>true,
-          'daysOfWeekHighlighted'=>[0,6],
-        ]
-      ]) ?>
-
-    <?= $form->field($model, 'req_cobertura')->textInput(['id'=>'req_cobertura', 'tabstop'=>6]) ?>
-
-    <?= $form->field($model, 'docs')->textarea(['rows' => 1, 'id'=>'docs', 'tabstop'=>7]) ?>
-
-    <?= $form->field($model, 'obs')->textarea(['rows' => 2, 'id'=>'obs', 'tabstop'=>8]) ?>
-
-    <div class="form-group">
-        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
     </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">
+      <?= Html::label('Al', '') ?>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <?= $form->field($model, 'fec_termino', ['showLabels'=>false])->widget(DateControl::classname(), [
+            'ajaxConversion'=>true,
+            'type'=>'date',
+            'autoWidget'=>true,
+            'widgetClass'=>'',
+            'displayFormat'=>'php:d-M-Y',
+            'saveFormat'=>'php:Y-m-d',
+            'saveTimezone'=>'America/Mexico_City',
+            'displayTimezone'=>'America/Mexico_City',
+            'options'=>[
+                'placeholder'=>'Al...',
+            ],
+            'language'=>'es',
+            'widgetOptions'=>[
+              'removeButton'=>false,
+              'type'=>DatePicker::TYPE_COMPONENT_APPEND,
+              'pluginOptions'=> [
+                'autoclose'=>true,
+                'todayHighlight'=>true,
+                'todayBtn'=>false,
+                'calendarWeeks'=>true,
+                'daysOfWeekHighlighted'=>[0,6],
+              ],
+            ],
+      ]) ?>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">
+        <?= Html::activeLabel($model, 'fec_reanuda', ['label' => "Reanudando:", 'class' => 'control-label']) ?>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <?= $form->field($model, 'fec_reanuda', ['showLabels'=>false])->widget(DateControl::classname(), [
+            'ajaxConversion'=>true,
+            'type'=>'date',
+            'autoWidget'=>true,
+            'widgetClass'=>'',
+            'displayFormat'=>'php:d-M-Y',
+            'saveFormat'=>'php:Y-m-d',
+            'saveTimezone'=>'America/Mexico_City',
+            'displayTimezone'=>'America/Mexico_City',
+            //'saveOptions'=> [
+            //  'label'=>'Saved as: ',
+            //  'type'=>'text',
+            //  'readonly'=>true,
+            //  'class'=>'form-control hint-input text-muted',
+            //],
+            'options'=>[
+                'placeholder'=>'El...',
+            ],
+            'language'=>'es',
+            'widgetOptions'=>[
+              'removeButton'=>false,
+              'type'=>DatePicker::TYPE_COMPONENT_APPEND,
+              'pluginOptions'=> [
+                'autoclose'=>true,
+                'todayHighlight'=>true,
+                'todayBtn'=>false,
+                'calendarWeeks'=>true,
+                'daysOfWeekHighlighted'=>[0,6],
+              ],
+            ],
+      ]) ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">
+        <?= Html::activeLabel($model, 'req_cobertura', ['label' => "Con Cobertura?:", 'class' => 'control-label']) ?>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">
+      <?= $form->field($model, 'req_cobertura')->textInput(['id'=>'req_cobertura', 'tabstop'=>6]) ?>
+    </div>
+    <div class="col-lg-1 col-md-1 col-sm-1">&nbsp;</div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'docs', ['label'=>'Documentos:', 'class'=>'control-label']) ?>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <?= $form->field($model, 'docs')->textarea(['rows' => 1, 'id'=>'docs', 'tabstop'=>7]) ?>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-2 col-md-2 col-sm-2">&nbsp;</div>
+    <div class="col-lg-2 col-md-2 col-sm-2">&nbsp;</div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'obs', ['label'=>'Observaciones:', 'class'=>'control-label']) ?>
+    </div>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <?= $form->field($model, 'obs')->textarea(['rows' => 2, 'id'=>'obs', 'tabstop'=>8]) ?>
+    </div>
+  </div>
 
-    <?php ActiveForm::end(); ?>
+  <div class="row">
+    <div class="col-lg-4 col-md-4 col-sm-4">
+    </div>
+    <div class="col-lg-offset-8 col-md-offset-8 col-sm-offset-8">
+      <div class="form-group">
+        <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
+      </div>
+    </div>
+  </div>
+  <?php ActiveForm::end(); ?>
 
 </div>

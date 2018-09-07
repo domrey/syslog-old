@@ -131,7 +131,7 @@ class RhAusenciaTipoController extends Controller
       $nombre_ausencia='';
       $clave_tipo = Yii::$app->request->get('clave_tipo');
       $tipo = RhAusenciaTipo::find()->where(['clave'=>$clave_tipo])->one();
-      $nombre_ausencia = $tipo->nombre;
+      $nombre_ausencia = $tipo->descr;
       Yii::$app->response->format=Response::FORMAT_JSON;
       $tipo_ausencia['nombre']=$nombre_ausencia;
       //return $this->renderPartial('nombre-tipo-ausencia', [
