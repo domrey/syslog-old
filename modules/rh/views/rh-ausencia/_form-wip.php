@@ -203,10 +203,10 @@ use kartik\datecontrol\DateControl;
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="col-lg-4 col-md-4 col-sm-4">
       &nbsp;
     </div>
-    <div class="col-lg-8 col-md-8 col-md-8">
+    <div class="col-lg-6 col-md-6 col-md-6">
       <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>4, 'disabled'=>'disabled']) ?>
       <div class="help-block"></div>
     </div>
