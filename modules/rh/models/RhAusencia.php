@@ -135,8 +135,8 @@ class RhAusencia extends \yii\db\ActiveRecord
 
     public function ListaTiposCobertura()
     {
-      $data = RhAusenciaTipo::find()->all();
-      $options = ArrayHelper::map($data, 'clave', 'nombre');
+      $data = RhAusenciaTipo::find()->orderBy('descr ASC')->all();
+      $options = ArrayHelper::map($data, 'clave', 'descr');
       return $options;
 
     }

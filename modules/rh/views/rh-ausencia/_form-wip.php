@@ -8,6 +8,7 @@ use yii\jui\AutoComplete;
 use app\modules\rh\models\RhTrab;
 use app\modules\rh\models\RhPlaza;
 use app\modules\rh\models\RhTrabActivo;
+use app\modules\rh\models\RhAusencia;
 use kartik\widgets\ActiveForm;
 use kartik\widgets\DatePicker;
 use kartik\DateControl\Module;
@@ -30,6 +31,13 @@ use kartik\datecontrol\DateControl;
 
 
 <?php
+  $this->registerCss("
+    div.required label.control-label:after {
+      content: ' *'';
+      color: red;
+    }
+  ");
+
   $this->registerJs("
   // register jQuery extension
   jQuery.extend(jQuery.expr[':'], {
@@ -151,41 +159,26 @@ use kartik\datecontrol\DateControl;
     }
   });
 
-  $('#clave_tipo').on('change', function(e) {
-    console.log(e.target.value);
-    var url='". Url::to(['rh-ausencia-tipo/get-nombre-ausencia']) . "';
-    jQuery.ajax(url, {
-      'dataType': 'json',
-      'method': 'get',
-      'success': function(result) {
-        console.log(result.nombre);
-        $('#tipo_ausencia').val(result.nombre);
-      },
-      'error': function(e) {
-        console.log('Hubo un error!');
-      },
-      'cache': false,
-      'data': {clave_tipo: $('#clave_tipo').val()},
-    });
-  });
   ", \yii\web\View::POS_READY);
  ?>
 
 
 <div class="rh-ausencia-form">
-
     <?php $form = ActiveForm::begin([
       'id'=>'frm_add_ausencia',
-      'type' => ActiveForm::TYPE_HORIZONTAL,
+      'type' => ActiveForm::TYPE_VERTICAL,
       'formConfig' => [
         'deviceSize' => ActiveForm::SIZE_SMALL,
         'showLabels'=>false,
       ],
     ]); ?>
+<div class="container">
   <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2">
+    <div class="col-lg-3 col-md-3 col-sm-3">
       <?= Html::activeLabel($model, 'clave', ['label'=>'Para el trabajador:', 'class'=>'control-label']) ?>
     </div>
+  </div>
+  <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2">
       <div class="input-group">
         <?= $form->field($model, 'clave_trab', [
@@ -199,20 +192,24 @@ use kartik\datecontrol\DateControl;
         ])->textInput(['id'=>'clave_trab', 'autofocus'=>'autofocus', 'tabstop'=>1, 'placeholder'=>'Ficha', 'title'=>'Introduzca la ficha', 'data-toggle'=>'tooltip']) ?>
       </div>
     </div>
-    <div class="col-lg-6 col-md-6 col-sm-6">
-      <?= Html::textInput('nombre_trab', '', ['id'=>'nombre_trab', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
+    <div class="col-lg-1 col-md-1 col-sm-1">&nbsp;</div>
+    <div class="col-lg-5 col-md-5 col-sm-5">
+      <?= Html::textInput('nombre_trab', '', [
+        'id'=>'nombre_trab',
+        'tabstop'=>-1,
+        'style'=>'border: 0px;',
+        'class'=>'form-control',
+        'readonly'=>true,
+        'disabled'=>'disabled']
+        ) ?>
+    </div>
       <div class="help-block"></div>
-    </div>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        &nbsp;
+      </div>
   </div>
-  <div class="row">
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      &nbsp;
-    </div>
-    <div class="col-lg-6 col-md-6 col-md-6">
-      <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>4, 'disabled'=>'disabled']) ?>
-      <div class="help-block"></div>
-    </div>
-  </div>
+
+
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2">
       <?= Html::activeLabel($model, 'clave', ['label'=>'En Plaza:', 'class'=>'control-label']) ?>
@@ -220,7 +217,12 @@ use kartik\datecontrol\DateControl;
     <div class="col-lg-3 col-md-3 col-sm-3">
       <?= AutoComplete::widget([
         'name'=>'plaza_actual',
-        'options'=>['placeholder'=>'En plaza', 'id'=>'plaza_actual', 'class'=>'form-control', 'tabstop'=>2],
+        'options'=>[
+          'placeholder'=>'En plaza',
+          'id'=>'plaza_actual',
+          'class'=>'form-control',
+          'tabstop'=>2
+        ],
         'clientOptions'=>[
           'minLength'=>2,
           'type'=>'get',
@@ -231,10 +233,16 @@ use kartik\datecontrol\DateControl;
         ],
       ]);
       ?>
-      <div class="col-lg-5 col-md-5 col-sm-5">
-    <!--  <div class="help-block"></div>  -->
-        <?= $form->field($model, 'id_plaza')->hiddenInput(['id'=>'id_plaza']) ?>
-      </div>
+      <?= $form->field($model, 'id_plaza')->hiddenInput([
+        'id'=>'id_plaza',
+        'tabstop'=>-1,
+        ]) ?>
+
+      <?= Html::label('Hola'); ?>
+    </div>
+    <div class="col-lg-6 col-md-6 col-md-6">
+      <?= Html::textArea('info', '', ['id'=>'info', 'tabstop'=>-1, 'readonly'=>true, 'class'=>'form-control', 'rows'=>4, 'disabled'=>'disabled']) ?>
+      <div class="help-block"></div>
     </div>
   </div>
   <div class="row">
@@ -242,12 +250,13 @@ use kartik\datecontrol\DateControl;
       <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Motivo:', 'class' => 'control-label']) ?>
     </div>
     <div class="col-lg-3 col-md-3 col-sm-3">
-      <?= $form->field($model, 'clave_tipo', ['showLabels'=>false])->textInput(['maxlength' => true, 'id'=>'clave_tipo']) ?>
+      <?= Html::activeDropDownList($model, 'clave_tipo', RhAusencia::ListaTiposCobertura(), [
+        'id'=>'clave_tipo',
+        'class'=>'form-control',
+        'prompt'=>'Elija un motivo',
+        'tabstop'=>3]); ?>
     </div>
-    <div class="col-lg-5 col-md-5 col-sm-5">
-      <?= Html::textInput('tipo_ausencia', '', ['showLabels'=>false, 'id'=>'tipo_ausencia', 'tabstop'=>-1, 'style'=>'border: 0px;', 'class'=>'form-control', 'readonly'=>true, 'disabled'=>'disabled']) ?>
-      <div class="help-block"></div>
-    </div>
+    <div class="help-block">&nbsp;</div>
   </div>
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2">
@@ -265,6 +274,7 @@ use kartik\datecontrol\DateControl;
             'displayTimezone'=>'America/Mexico_City',
             'options'=>[
                 'placeholder'=>'Del...',
+                'tabstop'=>4,
             ],
             'language'=>'es',
             'widgetOptions'=>[
@@ -295,6 +305,7 @@ use kartik\datecontrol\DateControl;
             'displayTimezone'=>'America/Mexico_City',
             'options'=>[
                 'placeholder'=>'Al...',
+                'tabstop'=>5,
             ],
             'language'=>'es',
             'widgetOptions'=>[
@@ -331,6 +342,7 @@ use kartik\datecontrol\DateControl;
             //],
             'options'=>[
                 'placeholder'=>'El...',
+                'tabstop'=>6,
             ],
             'language'=>'es',
             'widgetOptions'=>[
@@ -349,30 +361,21 @@ use kartik\datecontrol\DateControl;
   </div>
   <div class="row">
     <div class="col-lg-2 col-md-2 col-sm-2">
-        <?= Html::activeLabel($model, 'req_cobertura', ['label' => "Con Cobertura?:", 'class' => 'control-label']) ?>
+        <?= Html::activeLabel($model, 'req_cobertura', ['label' => "Cobertura:", 'class' => 'control-label']) ?>
     </div>
-    <div class="col-lg-1 col-md-1 col-sm-1">
-      <?= $form->field($model, 'req_cobertura')->textInput(['id'=>'req_cobertura', 'tabstop'=>6]) ?>
-    </div>
-    <div class="col-lg-1 col-md-1 col-sm-1">&nbsp;</div>
     <div class="col-lg-2 col-md-2 col-sm-2">
-      <?= Html::activeLabel($model, 'docs', ['label'=>'Documentos:', 'class'=>'control-label']) ?>
+      <?= Html::activeDropDownList($model, 'req_cobertura', RhAusencia::ListaStatusCobertura(), [
+        'class'=>'form-control',
+        'tabstop'=>7]
+      ); ?>
+    </div>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?= Html::activeLabel($model, 'docs', ['label'=>'Documento:', 'class'=>'control-label']) ?>
     </div>
     <div class="col-lg-4 col-md-4 col-sm-4">
-      <?= $form->field($model, 'docs')->textarea(['rows' => 1, 'id'=>'docs', 'tabstop'=>7]) ?>
+      <?= $form->field($model, 'docs')->textInput(['id'=>'docs', 'tabstop'=>8]) ?>
     </div>
   </div>
-  <div class="row">
-    <div class="col-lg-2 col-md-2 col-sm-2">&nbsp;</div>
-    <div class="col-lg-2 col-md-2 col-sm-2">&nbsp;</div>
-    <div class="col-lg-2 col-md-2 col-sm-2">
-      <?= Html::activeLabel($model, 'obs', ['label'=>'Observaciones:', 'class'=>'control-label']) ?>
-    </div>
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <?= $form->field($model, 'obs')->textarea(['rows' => 2, 'id'=>'obs', 'tabstop'=>8]) ?>
-    </div>
-  </div>
-
   <div class="row">
     <div class="col-lg-4 col-md-4 col-sm-4">
     </div>
@@ -382,6 +385,7 @@ use kartik\datecontrol\DateControl;
       </div>
     </div>
   </div>
+</div>
   <?php ActiveForm::end(); ?>
 
 </div>

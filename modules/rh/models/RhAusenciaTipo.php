@@ -76,4 +76,12 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
       return $this->nombre;
     }
 
+    public static function ListaTiposAusencias()
+    {
+      $data = RhAusenciaTipo::find()->all();
+      $options = ArrayHelper::map($data, 'clave', 'descr');
+      return $options;
+
+    }
+
 }
