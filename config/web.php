@@ -78,6 +78,8 @@ $config = [
                 'time' => 'H:i:s',
                 'datetime' => 'Y-m-d H:i:s',
               ],
+              'displayTimezone'=>'America/Mexico_City',
+              'saveTimezone'=>'UTC',
 
               // automatically use kartik\widgets for each of the above formats
               'autoWidget' => true,

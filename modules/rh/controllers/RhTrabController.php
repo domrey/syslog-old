@@ -192,14 +192,15 @@ class RhTrabController extends Controller
     */
     public function actionGetSituacionTrab()
     {
-      $datos['ficha']='';
-      $datos['nombre']='';
-      $datos['plaza']='';
-      $datos['id_plaza']='';
-      $datos['puesto']='';
-      $datos['jornada']='';
-      $datos['descanso']='';
-      $datos['clasif']='';
+      $datos['Ficha']='';
+      $datos['Trabajador']='';
+      $datos['IdPlaza']='';
+      $datos['Plaza']='';
+      $datos['Tipo']='';
+      $datos['Descanso']='';
+      $datos['Jornada']='';
+      $datos['Categoria']='';
+      $datos['Clasificacion']='';
 
       $trab;        // model RhTrab
       $movimiento; // modelo RhMovimiento
@@ -218,8 +219,8 @@ class RhTrabController extends Controller
       }
       else {
         $nombre_completo=$trab->getFullName();
-        $datos['ficha']=$clave_trab;
-        $datos['nombre']=$nombre_completo;
+        $datos['Ficha']=$clave_trab;
+        $datos['Trabajador']=$nombre_completo;
         // Ahora averiguar en qué plaza se encuentra actualmente este Trabajador
         $movimiento = RhMovimiento::UltimoMovimientoTrab($trab);
         // De ese movimiento se deduce la plaza actual del Trabajador
@@ -234,12 +235,13 @@ class RhTrabController extends Controller
             $clasif_actual = $plaza->puesto->StrClasif();
 
             // Llenar la información
-            $datos['puesto'] = $puesto_actual;
-            $datos['plaza'] = $plaza_actual;
-            $datos['id_plaza'] = $plaza->id;
-            $datos['jornada']=$jornada_actual;
-            $datos['descanso']=$descanso_actual;
-            $datos['clasif']=$clasif_actual;
+            $datos['Categoria'] = $puesto_actual;
+            $datos['Plaza'] = $plaza_actual;
+            $datos['IdPlaza'] = $plaza->id;
+            $datos['Tipo'] = $plaza->tipo;
+            $datos['Jornada']=$jornada_actual;
+            $datos['Descanso']=$descanso_actual;
+            $datos['Clasificacion']=$clasif_actual;
           }
         }
         Yii::$app->response->format=Response::FORMAT_JSON;

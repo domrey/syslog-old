@@ -41,7 +41,7 @@ class RhAusencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required'],
+            [['clave_trab', 'id_plaza', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
             [['clave_trab', 'id_plaza', 'req_cobertura'], 'integer'],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
             [['docs', 'obs'], 'string'],
@@ -59,15 +59,15 @@ class RhAusencia extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave_trab' => 'Clave Trab',
-            'id_plaza' => 'Id Plaza',
-            'clave_tipo' => 'Clave Tipo',
-            'fec_inicio' => 'Fec Inicio',
-            'fec_termino' => 'Fec Termino',
-            'fec_reanuda' => 'Fec Reanuda',
-            'req_cobertura' => 'Req Cobertura',
-            'docs' => 'Docs',
-            'obs' => 'Obs',
+            'clave_trab' => 'FICHA DEL TRABJADOR',
+            'id_plaza' => 'CLAVE DE PLAZA',
+            'clave_tipo' => 'ClAVE DE AUSENCIA',
+            'fec_inicio' => 'FECHA DE INICIO',
+            'fec_termino' => 'FECHA DE TERMINO',
+            'fec_reanuda' => 'FECHA DE REANUDACION',
+            'req_cobertura' => 'COBERTURA',
+            'docs' => 'INFORMACION DOCUMENTOS',
+            'obs' => 'INFORMACION ADICIONAL',
         ];
     }
 
