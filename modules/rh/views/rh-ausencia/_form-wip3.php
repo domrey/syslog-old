@@ -41,7 +41,7 @@ use kartik\datecontrol\DateControl;
   // register jQuery extension
   jQuery.extend(jQuery.expr[':'], {
     focusable: function (el, index, selector) {
-        return $(el).is('input:enabled[type!=hidden], select, textarea, [tabindex]');
+        return $(el).is('input:enabled[type!=hidden], select, [tabindex]');
         //return $(el).is(':input[type!=hidden], :input[type!=readonly], [tabindex]');
         //return $(el).is('a, button, :input, [tabindex]');
     }
@@ -71,14 +71,10 @@ use kartik\datecontrol\DateControl;
     // info es un registro con los campos: Tipo, Descanso, Jornada, Categoria, Clasificacion, IdPlaza, Plaza,
     // en formato json
    elementText='<div class=\'clearfix\'>';
-   elementText='<h4 class=\'text-center\'>Categoria:</h4> <h5 class=\'text-center\'>' + infoJson.Categoria+'</h5><br />';
-   elementText+='<h4 class=\'text-center\'>Clasificación: </h4><h5 class=\'text-center\'>' + infoJson.Clasificacion + '</h5><br />';
-   elementText+='<h4 class=\'text-center\'>Jornada: </h4><h5 class=\'text-center\'>' + infoJson.Jornada + '</h5><br />';
-   elementText+='<h4 class=\'text-center\'>Descanso: </h4><h5 class=\'text-center\'>' + infoJson.Descanso+'</h5><br />';
-   //elementText='<h5><span class=\'label-default\'>Categoria: </span>' + '<span class=\'text-info\'>'+infoJson.Categoria+'</span></h5><br />';
-   //elementText+='<span class=\'text-dark\'>Clasificación: </span>' + '<span class=\'text-info\'>' + infoJson.Clasificacion + '</span><br />';
-   //elementText+='<span class=\'text-dark\'>Jornada: </span>' + '<span class=\'text-info\'>' + infoJson.Jornada + '</span><br />';
-   //elementText+='<span class=\'text-dark\'>Descanso: </span>' + '<span class=\'text-info\'>' + infoJson.Descanso+'</span><br />';
+   elementText='<span class=\'label-default\'>Categoria: </span>' + '<span class=\'text-info\'>'+infoJson.Categoria+'</span><br />';
+   elementText+='<span class=\'text-dark\'>Clasificación: </span>' + '<span class=\'text-info\'>' + infoJson.Clasificacion + '</span><br />';
+   elementText+='<span class=\'text-dark\'>Jornada: </span>' + '<span class=\'text-info\'>' + infoJson.Jornada + '</span><br />';
+   elementText+='<span class=\'text-dark\'>Descanso: </span>' + '<span class=\'text-info\'>' + infoJson.Descanso+'</span><br />';
    elementText+='</div>';
    return elementText;
   }
@@ -113,7 +109,7 @@ use kartik\datecontrol\DateControl;
           }
           else {
             $('#id_plaza').val(result.IdPlaza);
-            $('#nombreTrab').html('<h4 class=\"text-center\">'+result.Trabajador+'</h4>');
+            $('#nombreTrab').html('<span class=\"label-info\">'+result.Trabajador+'</span>');
             $('#info').html(infoToHtml(result));
             $('#plaza_actual').val(result.Plaza);
           }
@@ -195,28 +191,43 @@ use kartik\datecontrol\DateControl;
     ],
   ]);
   ?>
+<?php
+  $template_fichaTrab='{label}';
+  $template_fichaTrab.='<div class="row">';
+  $template_fichaTrab.='  <div class="col-lg-2 col-md-2">';
+  $template_fichaTrab.='    {input}';
+  $template_fichaTrab.='  </div>';
+  $template_fichaTrab.='  <div class="col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-1">';
+  $template_fichaTrab.='    {error}{hint}<div id="nombreTrab" class="form-control-static text-info"></div>';
+  $template_fichaTrab.='  </div>';
+  $template_fichaTrab.='</div>';
 
+  $template_fichaTrabGroup='<div class="input-group"><span class="input-group-addon">@</span>{input}</div>';
+
+  $tmpl_infoTrab=' <div class="col-lg-5 col-md-5 col-sm-5">';
+  $tmpl_infoTrab.='   <div id="info" class="form-control-static"></div>{error}{input}{hint}';
+  $tmpl_infoTrab.=' </div>';
+
+  $tmpl1 = '<div class="col-lg-4 col-md-4 col-sm-4" style="border:1px solid red;">';
+  $tmpl1 .= '{input}';
+  $tmpl1 .= '</div>';
+  $tmpl1 .= '<div class="col-lg-8 col-md-8 col-sm-8" style="border: 1px solid yellow;">';
+  $tmpl1 .= '{error}{hint}';
+  $tmpl1 .= '</div>';
+ ?>
 <div class="container">
-
   <div class="row" style="border: 4px solid Black;">
       <div class="col-lg-7 col-md-7 col-sm-7">
 
-        <div class="row" style="border: 2px solid Red; background-color: Lightgray;">
-
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'clave_trab', ['label'=>'Trabajador que se ausenta:', 'class'=>'control-label']); ?>
-                </div>
+        <div class="row" style="border: 2px solid black; background-color: Lightgray;">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+              <div class="row" style="border: 1px solid blue;">
+                <?= Html::activeLabel($model, 'clave_trab', ['label'=>'Trabajador que se ausenta:', 'class'=>'control-label']); ?>
               </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-5 col-md-5 col-sm-5">
-                  <div class="row">
+              <div class="row" style="border: 1px solid Blue;">
                   <?= $form->field($model, 'clave_trab', [
                     //'template'=>'{label}<div class="row"><div class="col-lg-2 col-md-2">{input}</div><div class="col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-2"><div id="nombreTrab"></div>{error}{hint}</div></div>',
+                    'template'=> $tmpl1,
                     'addon'=>[
                       'append'=> [
                         'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', [
@@ -236,123 +247,100 @@ use kartik\datecontrol\DateControl;
                           'title'=>'Introduzca la ficha del trabajador',
                       ]);
                   ?>
-                  </div>
               </div>
+          </div>
+        </div>
+
+        <div class="row" style="border: 2px solid Blue; background-color: Gray;">
+          <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid cyan;">
+            <div class="row" style="border: 1px solid Blue;">
+              <?= Html::activeLabel($model, 'plaza_actual', ['label'=>'Plaza en que se ausenta:', 'class'=>'control-label']) ?>
             </div>
 
-          </div>
-
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'plaza_actual', ['label'=>'Plaza en que se ausenta:', 'class'=>'control-label']) ?>
+            <div class="row" style="border: 1px solid Green;">
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <?= AutoComplete::widget([
+                  'name'=>'plaza_actual',
+                  'options'=>[
+                    'placeholder'=>'Plaza...',
+                    'id'=>'plaza_actual',
+                    'class'=>'form-control',
+                    'tabstop'=>2
+                  ],
+                  'clientOptions'=>[
+                    'minLength'=>2,
+                    'type'=>'get',
+                    'source'=>Url::to(['rh-plaza/get-clave-plaza']),
+                    'select'=>'function(event, ui) {
+                      $("#laPlaza").val(ui.item.value);
+                    }',
+                  ],
+                ]);
+                ?>
+                <?= $form->field($model, 'id_plaza')->hiddenInput([
+                  'id'=>'id_plaza',
+                  'placeholder'=>'ID de la ficha',
+                  'tabstop'=>-1,
+                  ]) ?>
                 </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-8 col-md-8 col-sm-8">
-                  <div class="row">
-                    <?= AutoComplete::widget([
-                      'name'=>'plaza_actual',
-                      'options'=>[
-                        'placeholder'=>'Plaza...',
-                        'id'=>'plaza_actual',
-                        'class'=>'form-control',
-                        'tabstop'=>2
-                      ],
-                      'clientOptions'=>[
-                        'minLength'=>2,
-                        'type'=>'get',
-                        'source'=>Url::to(['rh-plaza/get-clave-plaza']),
-                        'select'=>'function(event, ui) {
-                          $("#laPlaza").val(ui.item.value);
-                        }',
-                      ],
-                    ]);
-                    ?>
-                    <?= $form->field($model, 'id_plaza')->hiddenInput([
-                      'id'=>'id_plaza',
-                      'placeholder'=>'ID de la ficha',
-                      'tabstop'=>-1,
-                      ]) ?>
-                  </div>
-              </div>
             </div>
 
           </div>
-
-
         </div>
 
 
-        <div class="row" style="border: 2px solid Red; background-color: Lightgray;">
-
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'req_cobertura', ['label' => "Especifique si se requiere la cobertura:", 'class' => 'control-label']) ?>
-                </div>
-              </div>
+        <div class="row" style="border: 2px Solid Blue; background-color: Lightgray;">
+          <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid cyan;">
+            <div class="row" style="border: 1px Solid Green;">
+              <?= Html::activeLabel($model, 'req_cobertura', ['label' => "Especifique si se requiere la cobertura:", 'class' => 'control-label']) ?>
             </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-6 col-md-6 col-sm-6">
-                  <div class="row">
+            <div class="row" style="border: 1px Solid Cyan;">
+              <div class="col-lg-3 col-md-3 col-sm-3">
                   <?= Html::activeDropDownList($model, 'req_cobertura', RhAusencia::ListaStatusCobertura(), [
                     'class'=>'form-control',
                     'prompt'=>'Cobertura...',
                     'tabstop'=>3] );
                   ?>
-                  </div>
+              </div>
+              <div class="col-lg-7 col-md-7 col-sm-7">
+                <!-- aquí va el mensaje de error -->
               </div>
             </div>
-
           </div>
-
-          <div class="col-lg-6 col-md-6 col-sm-6">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Especifique el motivo de la ausencia:', 'class' => 'control-label']) ?>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-10 col-md-10 col-sm-10">
-                <div class="row">
-                    <?= Html::activeDropDownList($model, 'clave_tipo', RhAusencia::ListaTiposCobertura(), [
-                      'id'=>'clave_tipo',
-                      'class'=>'form-control',
-                      'prompt'=>'Motivo...',
-                      'tabstop'=>4]);
-                    ?>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-
         </div>
 
-        <div class="row" style="border: 2px solid Red; background-color: Lightgray;">
-
-          <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'Período de Ausencia:', 'class'=>'control-label']) ?>
-                </div>
+        <div class="row" style="border: 2px Solid Blue; background-color: Lightgray;">
+          <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid cyan;">
+            <div class="row" style="border: 1px Solid Green;">
+              <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Especifique el motivo de la ausencia:', 'class' => 'control-label']) ?>
+            </div>
+            <div class="row" style="border: 1px Solid Cyan;">
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <!-- aquí va el campo -->
+                <?= Html::activeDropDownList($model, 'clave_tipo', RhAusencia::ListaTiposCobertura(), [
+                  'id'=>'clave_tipo',
+                  'class'=>'form-control',
+                  'prompt'=>'Motivo...',
+                  'tabstop'=>4]);
+                ?>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <!-- aquí va el mensaje de error -->
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                  <div class="row">
+
+        <div class="row" style="border: 2px Solid Blue; background-color: Lightgray;">
+          <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid cyan;">
+            <div class="row" style="border: 1px Solid Green;">
+              <!-- aquí va el título del campo -->
+              <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'Período de Ausencia:', 'class'=>'control-label']) ?>
+            </div>
+            <div class="row" style="border: 1px Solid Cyan;">
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <!-- aquí va el campo -->
                     <?= $form->field($model, 'fec_inicio', ['showLabels'=>true])->widget(DateControl::classname(), [
                         'ajaxConversion'=>true,
                         'language'=>'es',
@@ -380,24 +368,8 @@ use kartik\datecontrol\DateControl;
                           ],
                         ],
                   ]) ?>
-                  </div>
               </div>
-            </div>
-
-          </div>
-
-          <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-		                <div>&nbsp;</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-4">
                     <?= $form->field($model, 'fec_termino', ['showLabels'=>true])->widget(DateControl::classname(), [
                         'ajaxConversion'=>true,
                         'type'=>DateControl::FORMAT_DATE,
@@ -426,24 +398,9 @@ use kartik\datecontrol\DateControl;
                           ],
                         ],
                   ]) ?>
-                </div>
               </div>
-            </div>
-
-          </div>
-
-          <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-		                <div>&nbsp;</div>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                  <div class="row">
+              <div class="col-lg-4 col-md-4 col-sm-4">
+                <!-- aquí va el mensaje de error -->
                     <?= $form->field($model, 'fec_reanuda', ['showLabels'=>true])->widget(DatePicker::classname(), [
                         //'ajaxConversion'=>true,
                         'type'=>kartik\widgets\DatePicker::TYPE_COMPONENT_APPEND,
@@ -486,84 +443,28 @@ use kartik\datecontrol\DateControl;
                         //  ],
                         //],
                   ]) ?>
-                </div>
               </div>
             </div>
-
           </div>
-
-
-        </div>
-        <div class="row" style="border: 2px solid Red; background-color: Lightgray;">
-
-          <div class="col-lg-4 col-md-4 col-sm-4">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'docs', ['label'=>'Documento:', 'class'=>'control-label']) ?>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-10 col-md-10 col-sm-10">
-                  <div class="row">
-                    <?= $form->field($model, 'docs')->textInput(['id'=>'docs', 'tabstop'=>8, 'placeholder'=>'Docs...']) ?>
-                  </div>
-              </div>
-            </div>
-
-          </div>
-
-          <div class="col-lg-8 col-md-8 col-sm-8">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::activeLabel($model, 'obs', ['label'=>'Observaciones:', 'class'=>'control-label']) ?>
-                </div>
-              </div>
-            </div>
-
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                    <?= $form->field($model, 'obs')->textArea(['id'=>'obs', 'tabstop'=>9, 'placeholder'=>'Notas...']) ?>
-                </div>
-              </div>
-            </div>
-
-          </div>
-
-
         </div>
 
-
-        <div class="row" style="border: 2px solid Red; background-color: Lightgray;">
-
-          <div class="col-lg-3 col-md-3 col-sm-3">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                  <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
-                </div>
+        <div class="row" style="border: 2px Solid Blue; background-color: Lightgray;">
+          <div class="col-lg-12 col-md-12 col-sm-12" style="border: 1px solid cyan;">
+            <div class="row" style="border: 1px Solid Green;">
+              <!-- aquí va el título del campo -->
+              <?= Html::activeLabel($model, 'docs', ['label'=>'Documento:', 'class'=>'control-label']) ?>
+            </div>
+            <div class="row" style="border: 1px Solid Cyan;">
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <!-- aquí va el campo -->
+                <?= $form->field($model, 'docs')->textInput(['id'=>'docs', 'tabstop'=>8]) ?>
+              </div>
+              <div class="col-lg-6 col-md-6 col-sm-6">
+                <!-- aquí va el mensaje de error -->
               </div>
             </div>
           </div>
-          <div class="col-lg-9 col-md-9 col-sm-9">
-            <div class="row" style="border: 1px Solid Blue;">
-              <div class="col-lg-12 col-md-12 col-sm-12">
-                <div class="row">
-                    <?= $form->errorSummary($model, ['header'=>'Corrija los errores:']); ?>
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-
         </div>
-
-
 
 
       </div>
@@ -583,16 +484,15 @@ use kartik\datecontrol\DateControl;
 
         <div class="row">
           <div class="col-lg-12 col-md-12 col-sm-12">
+            <?= $form->errorSummary($model, ['header'=>'Corrija los errores:']); ?>
           </div>
         </div>
         <div class="row">
+          <?= Html::submitButton('Guardar', ['class' => 'btn btn-success']) ?>
         </div>
       </div>
   </div>
-
-
 </div>
-
 
   <?php ActiveForm::end(); ?>
 
