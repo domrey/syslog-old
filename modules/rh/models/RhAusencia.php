@@ -13,7 +13,8 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property int $clave_trab
  * @property int $id_plaza
- * @property string $clave_tipo
+ * @property string $clave_motivo
+ * @property int $id_motivo
  * @property string $fec_inicio
  * @property string $fec_termino
  * @property string $fec_reanuda
@@ -41,12 +42,13 @@ class RhAusencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
-            [['clave_trab', 'id_plaza', 'req_cobertura'], 'integer'],
+            [['clave_trab', 'id_plaza', 'id_motivo', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
+            [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
             [['docs', 'obs'], 'string'],
-            [['clave_tipo'], 'string', 'max' => 3],
-            [['clave_tipo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['clave_tipo' => 'clave']],
+            [['clave_motivo'], 'string', 'max' => 3],
+            [['clave_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['clave_motivo' => 'clave']],
+            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
         ];
@@ -61,7 +63,8 @@ class RhAusencia extends \yii\db\ActiveRecord
             'id' => 'ID',
             'clave_trab' => 'FICHA DEL TRABJADOR',
             'id_plaza' => 'CLAVE DE PLAZA',
-            'clave_tipo' => 'ClAVE DE AUSENCIA',
+            'id_motivo' => 'ID MOTIVO AUSENCIA',
+            'clave_motivo' => 'MOTIVO DE AUSENCIA',
             'fec_inicio' => 'FECHA DE INICIO',
             'fec_termino' => 'FECHA DE TERMINO',
             'fec_reanuda' => 'FECHA DE REANUDACION',
@@ -103,7 +106,7 @@ class RhAusencia extends \yii\db\ActiveRecord
      */
     public function getTipo()
     {
-        return $this->hasOne(RhAusenciaTipo::className(), ['clave' => 'clave_tipo']);
+        return $this->hasOne(RhAusenciaTipo::className(), ['clave' => 'clave_motivo']);
     }
 
     /**

@@ -316,7 +316,7 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="row">
-                  <?= Html::activeLabel($model, 'clave_tipo', ['label' => 'Especifique el motivo de la ausencia:', 'class' => 'control-label']) ?>
+                  <?= Html::activeLabel($model, 'clave_motivo', ['label' => 'Especifique el motivo de la ausencia:', 'class' => 'control-label']) ?>
                 </div>
               </div>
             </div>
@@ -324,8 +324,8 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-10 col-md-10 col-sm-10">
                 <div class="row">
-                    <?= Html::activeDropDownList($model, 'clave_tipo', RhAusencia::ListaTiposCobertura(), [
-                      'id'=>'clave_tipo',
+                    <?= Html::activeDropDownList($model, 'clave_motivo', RhAusencia::ListaTiposCobertura(), [
+                      'id'=>'clave_motivo',
                       'class'=>'form-control',
                       'prompt'=>'Motivo...',
                       'tabstop'=>4]);
