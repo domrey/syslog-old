@@ -62,7 +62,8 @@ class RhAusencia extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'clave_trab' => 'FICHA DEL TRABJADOR',
-            'id_plaza' => 'CLAVE DE PLAZA',
+            'id_plaza' => 'ID DE PLAZA',
+            'clave_plaza' => 'CLAVE DE LA PLAZA',
             'id_motivo' => 'ID MOTIVO AUSENCIA',
             'clave_motivo' => 'MOTIVO DE AUSENCIA',
             'fec_inicio' => 'FECHA DE INICIO',
