@@ -34,8 +34,8 @@ class RhAusenciaClase extends \yii\db\ActiveRecord
             [['clave', 'nombre', 'id_vacancia'], 'required'],
             [['id_vacancia'], 'integer'],
             [['clave'], 'string', 'max' => 2],
-            [['nombre'], 'string', 'max' => 15],
-            [['descr'], 'string', 'max' => 50],
+            [['nombre'], 'string', 'max' => 50],
+            [['descr'], 'string', 'max' => 100],
             [['clave'], 'unique'],
             [['id_vacancia'], 'exist', 'skipOnError' => true, 'targetClass' => RhVacancia::className(), 'targetAttribute' => ['id_vacancia' => 'id']],
         ];

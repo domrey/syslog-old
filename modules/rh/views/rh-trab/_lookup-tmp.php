@@ -59,6 +59,14 @@ use yii\helpers\Url;
       });
     }
   });
+
+  function updateControl(el, value, popup)
+  {
+    el.val(value);
+    el.trigger('change');
+    el.focus();
+    popup.modal('hide');
+  }
   ", \yii\web\View::POS_READY); ?>
 <?php
 Pjax::begin(['id'=>'pjax-container', 'enablePushState'=>false]);
@@ -88,7 +96,9 @@ Pjax::begin(['id'=>'pjax-container', 'enablePushState'=>false]);
            'itemView' => function($model)
            {
                return '<div class="list-group">
-                           <a href="' . url::to(['rh-ausencia/create', 'id'=>$model['clave']])  . '" class="list-group-item">
+<!--                           <a href="' . url::to(['rh-ausencia/create', 'id'=>$model['clave']])  . '" class="list-group-item">  -->
+<!--                           <a href="javascript:void(0);" onclick="$(\'#clave_trab\').val(\'' . $model['clave'] . '\'); $(\'#clave_trab\').trigger(\'change\'); $(\'#clave_trab\').focus(); $(\'#popup1\').modal(\'hide\');" class="list-group-item"> -->
+                                <a href="javascript:void(0);" onclick="updateControl($(\'#clave_trab\'), \'' . $model['clave'] . '\', $(\'#popup1\'));" class="list-group-item">
                                <span class="list-group-item-heading"><strong>' . $model['clave'] . '</strong></span>&nbsp;' .
                                '<span class="list-group-item-text">' . $model['fullName'] . '</span>' .
                            '</a>

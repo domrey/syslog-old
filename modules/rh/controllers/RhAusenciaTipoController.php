@@ -8,6 +8,7 @@ use app\modules\rh\models\RhAusenciaTipoSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * RhAusenciaTipoController implements the CRUD actions for RhAusenciaTipo model.
@@ -124,4 +125,20 @@ class RhAusenciaTipoController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+    public function actionGetNombreAusencia()
+    {
+      $nombre_ausencia='';
+      $clave_tipo = Yii::$app->request->get('clave_tipo');
+      $tipo = RhAusenciaTipo::find()->where(['clave'=>$clave_tipo])->one();
+      $nombre_ausencia = $tipo->descr;
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      $tipo_ausencia['nombre']=$nombre_ausencia;
+      //return $this->renderPartial('nombre-tipo-ausencia', [
+      //  'nombre_tipo_ausencia'=>$nombre_ausencia
+      //]);
+      return $tipo_ausencia;
+    }
+
+    
 }

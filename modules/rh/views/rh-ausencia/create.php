@@ -14,20 +14,8 @@ $this->params['breadcrumbs'][] = $this->title;
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form-tmp', [
+    <?= $this->render('_form', [
         'model' => $model,
-        'model_trab'=>$model_trab,
-        'model_plaza' => $model_plaza,
-        'model_motivo' => $model_motivo,
-        //'jornada_descanso' => $jornada_descanso,
-        'puesto' => $puesto,
-        'jornada' => $jornada,
-        'descanso' => $descanso,
-        'nombreTrab' => $nombreTrab,
-        'motivos' => $motivos,
-        'status_cobertura'=>$status_cobertura,
-        'plazas'=>$plazas,
-        'plaza_actual'=>$plaza_actual,
     ]) ?>
 
 </div>

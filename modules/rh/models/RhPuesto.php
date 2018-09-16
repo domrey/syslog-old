@@ -82,4 +82,9 @@ class RhPuesto extends \yii\db\ActiveRecord
     {
         return $this->descr;
     }
+
+    public function StrClasif()
+    {
+      return $this->clasif;
+    }
 }

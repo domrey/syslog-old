@@ -120,7 +120,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Motivo',
                 'class' => '\kartik\grid\DataColumn',
                 'value' => 'tipoCobertura',
-                'filter' => Html::activeDropDownList($searchModel, 'clave_tipo', RhAusencia::ListaTiposCobertura(), ['class'=>'form-control','prompt' => 'All'])
+                'filter' => Html::activeDropDownList($searchModel, 'clave_motivo', RhAusencia::ListaTiposCobertura(), ['class'=>'form-control','prompt' => 'All'])
             ],
 
 

@@ -13,12 +13,14 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property int $clave_trab
  * @property int $id_plaza
- * @property string $clave_tipo
+ * @property string $clave_plaza
+ * @property string $clave_motivo
+ * @property int $id_motivo
  * @property string $fec_inicio
  * @property string $fec_termino
  * @property string $fec_reanuda
  * @property int $req_cobertura
- * @property string $docs
+ * @property string $doc
  * @property string $obs
  *
  * @property RhAusenciaTipo $claveTipo
@@ -41,14 +43,15 @@ class RhAusencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required'],
-            [['clave_trab', 'id_plaza', 'req_cobertura'], 'integer'],
+            [['clave_trab', 'id_plaza', 'id_motivo', 'clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
+            [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
-            [['docs', 'obs'], 'string'],
-            [['clave_tipo'], 'string', 'max' => 3],
-            [['clave_tipo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['clave_tipo' => 'clave']],
+            [['doc', 'obs'], 'string'],
+            [['clave_motivo'], 'string', 'max' => 3],
+            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
+            [['clave_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['clave_plaza' => 'clave']],
         ];
     }
 
@@ -59,15 +62,17 @@ class RhAusencia extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave_trab' => 'Clave Trab',
-            'id_plaza' => 'Id Plaza',
-            'clave_tipo' => 'Clave Tipo',
-            'fec_inicio' => 'Fec Inicio',
-            'fec_termino' => 'Fec Termino',
-            'fec_reanuda' => 'Fec Reanuda',
-            'req_cobertura' => 'Req Cobertura',
-            'docs' => 'Docs',
-            'obs' => 'Obs',
+            'clave_trab' => 'FICHA DEL TRABJADOR',
+            'id_plaza' => 'ID DE PLAZA',
+            'clave_plaza' => 'CLAVE DE LA PLAZA',
+            'id_motivo' => 'ID MOTIVO AUSENCIA',
+            'clave_motivo' => 'MOTIVO DE AUSENCIA',
+            'fec_inicio' => 'FECHA DE INICIO',
+            'fec_termino' => 'FECHA DE TERMINO',
+            'fec_reanuda' => 'FECHA DE REANUDACION',
+            'req_cobertura' => 'COBERTURA',
+            'doc' => 'INFORMACION DOCUMENTOS',
+            'obs' => 'INFORMACION ADICIONAL',
         ];
     }
 
@@ -103,7 +108,7 @@ class RhAusencia extends \yii\db\ActiveRecord
      */
     public function getTipo()
     {
-        return $this->hasOne(RhAusenciaTipo::className(), ['clave' => 'clave_tipo']);
+        return $this->hasOne(RhAusenciaTipo::className(), ['clave' => 'clave_motivo']);
     }
 
     /**
@@ -134,9 +139,20 @@ class RhAusencia extends \yii\db\ActiveRecord
     }
 
     public function ListaTiposCobertura()
+
     {
-      $data = RhAusenciaTipo::find()->all();
-      $options = ArrayHelper::map($data, 'clave', 'nombre');
+      $data = RhAusenciaTipo::find()->orderBy('orden ASC')->all();
+      $options = ArrayHelper::map($data, 'clave', 'descr');
+      return $options;
+
+    }
+
+
+  public function listaIdsCobertura()
+
+    {
+      $data = RhAusenciaTipo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
+      $options = ArrayHelper::map($data, 'id', 'item');
       return $options;
 
     }
