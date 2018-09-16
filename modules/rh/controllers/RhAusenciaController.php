@@ -82,6 +82,7 @@ class RhAusenciaController extends Controller
           'model'=>$model,
         ]);
      }
+
     public function actionCreate2($id=null)
     {
         $model = new RhAusencia();
@@ -194,9 +195,4 @@ class RhAusenciaController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
-
-
-    /***
-      *
-      */
 }

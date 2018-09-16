@@ -12,6 +12,7 @@ use Yii;
  * @property string $nombre
  * @property string $descr
  * @property string $clave_clase
+ * @property int $orden
  *
  * @property RhAusencia[] $rhAusencias
  * @property RhAusenciaClase $claveClase
@@ -33,9 +34,10 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
     {
         return [
             [['clave', 'nombre', 'descr', 'clave_clase'], 'required'],
+            [['orden'], 'integer'],
             [['clave'], 'string', 'max' => 3],
-            [['nombre'], 'string', 'max' => 15],
-            [['descr'], 'string', 'max' => 50],
+            [['nombre'], 'string', 'max' => 50],
+            [['descr'], 'string', 'max' => 100],
             [['clave_clase'], 'string', 'max' => 2],
             [['clave_clase'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaClase::className(), 'targetAttribute' => ['clave_clase' => 'clave']],
         ];
@@ -48,10 +50,11 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave' => 'Clave',
-            'nombre' => 'Nombre',
-            'descr' => 'Descr',
-            'clave_clase' => 'Clave Clase',
+            'clave' => 'CLAVE',
+            'nombre' => 'NOMBRE',
+            'descr' => 'DESCRIPCION',
+            'orden' => 'ORDEN',
+            'clave_clase' => 'CLAVE CLASE',
         ];
     }
 
@@ -78,7 +81,7 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
 
     public static function ListaTiposAusencias()
     {
-      $data = RhAusenciaTipo::find()->all();
+      $data = RhAusenciaTipo::find()->orderBy('orden ASC')->all();
       $options = ArrayHelper::map($data, 'clave', 'descr');
       return $options;
 

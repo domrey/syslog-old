@@ -22,13 +22,9 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'fec_termino')->textInput() ?>
 
-    <?= $form->field($model, 'tipo_mov')->dropDownList([ 'TEMPORAL' => 'TEMPORAL', 'DEFINITIVO' => 'DEFINITIVO', ], ['prompt' => '']) ?>
-
     <?= $form->field($model, 'descr')->textarea(['rows' => 6]) ?>
 
-    <?= $form->field($model, 'docs')->textarea(['rows' => 6]) ?>
-
-    <?= $form->field($model, 'motivo')->textarea(['rows' => 6]) ?>
+    <?= $form->field($model, 'doc')->textarea(['rows' => 6]) ?>
 
     <?= $form->field($model, 'ref_motivo')->textarea(['rows' => 6]) ?>
 

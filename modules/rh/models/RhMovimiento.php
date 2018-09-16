@@ -16,7 +16,7 @@ use yii\db\Expression;
  * @property string $fec_termino
  * @property string $tipo_mov
  * @property string $descr
- * @property string $docs
+ * @property string $doc
  * @property string $motivo
  * @property string $ref_motivo
  * @property string $ref_origen
@@ -43,7 +43,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
             [['clave_trab', 'id_plaza', 'fec_inicio', 'fec_termino'], 'required'],
             [['clave_trab', 'id_plaza', 'id_ausencia'], 'integer'],
             [['fec_inicio', 'fec_termino'], 'safe'],
-            [['tipo_mov', 'descr', 'docs', 'motivo', 'ref_motivo', 'ref_origen'], 'string'],
+            [['descr', 'doc', 'ref_motivo', 'ref_origen'], 'string'],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
         ];
@@ -56,17 +56,16 @@ class RhMovimiento extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave_trab' => 'Clave Trab',
-            'id_plaza' => 'Id Plaza',
-            'id_ausencia' => 'Id Ausencia',
-            'fec_inicio' => 'Fec Inicio',
-            'fec_termino' => 'Fec Termino',
-            'tipo_mov' => 'Tipo Mov',
-            'descr' => 'Descr',
-            'docs' => 'Docs',
-            'motivo' => 'Motivo',
-            'ref_motivo' => 'Ref Motivo',
-            'ref_origen' => 'Ref Origen',
+            'clave_trab' => 'CLAVE DE TRABAJADOR',
+            'id_plaza' => 'ID DE PLAZA',
+            'clave_plaza' => 'CLAVE DE PLAZA',
+            'id_ausencia' => 'ID DE AUSENCIA',
+            'fec_inicio' => 'FECHA INICIO',
+            'fec_termino' => 'FECHA TERMINO',
+            'descr' => 'DESCRIPCION',
+            'doc' => 'DOCUMENTO',
+            'ref_motivo' => 'REF. MOTIVO',
+            'ref_origen' => 'REF. ORIGEN',
         ];
     }
 

@@ -13,6 +13,7 @@ use kartik\widgets\ActiveForm;
 use kartik\widgets\DatePicker;
 use kartik\DateControl\Module;
 use kartik\datecontrol\DateControl;
+use yii\web\JsExpression;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhAusencia */
@@ -63,7 +64,7 @@ use kartik\datecontrol\DateControl;
     $('#popup1').modal('show').find('#popup-content').load($(this).attr('value'));
   });
 
-  // Recibe un registro con los datos de una plaza_actual
+  // Recibe un registro con los datos de una clave_plaza
   // el cual formatea en formato html para mostrarlo
   // en el formulario
   function infoToHtml(infoJson)
@@ -108,14 +109,14 @@ use kartik\datecontrol\DateControl;
             alert ('Trabajador sin relación laboral actual.');
             $('#info').html('');
             $('#nombreTrab').html('');
-            $('#plaza_actual').val('');
+            $('#clave_plaza').val('');
             $('#id_plaza').val('');
           }
           else {
             $('#id_plaza').val(result.IdPlaza);
             $('#nombreTrab').html('<h4 class=\"text-center\">'+result.Trabajador+'</h4>');
             $('#info').html(infoToHtml(result));
-            $('#plaza_actual').val(result.Plaza);
+            $('#clave_plaza').val(result.Plaza);
           }
         }
       },
@@ -128,7 +129,7 @@ use kartik\datecontrol\DateControl;
         $('#id_plaza').val(0);
         $('#nombre_trab').html('');
         $('#info').html('');
-        $('#plaza_actual').val('');
+        $('#clave_plaza').val('');
       },
       'cache': false,
       //'data': jQuery(this).parents('form').serialize(),
@@ -153,7 +154,7 @@ use kartik\datecontrol\DateControl;
     });
   }
 
-  $('#plaza_actual').on('change blur', function(e) {
+  $('#clave_plaza').on('change blur', function(e) {
     var obj = $(this);
     var val = obj.val();
     var url = '" . Url::to(['rh-plaza/get-id-plaza']) . "';
@@ -246,7 +247,7 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="row">
-                  <?= Html::activeLabel($model, 'plaza_actual', ['label'=>'Plaza en que se ausenta:', 'class'=>'control-label']) ?>
+                  <?= Html::activeLabel($model, 'clave_plaza', ['label'=>'Plaza en que se ausenta:', 'class'=>'control-label']) ?>
                 </div>
               </div>
             </div>
@@ -255,10 +256,12 @@ use kartik\datecontrol\DateControl;
               <div class="col-lg-8 col-md-8 col-sm-8">
                   <div class="row">
                     <?= AutoComplete::widget([
-                      'name'=>'plaza_actual',
+                      'model'=> $model,
+                      'attribute'=>'clave_plaza',
+                      'name'=>'clave_plaza',
                       'options'=>[
                         'placeholder'=>'Plaza...',
-                        'id'=>'plaza_actual',
+                        'id'=>'clave_plaza',
                         'class'=>'form-control',
                         'tabstop'=>2
                       ],
@@ -266,15 +269,16 @@ use kartik\datecontrol\DateControl;
                         'minLength'=>2,
                         'type'=>'get',
                         'source'=>Url::to(['rh-plaza/get-clave-plaza']),
-                        'select'=>'function(event, ui) {
+                        'select'=> new JsExpression('function(event, ui) {
                           $("#laPlaza").val(ui.item.value);
-                        }',
+                          console.log("laPlaza vale="+ui.item.value);
+                        }'),
                       ],
                     ]);
                     ?>
                     <?= $form->field($model, 'id_plaza')->hiddenInput([
                       'id'=>'id_plaza',
-                      'placeholder'=>'ID de la ficha',
+                      'placeholder'=>'ID de la plaza',
                       'tabstop'=>-1,
                       ]) ?>
                   </div>
@@ -303,7 +307,6 @@ use kartik\datecontrol\DateControl;
                   <div class="row">
                   <?= Html::activeDropDownList($model, 'req_cobertura', RhAusencia::ListaStatusCobertura(), [
                     'class'=>'form-control',
-                    'prompt'=>'Cobertura...',
                     'tabstop'=>3] );
                   ?>
                   </div>
@@ -324,12 +327,17 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-10 col-md-10 col-sm-10">
                 <div class="row">
-                    <?= Html::activeDropDownList($model, 'clave_motivo', RhAusencia::ListaTiposCobertura(), [
-                      'id'=>'clave_motivo',
+                    <?= Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
+                      'id'=>'id_motivo',
                       'class'=>'form-control',
-                      'prompt'=>'Motivo...',
+                      'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); console.log(val);',
                       'tabstop'=>4]);
                     ?>
+                    <?= $form->field($model, 'clave_motivo')->hiddenInput([
+                      'id'=>'clave_motivo',
+                      'value'=>'???',
+                      'tabstop'=>-1,
+                      ]) ?>
                 </div>
               </div>
             </div>
@@ -444,16 +452,17 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-12 col-md-12 col-sm-12">
                   <div class="row">
-                    <?= $form->field($model, 'fec_reanuda', ['showLabels'=>true])->widget(DatePicker::classname(), [
-                        //'ajaxConversion'=>true,
-                        'type'=>kartik\widgets\DatePicker::TYPE_COMPONENT_APPEND,
+                    <?= $form->field($model, 'fec_reanuda', ['showLabels'=>true])->widget(DateControl::classname(), [
+                        'ajaxConversion'=>true,
+                        //'type'=>kartik\widgets\DatePicker::TYPE_COMPONENT_APPEND,
+                        'type'=>kartik\datecontrol\DateControl::FORMAT_DATE,
                         //'type'=>'date',
-                        //'autoWidget'=>true,
-                        //'widgetClass'=>'',
-                        //'displayFormat'=>'php:d-M-Y',
-                        //'saveFormat'=>'php:Y-m-d',
-                        //'saveTimezone'=>'America/Mexico_City',
-                        //'displayTimezone'=>'America/Mexico_City',
+                        'autoWidget'=>true,
+                        'widgetClass'=>'',
+                        'displayFormat'=>'php:d-M-Y',
+                        'saveFormat'=>'php:Y-m-d',
+                        'saveTimezone'=>'America/Mexico_City',
+                        'displayTimezone'=>'America/Mexico_City',
                         //'saveOptions'=> [
                         //  'label'=>'Saved as: ',
                         //  'type'=>'text',
@@ -465,26 +474,26 @@ use kartik\datecontrol\DateControl;
                             'tabstop'=>6,
                         ],
                         'language'=>'es',
-                        'removeButton'=>false,
-                        'convertFormat'=>false,
+                        //'removeButton'=>false,
+                        //'convertFormat'=>false,
                         //'daysOfWeekHighlighted'=>[0,6],
                         'pluginOptions'=> [
                           'autoclose'=>true,
                           //'format'=>'yyyy-MM-dd',
                           'todayBtn'=>true,
                           'todayHighlight'=>true,
-                        ]
-                        //'widgetOptions'=>[
-                        //  'removeButton'=>false,
-                        //  'type'=>DatePicker::TYPE_COMPONENT_APPEND,
-                        //  'pluginOptions'=> [
-                        //    'autoclose'=>true,
-                        //    'todayHighlight'=>true,
-                        //    'todayBtn'=>false,
-                        //    'calendarWeeks'=>true,
-                        //    'daysOfWeekHighlighted'=>[0,6],
-                        //  ],
-                        //],
+                        ],
+                        'widgetOptions'=>[
+                          'removeButton'=>false,
+                          'type'=>DatePicker::TYPE_COMPONENT_APPEND,
+                          'pluginOptions'=> [
+                            'autoclose'=>true,
+                            'todayHighlight'=>true,
+                            'todayBtn'=>false,
+                            'calendarWeeks'=>true,
+                            'daysOfWeekHighlighted'=>[0,6],
+                          ],
+                        ],
                   ]) ?>
                 </div>
               </div>
@@ -500,7 +509,7 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="row">
-                  <?= Html::activeLabel($model, 'docs', ['label'=>'Documento:', 'class'=>'control-label']) ?>
+                  <?= Html::activeLabel($model, 'doc', ['label'=>'Documento:', 'class'=>'control-label']) ?>
                 </div>
               </div>
             </div>
@@ -508,7 +517,7 @@ use kartik\datecontrol\DateControl;
             <div class="row" style="border: 1px Solid Blue;">
               <div class="col-lg-10 col-md-10 col-sm-10">
                   <div class="row">
-                    <?= $form->field($model, 'docs')->textInput(['id'=>'docs', 'tabstop'=>8, 'placeholder'=>'Docs...']) ?>
+                    <?= $form->field($model, 'doc')->textInput(['id'=>'doc', 'tabstop'=>8, 'placeholder'=>'Docs...']) ?>
                   </div>
               </div>
             </div>
@@ -573,6 +582,7 @@ use kartik\datecontrol\DateControl;
           <div class="col-lg-12 col-md-12 col-sm-12">
               <div class="row">
                 <div  id="nombreTrab" style="border: 1px solid magenta;"></div>
+                <div><input type="text" name="laPlaza" id="laPlaza" class="form-control text-muted"/></div>
               </div>
 
               <div class="row">

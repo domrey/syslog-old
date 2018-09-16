@@ -72,7 +72,7 @@ class RhAusenciaSearch extends RhAusencia
         ]);
 
         $query->andFilterWhere(['like', 'clave_motivo', $this->clave_motivo])
-            ->andFilterWhere(['like', 'docs', $this->docs])
+            ->andFilterWhere(['like', 'doc', $this->doc])
             ->andFilterWhere(['like', 'obs', $this->obs]);
 
         return $dataProvider;

@@ -13,13 +13,14 @@ use yii\helpers\ArrayHelper;
  * @property int $id
  * @property int $clave_trab
  * @property int $id_plaza
+ * @property string $clave_plaza
  * @property string $clave_motivo
  * @property int $id_motivo
  * @property string $fec_inicio
  * @property string $fec_termino
  * @property string $fec_reanuda
  * @property int $req_cobertura
- * @property string $docs
+ * @property string $doc
  * @property string $obs
  *
  * @property RhAusenciaTipo $claveTipo
@@ -42,15 +43,15 @@ class RhAusencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'id_motivo', 'clave_tipo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
+            [['clave_trab', 'id_plaza', 'id_motivo', 'clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
             [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
-            [['docs', 'obs'], 'string'],
+            [['doc', 'obs'], 'string'],
             [['clave_motivo'], 'string', 'max' => 3],
-            [['clave_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['clave_motivo' => 'clave']],
             [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
+            [['clave_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['clave_plaza' => 'clave']],
         ];
     }
 
@@ -70,7 +71,7 @@ class RhAusencia extends \yii\db\ActiveRecord
             'fec_termino' => 'FECHA DE TERMINO',
             'fec_reanuda' => 'FECHA DE REANUDACION',
             'req_cobertura' => 'COBERTURA',
-            'docs' => 'INFORMACION DOCUMENTOS',
+            'doc' => 'INFORMACION DOCUMENTOS',
             'obs' => 'INFORMACION ADICIONAL',
         ];
     }
@@ -138,9 +139,20 @@ class RhAusencia extends \yii\db\ActiveRecord
     }
 
     public function ListaTiposCobertura()
+
     {
-      $data = RhAusenciaTipo::find()->orderBy('descr ASC')->all();
+      $data = RhAusenciaTipo::find()->orderBy('orden ASC')->all();
       $options = ArrayHelper::map($data, 'clave', 'descr');
+      return $options;
+
+    }
+
+
+  public function listaIdsCobertura()
+
+    {
+      $data = RhAusenciaTipo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
+      $options = ArrayHelper::map($data, 'id', 'item');
       return $options;
 
     }

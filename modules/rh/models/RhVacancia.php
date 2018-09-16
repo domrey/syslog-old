@@ -30,8 +30,8 @@ class RhVacancia extends \yii\db\ActiveRecord
     {
         return [
             [['nombre', 'descr'], 'required'],
-            [['nombre'], 'string', 'max' => 15],
-            [['descr'], 'string', 'max' => 50],
+            [['nombre'], 'string', 'max' => 30],
+            [['descr'], 'string', 'max' => 130],
         ];
     }
 

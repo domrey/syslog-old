@@ -38,7 +38,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'fec_termino',
             'fec_reanuda',
             'req_cobertura',
-            'docs:ntext',
+            'doc:ntext',
             'obs:ntext',
         ],
     ]) ?>
