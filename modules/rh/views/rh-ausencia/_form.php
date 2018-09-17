@@ -231,9 +231,9 @@ use kartik\datecontrol\DateControl;
         <?= Html::activeLabel($model, 'clave_plaza', ['label'=>'Plaza en que se ausenta:', 'class'=>'control-label']) ?>
     </div>
 
-    <div class="col-lg-8 col-md-8 col-sm-10">
+    <div class="col-lg-10 col-md-10 col-sm-10">
       <div class="row">
-        <div class="col-lg-4 col-md-4 col-sm-4">
+        <div class="col-lg-3 col-md-3 col-sm-3">
           <?= AutoComplete::widget([
             'model'=> $model,
             'attribute'=>'clave_plaza',
@@ -261,7 +261,7 @@ use kartik\datecontrol\DateControl;
               'tabstop'=>-1,
             ]) ?>
         </div>
-        <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="col-lg-8 col-md-8 col-sm-8">
             <div id="info"></div>
         </div>
       </div>
