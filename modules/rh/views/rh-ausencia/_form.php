@@ -3,18 +3,28 @@
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
-use yii\widgets\ActiveForm;
 use yii\jui\AutoComplete;
 use yii\web\JsExpression;
+use yii\bootstrap\Modal;
+use kartik\widgets\ActiveForm;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\DatePicker;
+use kartik\field\FieldRange;
 use app\modules\rh\models\RhAusencia;
 
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhAusencia */
 /* @var $form yii\widgets\ActiveForm */
 ?>
-
+<?php
+  Modal::begin([
+    'header'=>null,
+    'id' => 'popup1',
+    'size'=>'modal-md',
+  ]);
+  echo "<div id='popup-content'></div>";
+  Modal::end();
+?>
 <?php
 $urlGetSituacionTrab = Url::to(['rh-trab/get-situacion-trab']);
 $urlGetDatosPlazaPorId = Url::to(['rh-plaza/get-datos-plaza-por-id']);
@@ -37,6 +47,11 @@ $theScript = <<< JS
         console.log('Se enfoca al control no. ' + index);
         canfocus.eq(index).focus();
     }
+  });
+
+  $('#btn_lookup_click').on('click', function(e) {
+    console.log('Click');
+    $('#popup1').modal('show').find('#popup-content').load($(this).attr('value'));
   });
 
     // Recibe un registro con los datos de una clave_plaza
@@ -154,114 +169,141 @@ JS;
 
     <?php $form = ActiveForm::begin([
         'id'=>'frm-ausencia-registrar',
-        'options'=>[
-            'class'=>'form-vertical',
+        'type' => ActiveForm::TYPE_HORIZONTAL,
+        'formConfig' => [
+          //'labelSpan' => 3,
+          'showLabels'=>false,
+          'deviceSize' => ActiveForm::SIZE_SMALL
         ],
-        'scrollToError'=>true,
     ]); ?>
 
-  <div class="container">
+<div class="form-group" style="margin-bottom: 0">
+  <?= Html::activeLabel($model, 'clave_trab', ['label'=>'TRABAJADOR:', 'class'=>'col-sm-2 control-label']) ?>
+  <div class="col-lg-2 col-md-2 col-sm-2">
+    <?=
+      $form->field($model, 'clave_trab', [
+        'addon'=>[
+            'append'=> [
+              'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', [
+                'id'=>'btn_lookup_click',
+                'class'=>'btn btn-default',
+                'value'=>Url::to(['rh-trab/lookup']),
+                'tabindex'=>-1,
+              ]),
+              'asButton'=>true,
+            ],
+            'prepend'=>[
+              //'content'=>Html::button('<span>F-</span>', [
+              'content'=>'<span class="input-group-text" id="inputGroupPrepend">F-</span>',
+              //'asButton'=>true,
+            ],
+          ],
+        ])->textInput([
+        'tabindex'=>1,
+        'placeholder'=>'Ficha...',
+        //'style'=>'width: 100px;',
+        'autofocus'=>'autofocus',
+        'id'=>'clave_trab',
+        'horizontalCssClasses'=> [
+          'wrapper' => 'col-lg-2 col-md-2 col-sm-2',
+        ],
+      ]);
+    ?>
+  </div>
+  <div class="col-lg-6 col-md-6 col-sm-6">
+      <div id="nombreTrab" class="text-left text-secondary"></div>
+  </div>
+</div>
 
-    <div class="row panel">
-      <div class="column">
+<div class="form-group">
+  <?= Html::activeLabel($model, 'clave_plaza', ['label'=>'EN PLAZA:', 'class'=>'col-sm-2 control-label']) ?>
+  <div class="col-lg-3 col-md-3 col-sm-3">
+    <?= AutoComplete::widget([
+        'model'=> $model,
+        'attribute'=>'clave_plaza',
+        'name'=>'clave_plaza',
+        'options'=>[
+          'placeholder'=>'Plaza...',
+          'id'=>'clave_plaza',
+          'class'=>'form-control',
+          'style'=>'width: 180px;',
+          'tabindex'=>2
+        ],
+        'clientOptions'=>[
+          'minLength'=>3,
+          'type'=>'get',
+          'source'=>Url::to(['rh-plaza/get-clave-plaza']),
+          'select'=> new JsExpression('function(event, ui) {
+            $("#laPlaza").val(ui.item.value);
+            console.log("laPlaza vale="+ui.item.value);
+          }'),
+        ],
+      ]);
+    ?>
+    <?= $form->field($model, 'id_plaza')->hiddenInput([
+        'tabindex'=>false,
+        'id'=>'id_plaza',
+        ])->label(false);
+     ?>
+  </div>
+  <div class="col-lg-pull-1 col-lg-7 col-md-7 col-sm-7">
+       <div id="infoPlaza" class="text-left text-secondary"></div>
+  </div>
 
-        <div class="row">
-          <?=
-          $form->field($model, 'clave_trab')->textInput([
-              'tabindex'=>1,
-              'placeholder'=>'Ficha...',
-              'style'=>'width: 100px;',
-              'autofocus'=>'autofocus',
-              'id'=>'clave_trab',
-          ])->label('TRABAJADOR:');
-          ?>
-            <div id="nombreTrab" class="text-left text-secondary" style="position: relative; top: -45px; left: 150px;"></div>
-        </div>
+</div>
+<div class="form-group" style="margin-top: 20px;">
+  <?= Html::activeLabel($model, 'id_motivo', ['label'=>'MOTIVO:', 'class'=>'col-sm-2 control-label']) ?>
+  <div class="col-lg-4 col-md-4 col-sm-4">
+    <?=
+      Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
+        'id'=>'id_motivo',
+        'class'=>'form-control',
+        'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); ',
+         'tabindex'=>3,
+         'options'=>[
+           'label'=>'MOTIVO:',
+         ],
+        ]
+      );
+    ?>
+    <?=
+     $form->field($model, 'clave_motivo')->hiddenInput([
+         'id'=>'clave_motivo',
+         'value'=>'???',
+         'tabindex'=>false,
+     ])->label(false);
+      ?>
+  </div>
+</div>
 
-        <div class="row">
-    
-
-          <?= AutoComplete::widget([
-              'model'=> $model,
-              'attribute'=>'clave_plaza',
-              'name'=>'clave_plaza',
-              'options'=>[
-                'placeholder'=>'Plaza...',
-                'id'=>'clave_plaza',
-                'class'=>'form-control',
-                'style'=>'width: 220px;',
-                'tabindex'=>2
-              ],
-              'clientOptions'=>[
-                'minLength'=>3,
-                'type'=>'get',
-                'source'=>Url::to(['rh-plaza/get-clave-plaza']),
-                'select'=> new JsExpression('function(event, ui) {
-                  $("#laPlaza").val(ui.item.value);
-                  console.log("laPlaza vale="+ui.item.value);
-                }'),
-              ],
-            ]);
-            ?>
+<div class="form-group">
+    <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'PERIODO:', 'class'=>'col-sm-2 control-label']); ?>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <?=
+      FieldRange::widget([
+          'form' => $form,
+          'model' => $model,
+          //'label' => 'Especifique el periodo de la ausencia:',
+          'attribute1' => 'fec_inicio',
+          'attribute2' => 'fec_termino',
+          'type' => FieldRange::INPUT_WIDGET,
+          'widgetClass' => DateControl::classname(),
+          'separator'=>' al ',
+          //'widgetOptions1' => [
+          //    'saveFormat' => 'php:U'
+          //],
+          //'widgetOptions2' => [
+          //    'saveFormat' => 'php:U'
+          //],
+      ]);
+      ?>
+    </div>
+</div>
 
 
-          <?= $form->field($model, 'id_plaza')->hiddenInput([
-            'tabindex'=>false,
-            'id'=>'id_plaza',
-            ])->label(false); ?>
-           <div id="infoPlaza" class="text-left text-secondary"></div>
-        </div>
-
-        <hr />
-
-        <div class="row">
-        <?= Html::activeLabel($model, 'id_motivo', [
-          'label'=>'MOTIVO:',
-        ]); ?>
-        <?=
-          Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
-            'id'=>'id_motivo',
-            'class'=>'form-control',
-            'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); ',
-             'tabindex'=>3,
-             'options'=>[
-               'label'=>'MOTIVO:',
-             ],
-            ]
-          );
-        ?>
-        <?=
-         $form->field($model, 'clave_motivo')->hiddenInput([
-             'id'=>'clave_motivo',
-             'value'=>'???',
-             'tabindex'=>false,
-         ])->label(false);
-        ?>
-
-        </div>
-
-        <div class="row">
-          <?=
-            $form->field($model, 'fec_inicio')->widget(DateControl::classname(), [
-              'options'=>[
-                  'tabstop'=>4,
-                  'placeholder'=>'Del...',
-                  'id'=>'fec_inicio',
-               ],
-             ])->label('INICIO:');
-          ?>
-          <?=
-            $form->field($model, 'fec_termino')->widget(DateControl::classname(), [
-              'options'=>[
-                  'tabstop'=>5,
-                  'placeholder'=>'Al...',
-                  'id'=>'fec_termino',
-               ],
-             ])->label('TERMINO:');
-          ?>
-        </div>
-
-        <div class="row">
+<div class="form-group">
+        <?= Html::activeLabel($model, 'obs', ['label'=>'COMENTARIOS:', 'class'=>'col-sm-2 control-label']) ?>
+        <div class="col-lg-4 col-md-4 col-sm-4">
           <?=
           $form->field($model, 'obs')->textarea([
             'rows' => 2,
@@ -272,20 +314,16 @@ JS;
             )->label('COMENTARIOS:');
           ?>
         </div>
-
-
-      </div>
-    </div>
-
-
-  </div>
-
-<div class="form-group">
-     <?= Html::submitButton('Registrar', ['class' => 'btn btn-success']) ?>
 </div>
 
+<div class="form-group" style="margin-bottom:0">
+    <div class="col-sm-offset-2 col-sm-10">
+        <?= Html::submitButton('Registrar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::resetButton('Reestablecer', ['class' => 'btn btn-default']) ?>
+    </div>
+</div>
 
-    <?php ActiveForm::end(); ?>
+  <?php ActiveForm::end(); ?>
 
 
 </div>

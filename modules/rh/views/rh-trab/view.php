@@ -6,18 +6,17 @@ use yii\widgets\DetailView;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhTrab */
 
-//$this->title = 'F-' . $model->clave . ' ' . $model->nombre . ' ' . $model->ap_pat;
-$this->title = $model->getDisplayName();
-$this->params['breadcrumbs'][] = ['label' => 'Trabajadores', 'url' => ['index']];
-$this->params['breadcrumbs'][] = $model->clave;
+$this->title = $model->clave;
+$this->params['breadcrumbs'][] = ['label' => 'Rh Trabs', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rh-trab-view">
 
     <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
-        <?= Html::a('Modificar', ['update', 'id' => $model->clave], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Eliminar', ['delete', 'id' => $model->clave], [
+        <?= Html::a('Update', ['update', 'id' => $model->clave], ['class' => 'btn btn-primary']) ?>
+        <?= Html::a('Delete', ['delete', 'id' => $model->clave], [
             'class' => 'btn btn-danger',
             'data' => [
                 'confirm' => 'Are you sure you want to delete this item?',

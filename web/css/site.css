@@ -113,34 +113,3 @@ a.desc:after {
 .nav > li > form > button.logout:focus {
     outline: none;
 }
-.column {
-    float: left;
-    padding: 10px;
-}
-
-.left {
-    width: 45%;
-}
-
-.right {
-    width: 55%;
-}
-
-
-.row:after {
-    content: "";
-    display: table;
-    clear: both;
-}
-
-.panel {
-  float: left;
-  padding: 20px;
-  width: 600px;
-  border: 3px Solid LightGray;
-  background: GhostWhite;
-}
-
-.marquee {
-
-}
