@@ -4,9 +4,12 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
-use app\modules\rh\models\RhAusencia;
+use yii\jui\AutoComplete;
+use yii\web\JsExpression;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\DatePicker;
+use app\modules\rh\models\RhAusencia;
+
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhAusencia */
 /* @var $form yii\widgets\ActiveForm */
@@ -176,14 +179,31 @@ JS;
         </div>
 
         <div class="row">
-          <?=
-          $form->field($model, 'clave_plaza')->textInput([
-              'maxlength' => true,
-              'tabindex' =>2,
-              'placeholder'=>'Plaza...',
-              'style'=>'width: 220px;',
-              'id'=>'clave_plaza',
-          ])->label('CLAVE DE PLAZA:'); ?>
+    
+
+          <?= AutoComplete::widget([
+              'model'=> $model,
+              'attribute'=>'clave_plaza',
+              'name'=>'clave_plaza',
+              'options'=>[
+                'placeholder'=>'Plaza...',
+                'id'=>'clave_plaza',
+                'class'=>'form-control',
+                'style'=>'width: 220px;',
+                'tabindex'=>2
+              ],
+              'clientOptions'=>[
+                'minLength'=>3,
+                'type'=>'get',
+                'source'=>Url::to(['rh-plaza/get-clave-plaza']),
+                'select'=> new JsExpression('function(event, ui) {
+                  $("#laPlaza").val(ui.item.value);
+                  console.log("laPlaza vale="+ui.item.value);
+                }'),
+              ],
+            ]);
+            ?>
+
 
           <?= $form->field($model, 'id_plaza')->hiddenInput([
             'tabindex'=>false,
@@ -195,6 +215,9 @@ JS;
         <hr />
 
         <div class="row">
+        <?= Html::activeLabel($model, 'id_motivo', [
+          'label'=>'MOTIVO:',
+        ]); ?>
         <?=
           Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
             'id'=>'id_motivo',
@@ -225,7 +248,7 @@ JS;
                   'placeholder'=>'Del...',
                   'id'=>'fec_inicio',
                ],
-             ]);
+             ])->label('INICIO:');
           ?>
           <?=
             $form->field($model, 'fec_termino')->widget(DateControl::classname(), [
@@ -234,7 +257,7 @@ JS;
                   'placeholder'=>'Al...',
                   'id'=>'fec_termino',
                ],
-             ]);
+             ])->label('TERMINO:');
           ?>
         </div>
 
