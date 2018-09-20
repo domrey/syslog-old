@@ -5,7 +5,7 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhAusencia */
 
-$this->title = 'Modificar Ausencia 2: ' . $model->id;
+$this->title = 'Modificar Ausencia: ' . $model->id;
 $this->params['breadcrumbs'][] = ['label' => 'Ausencias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = ['label' => $model->id, 'url' => ['view', 'id' => $model->id]];
 $this->params['breadcrumbs'][] = 'Modificar';
@@ -16,8 +16,6 @@ $this->params['breadcrumbs'][] = 'Modificar';
 
     <?= $this->render('_form', [
         'model' => $model,
-        'model_plaza' => $model_plaza,
-        'model_tipo' => $model_tipo,
     ]) ?>
 
 </div>

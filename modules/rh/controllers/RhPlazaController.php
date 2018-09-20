@@ -142,6 +142,21 @@ class RhPlazaController extends Controller
       return $data;
     }
 
+    public function actionGetListadoPlazas($q=null, $id=null)
+    {
+      $data=['results'=>['id'=>'', 'text'=>'']];
+      if (!is_null($q)) {
+        $data['results'] = Yii::$app->db->createCommand("SELECT id, clave AS text FROM rh_plaza WHERE clave LIKE :cadena")
+        ->bindValue(':cadena', '%' . $q . '%')->queryAll();
+
+      }
+      elseif ($id>0) {
+        $data['results']=['id'=>$id, 'text'=>RhPlaza::find($id)];
+      }
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+    }
+
     public function actionGetIdPlaza()
     {
       $data=[];

@@ -7,10 +7,10 @@ use Yii;
 /**
  * This is the model class for table "rh_descanso".
  *
- * @property string $clave Código Descanso
- * @property string $descr Descripción
- * @property int $valor Valor
- * @property string $abrevn Código como Número
+ * @property string $clave
+ * @property string $descr
+ * @property int $valor
+ * @property string $abrevn
  *
  * @property RhPlaza[] $rhPlazas
  */
@@ -45,10 +45,10 @@ class RhDescanso extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'clave' => 'Código Descanso',
-            'descr' => 'Descripción',
-            'valor' => 'Valor',
-            'abrevn' => 'Código como Número',
+            'clave' => 'DESCANSO',
+            'descr' => 'DESCRIPCION',
+            'valor' => 'VALOR',
+            'abrevn' => 'ABREVIACION',
         ];
     }
 
@@ -60,11 +60,17 @@ class RhDescanso extends \yii\db\ActiveRecord
         return $this->hasMany(RhPlaza::className(), ['clave_descanso' => 'clave']);
     }
 
-    /** return string
-    * Obtiene el descanso en forma de cadena
-    */
     public function StrDescanso()
     {
       return $this->descr;
+    }
+
+    /**
+     * {@inheritdoc}
+     * @return RhDescansoQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhDescansoQuery(get_called_class());
     }
 }

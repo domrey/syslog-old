@@ -1,0 +1,31 @@
+.marquee-1 {
+    border: 1px Solid Magenta;
+}
+
+html,
+body {
+    background: GhostWhite;
+    /*background: HoneyDew;*/
+    font-size: 1.1em;
+}
+
+.column {
+	float: left;
+	padding: 10px;
+}
+
+.left {
+	width: 45%;
+}
+
+.right {
+	width: 55%;
+}
+
+
+.row:after {
+	content: "";
+	display: table;
+	clear: both;
+}
+

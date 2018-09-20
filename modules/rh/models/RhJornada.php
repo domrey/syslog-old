@@ -7,9 +7,9 @@ use Yii;
 /**
  * This is the model class for table "rh_jornada".
  *
- * @property int $clave Clave de Jornada
- * @property string $descr Descripción
- * @property string $clave_texto Clave como text
+ * @property int $clave
+ * @property string $descr
+ * @property string $clave_texto
  *
  * @property RhPlaza[] $rhPlazas
  */
@@ -43,9 +43,9 @@ class RhJornada extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'clave' => 'Clave de Jornada',
-            'descr' => 'Descripción',
-            'clave_texto' => 'Clave como text',
+            'clave' => 'CLAVE',
+            'descr' => 'DESCRIPCION',
+            'clave_texto' => 'CLAVE DE TEXTO',
         ];
     }
 
@@ -60,5 +60,13 @@ class RhJornada extends \yii\db\ActiveRecord
     public function StrJornada()
     {
       return $this->clave_texto;
+    }
+    /**
+     * {@inheritdoc}
+     * @return RhJornadaQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhJornadaQuery(get_called_class());
     }
 }

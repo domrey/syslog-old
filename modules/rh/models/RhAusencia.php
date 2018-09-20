@@ -3,9 +3,7 @@
 namespace app\modules\rh\models;
 
 use Yii;
-use app\modules\rh\models\RhAusenciaTipo;
 use yii\helpers\ArrayHelper;
-
 
 /**
  * This is the model class for table "rh_ausencia".
@@ -14,8 +12,8 @@ use yii\helpers\ArrayHelper;
  * @property int $clave_trab
  * @property int $id_plaza
  * @property string $clave_plaza
- * @property string $clave_motivo
  * @property int $id_motivo
+ * @property string $clave_motivo
  * @property string $fec_inicio
  * @property string $fec_termino
  * @property string $fec_reanuda
@@ -23,9 +21,9 @@ use yii\helpers\ArrayHelper;
  * @property string $doc
  * @property string $obs
  *
- * @property RhAusenciaTipo $claveTipo
  * @property RhTrab $claveTrab
  * @property RhPlaza $plaza
+ * @property RhAusenciaTipo $motivo
  */
 class RhAusencia extends \yii\db\ActiveRecord
 {
@@ -43,15 +41,15 @@ class RhAusencia extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'id_motivo', 'clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'La {attribute} es un dato obligatorio!'],
+            [['clave_trab', 'id_plaza', 'clave_plaza', 'id_motivo', 'fec_inicio', 'fec_termino'], 'required'],
             [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
             [['doc', 'obs'], 'string'],
+            [['clave_plaza'], 'string', 'max' => 20],
             [['clave_motivo'], 'string', 'max' => 3],
-            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
-            [['clave_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['clave_plaza' => 'clave']],
+            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
         ];
     }
 
@@ -62,53 +60,18 @@ class RhAusencia extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave_trab' => 'FICHA DEL TRABJADOR',
-            'id_plaza' => 'ID DE PLAZA',
-            'clave_plaza' => 'CLAVE DE LA PLAZA',
-            'id_motivo' => 'ID MOTIVO AUSENCIA',
-            'clave_motivo' => 'MOTIVO DE AUSENCIA',
-            'fec_inicio' => 'FECHA DE INICIO',
-            'fec_termino' => 'FECHA DE TERMINO',
-            'fec_reanuda' => 'FECHA DE REANUDACION',
-            'req_cobertura' => 'COBERTURA',
-            'doc' => 'INFORMACION DOCUMENTOS',
-            'obs' => 'INFORMACION ADICIONAL',
+            'clave_trab' => 'Clave Trab',
+            'id_plaza' => 'Id Plaza',
+            'clave_plaza' => 'Clave Plaza',
+            'id_motivo' => 'Id Motivo',
+            'clave_motivo' => 'Clave Motivo',
+            'fec_inicio' => 'Fec Inicio',
+            'fec_termino' => 'Fec Termino',
+            'fec_reanuda' => 'Fec Reanuda',
+            'req_cobertura' => 'Req Cobertura',
+            'doc' => 'Documento',
+            'obs' => 'Observaciones',
         ];
-    }
-
-/**
-  ** A continuación una serie de métodos auxiliares para el despliegue del modelo en pantalla
-*/
-    public function getStatusCobertura()
-    {
-      switch($this->req_cobertura) {
-        case 1:
-          return 'Con Cobertura';
-          break;
-        case 0:
-          return 'Sin Cobertura';
-          break;
-        default:
-          return 'Indefinida';
-          break;
-      }
-    }
-
-    public static function ListaStatusCobertura()
-    {
-      return [
-        '0' => 'Sin Cobertura',
-        '1' => 'Con Cobertura',
-      ];
-    }
-
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getTipo()
-    {
-        return $this->hasOne(RhAusenciaTipo::className(), ['clave' => 'clave_motivo']);
     }
 
     /**
@@ -127,33 +90,27 @@ class RhAusencia extends \yii\db\ActiveRecord
         return $this->hasOne(RhPlaza::className(), ['id' => 'id_plaza']);
     }
 
-
-    public function getTrabName()
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getMotivo()
     {
-      return $this->trab->getFullName();
+        return $this->hasOne(RhAusenciaTipo::className(), ['id' => 'id_motivo']);
     }
 
-    public function getTipoCobertura()
-    {
-      return $this->tipo->getNombreTipoAusencia();
-    }
-
-    public function ListaTiposCobertura()
-
-    {
-      $data = RhAusenciaTipo::find()->orderBy('orden ASC')->all();
-      $options = ArrayHelper::map($data, 'clave', 'descr');
-      return $options;
-
-    }
-
-
-  public function listaIdsCobertura()
-
+    public function listaIdsCobertura()
     {
       $data = RhAusenciaTipo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
       $options = ArrayHelper::map($data, 'id', 'item');
       return $options;
+    }
 
+    /**
+     * {@inheritdoc}
+     * @return RhAusenciaQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhAusenciaQuery(get_called_class());
     }
 }

@@ -54,4 +54,13 @@ class RhVacancia extends \yii\db\ActiveRecord
     {
         return $this->hasMany(RhAusenciaClase::className(), ['id_vacancia' => 'id']);
     }
+
+    /**
+     * {@inheritdoc}
+     * @return RhVacanciaQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhVacanciaQuery(get_called_class());
+    }
 }

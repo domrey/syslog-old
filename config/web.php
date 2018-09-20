@@ -1,4 +1,5 @@
 <?php
+use kartik\datecontrol\Module;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -64,26 +65,57 @@ $config = [
            ],
            'datecontrol' => [
               'class' => 'kartik\datecontrol\Module',
-
               // format settings for displaying each date attribute
               'displaySettings' => [
-                'date' => 'dd-MM-yy',
-                'time' => 'H:i:s A',
-                'datetime' => 'd-m-Y H:i:s A',
+                Module::FORMAT_DATE => 'php:d-M-Y',
+                Module::FORMAT_TIME => 'H:i:s A',
+                Module::FORMAT_DATETIME => 'd-m-Y H:i:s a',
               ],
-
               // format settings for saving each date attribute
               'saveSettings' => [
-                'date' => 'Y-m-d',
-                'time' => 'H:i:s',
-                'datetime' => 'Y-m-d H:i:s',
+                //'date' => 'Y-m-d',
+                //'time' => 'H:i:s',
+                //'datetime' => 'Y-m-d H:i:s',
+                Module::FORMAT_DATE => 'php:Y-m-d',
+                //Module::FORMAT_DATE => 'php:U',
+                Module::FORMAT_TIME => 'H:i:s',
+                Module::FORMAT_DATETIME => 'Y-m-d H:i:s',
               ],
               'displayTimezone'=>'America/Mexico_City',
-              'saveTimezone'=>'UTC',
+              'saveTimezone'=>'America/Mexico_City',
 
               // automatically use kartik\widgets for each of the above formats
-              'autoWidget' => true,
+              'autoWidget' =>true,
+              'ajaxConversion'=>true,
+              'autoWidgetSettings' => [
+                Module::FORMAT_DATE => [
+                  //'type'=>2,
+                  'type'=>kartik\widgets\DatePicker::TYPE_COMPONENT_APPEND,
+                  'removeButton'=>false,
+                  'pluginOptions'=>[
+                    'autoclose'=>true,
+                    'todayHighlight'=>true,
+                    'todayBtn'=>false,
+                    'calendarWeeks'=>true,
+                    'daysOfWeekHighlighted'=>[0,6],
+                  ],
+                ], // example
+                Module::FORMAT_DATETIME => [], // setup if needed
+                Module::FORMAT_TIME => [], // setup if needed
+              ],
+                // custom widget settings that will be used to render the date input instead of kartik\widgets,
+                // this will be used when autoWidget is set to false at module or widget level.
+                'widgetSettings' => [
+                  Module::FORMAT_DATE => [
+                    'class' => 'yii\jui\DatePicker', // example
+                    'options' => [
+                        'dateFormat' => 'php:d-M-Y',
+                        'options' => ['class'=>'form-control'],
+                    ],
+                  ],
+              ]
             ],
+
     ],
     'params' => $params,
 ];

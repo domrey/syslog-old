@@ -160,9 +160,6 @@ class RhAusenciaController extends Controller
 
         return $this->render('update', [
             'model' => $model,
-            'model_plaza' => $model->plaza,
-            'model_tipo' => $model->tipo,
-            'model_trab' => $model->trab,
         ]);
     }
 

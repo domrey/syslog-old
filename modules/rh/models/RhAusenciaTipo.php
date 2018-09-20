@@ -50,11 +50,11 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave' => 'CLAVE',
-            'nombre' => 'NOMBRE',
-            'descr' => 'DESCRIPCION',
-            'orden' => 'ORDEN',
-            'clave_clase' => 'CLAVE CLASE',
+            'clave' => 'Clave',
+            'nombre' => 'Nombre',
+            'descr' => 'Descr',
+            'clave_clase' => 'Clave Clase',
+            'orden' => 'Orden',
         ];
     }
 
@@ -63,7 +63,7 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
      */
     public function getRhAusencias()
     {
-        return $this->hasMany(RhAusencia::className(), ['clave_tipo' => 'clave']);
+        return $this->hasMany(RhAusencia::className(), ['id_motivo' => 'id']);
     }
 
     /**
@@ -74,17 +74,12 @@ class RhAusenciaTipo extends \yii\db\ActiveRecord
         return $this->hasOne(RhAusenciaClase::className(), ['clave' => 'clave_clase']);
     }
 
-    public function getNombreTipoAusencia()
+    /**
+     * {@inheritdoc}
+     * @return RhAusenciaTipoQuery the active query used by this AR class.
+     */
+    public static function find()
     {
-      return $this->nombre;
+        return new RhAusenciaTipoQuery(get_called_class());
     }
-
-    public static function ListaTiposAusencias()
-    {
-      $data = RhAusenciaTipo::find()->orderBy('orden ASC')->all();
-      $options = ArrayHelper::map($data, 'clave', 'descr');
-      return $options;
-
-    }
-
 }
