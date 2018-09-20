@@ -29,6 +29,12 @@ $config = [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
+        'formatter'=>[
+          'dateFormat'=>'medium',
+          'decimalSeparator'=>'.',
+          'thousandSeparator'=>',',
+          'currencyCode'=>'MXN',
+        ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
             // send all mails to a file by default. You have to set

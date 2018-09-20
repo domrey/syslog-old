@@ -43,7 +43,9 @@ class RhAusencia extends \yii\db\ActiveRecord
         return [
             [['clave_trab', 'id_plaza', 'clave_plaza', 'id_motivo', 'fec_inicio', 'fec_termino'], 'required'],
             [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
-            [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
+            [['fec_reanuda'], 'default', 'value'=>null],
+            //[['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
+            [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'date'],
             [['doc', 'obs'], 'string'],
             [['clave_plaza'], 'string', 'max' => 20],
             [['clave_motivo'], 'string', 'max' => 3],
