@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\helpers\ArrayHelper;
 use yii\jui\AutoComplete;
 use yii\web\JsExpression;
+use yii\web\Request;
 use yii\bootstrap\Modal;
 use kartik\widgets\ActiveForm;
 use kartik\datecontrol\DateControl;
@@ -21,6 +22,10 @@ use app\modules\rh\models\RhAusencia;
     'header'=>null,
     'id' => 'popup1',
     'size'=>'modal-md',
+    'options'=> [
+      'tabindex'=>false,
+      // 'style'=>'display:none;',
+    ],
   ]);
   echo "<div id='popup-content'></div>";
   Modal::end();
@@ -29,6 +34,8 @@ use app\modules\rh\models\RhAusencia;
 $urlGetSituacionTrab = Url::to(['rh-trab/get-situacion-trab']);
 $urlGetDatosPlazaPorId = Url::to(['rh-plaza/get-datos-plaza-por-id']);
 $urlGetIdPlaza = Url::to(['rh-plaza/get-id-plaza']);
+$unaAusencia = Yii::$app->request->get("id");
+
 
 $theScript = <<< JS
   jQuery.extend(jQuery.expr[':'], {
@@ -48,6 +55,28 @@ $theScript = <<< JS
         canfocus.eq(index).focus();
     }
   });
+
+  function changeTabIndex()
+  {
+    document.getElementById('fec_inicio').tabIndex="3";
+    document.getElementById('fec_termino').tabIndex="4";
+    document.getElementById('obs').tabIndex="5";
+  }
+
+  jQuery(function($) {
+    //changeTabIndex();
+    //Si se pasa como parámetro el id de una ausencia se despliegan
+    // los datos correspondientes
+    idAusencia='$unaAusencia';
+    if (idAusencia) {
+      // alert('Editando...' + idAusencia);
+      // En este momento ya se hallan completado los campos del formulario
+      // así que clave_trab ya tiene un valor. Utilizar este para traer
+      // la informaciónote
+      $('#clave_trab').change();
+    }
+  });
+
 
   $('#btn_lookup_click').on('click', function(e) {
     console.log('Click');
@@ -161,6 +190,10 @@ $theScript = <<< JS
     }
   });
 
+  $('#btnReset').on('click', function(e) {
+    blankFields();
+  });
+
 JS;
   $this->registerJs($theScript, \yii\web\View::POS_READY);
  ?>
@@ -184,33 +217,26 @@ JS;
       $form->field($model, 'clave_trab', [
         'addon'=>[
             'append'=> [
-              'content'=>Html::button('<i class="glyphicon glyphicon-sunglasses"></i>', [
+              'content'=>Html::button('<i class="glyphicon glyphicon-search"></i>', [
                 'id'=>'btn_lookup_click',
-                'class'=>'btn btn-default',
+                'class'=>'btn btn-primary',
                 'value'=>Url::to(['rh-trab/lookup']),
-                'tabindex'=>-1,
+                'tabindex'=>false,
               ]),
               'asButton'=>true,
             ],
             'prepend'=>[
-              //'content'=>Html::button('<span>F-</span>', [
               'content'=>'<span class="input-group-text" id="inputGroupPrepend">F-</span>',
-              //'asButton'=>true,
             ],
           ],
         ])->textInput([
-        'tabindex'=>1,
         'placeholder'=>'Ficha...',
-        //'style'=>'width: 100px;',
         'autofocus'=>'autofocus',
         'id'=>'clave_trab',
-        'horizontalCssClasses'=> [
-          'wrapper' => 'col-lg-2 col-md-2 col-sm-2',
-        ],
       ]);
     ?>
   </div>
-  <div class="col-lg-6 col-md-6 col-sm-6">
+  <div class="col-lg-offset-1 col-md-offset-1 col-sm-offset-1 col-lg-6 col-md-6 col-sm-6">
       <div id="nombreTrab" class="text-left text-secondary"></div>
   </div>
 </div>
@@ -227,14 +253,12 @@ JS;
           'id'=>'clave_plaza',
           'class'=>'form-control',
           'style'=>'width: 180px;',
-          'tabindex'=>2
         ],
         'clientOptions'=>[
           'minLength'=>3,
           'type'=>'get',
           'source'=>Url::to(['rh-plaza/get-clave-plaza']),
           'select'=> new JsExpression('function(event, ui) {
-            $("#laPlaza").val(ui.item.value);
             console.log("laPlaza vale="+ui.item.value);
           }'),
         ],
@@ -246,80 +270,88 @@ JS;
         ])->label(false);
      ?>
   </div>
-  <div class="col-lg-pull-1 col-lg-7 col-md-7 col-sm-7">
+  <div class="col-lg-7 col-md-7 col-sm-7">
        <div id="infoPlaza" class="text-left text-secondary"></div>
   </div>
 
 </div>
-<div class="form-group" style="margin-top: 20px;">
-  <?= Html::activeLabel($model, 'id_motivo', ['label'=>'MOTIVO:', 'class'=>'col-sm-2 control-label']) ?>
-  <div class="col-lg-4 col-md-4 col-sm-4">
-    <?=
-      Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
-        'id'=>'id_motivo',
-        'class'=>'form-control',
-        'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); ',
-         'tabindex'=>3,
-         'options'=>[
-           'label'=>'MOTIVO:',
-         ],
-        ]
-      );
-    ?>
-    <?=
-     $form->field($model, 'clave_motivo')->hiddenInput([
-         'id'=>'clave_motivo',
-         'value'=>'???',
-         'tabindex'=>false,
-     ])->label(false);
-      ?>
-  </div>
-</div>
 
-<div class="form-group">
-    <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'PERIODO:', 'class'=>'col-sm-2 control-label']); ?>
-    <div class="col-lg-4 col-md-4 col-sm-4">
-      <?=
-      FieldRange::widget([
-          'form' => $form,
-          'model' => $model,
-          //'label' => 'Especifique el periodo de la ausencia:',
-          'attribute1' => 'fec_inicio',
-          'attribute2' => 'fec_termino',
-          'type' => FieldRange::INPUT_WIDGET,
-          'widgetClass' => DateControl::classname(),
-          'separator'=>' al ',
-          //'widgetOptions1' => [
-          //    'saveFormat' => 'php:U'
-          //],
-          //'widgetOptions2' => [
-          //    'saveFormat' => 'php:U'
-          //],
-      ]);
-      ?>
-    </div>
-</div>
+<hr />
 
-
-<div class="form-group">
-        <?= Html::activeLabel($model, 'obs', ['label'=>'COMENTARIOS:', 'class'=>'col-sm-2 control-label']) ?>
-        <div class="col-lg-4 col-md-4 col-sm-4">
-          <?=
-          $form->field($model, 'obs')->textarea([
-            'rows' => 2,
-            'cols'=>40,
-            'style'=>'width:100%',
-            'tabindex'=>false
+<div class="form-group" style="margin-bottom:0; margin-top: 20px;">
+      <?= Html::activeLabel($model, 'fec_inicio', ['label'=>'INICIO:', 'class'=>'col-sm-2 control-label']) ?>
+      <div class="col-lg-2 col-md-2 col-sm-2">
+        <?=
+          $form->field($model, 'fec_inicio')->widget(DateControl::classname(), [
+            'options'=>[
+                'placeholder'=>'Del...',
+                'id'=>'fec_inicio',
+             ],
+           ])->label('INICIO:');
+        ?>
+      </div>
+      <?= Html::activeLabel($model, 'id_motivo', ['label'=>'MOTIVO:', 'class'=>'col-sm-2 control-label']) ?>
+      <div class="col-lg-4 col-md-4 col-sm-4">
+        <?=
+          Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
+            'id'=>'id_motivo',
+            'class'=>'form-control',
+            'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); ',
+             'options'=>[
+               'label'=>'MOTIVO:',
+               'style'=>'width: 200px;',
+             ],
             ]
-            )->label('COMENTARIOS:');
+          );
+        ?>
+        <?=
+         $form->field($model, 'clave_motivo')->hiddenInput([
+             'id'=>'clave_motivo',
+             'value'=>'???',
+             'tabindex'=>false,
+         ])->label(false);
           ?>
         </div>
 </div>
 
 <div class="form-group" style="margin-bottom:0">
+    <?= Html::activeLabel($model, 'fec_termino', ['label'=>'TERMINO:', 'class'=>'col-sm-2 control-label']) ?>
+    <div class="col-lg-2 col-md-2 col-sm-2">
+      <?=
+        $form->field($model, 'fec_termino')->widget(DateControl::classname(), [
+          'options'=>[
+              'placeholder'=>'Al...',
+              'id'=>'fec_termino',
+           ],
+         ])->label('TERMINO:');
+      ?>
+    </div>
+
+    <?= Html::activeLabel($model, 'obs', ['label'=>'COMENTARIOS:', 'class'=>'col-sm-2 control-label']) ?>
+    <div class="col-lg-4 col-md-4 col-sm-4">
+      <?=
+      $form->field($model, 'obs')->textarea([
+        'rows' => 2,
+        'cols'=>40,
+        'style'=>'width:100%',
+        'tabindex'=>false,
+        'placeholder'=>'Información adicional...',
+        ]
+        )->label('COMENTARIOS:');
+      ?>
+    </div>
+
+</div>
+
+
+<div class="form-group">
+
+</div>
+
+<div class="form-group" style="margin-bottom:0">
     <div class="col-sm-offset-2 col-sm-10">
         <?= Html::submitButton('Registrar', ['class' => 'btn btn-primary']) ?>
-        <?= Html::resetButton('Reestablecer', ['class' => 'btn btn-default']) ?>
+        <?= Html::resetButton('Reestablecer', ['class' => 'btn btn-default', 'id'=>'btnReset']) ?>
     </div>
 </div>
 

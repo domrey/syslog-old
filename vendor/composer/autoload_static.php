@@ -32,6 +32,10 @@ class ComposerStaticInitdb0c62cd87cdab63efefcd5a9d4486ff
         array (
             'phpDocumentor\\Reflection\\' => 25,
         ),
+        'n' => 
+        array (
+            'nepstor\\validators\\' => 19,
+        ),
         'k' => 
         array (
             'kartik\\widgets\\' => 15,
@@ -152,6 +156,10 @@ class ComposerStaticInitdb0c62cd87cdab63efefcd5a9d4486ff
             0 => __DIR__ . '/..' . '/phpdocumentor/reflection-common/src',
             1 => __DIR__ . '/..' . '/phpdocumentor/reflection-docblock/src',
             2 => __DIR__ . '/..' . '/phpdocumentor/type-resolver/src',
+        ),
+        'nepstor\\validators\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/nepstor/yii2-datetime-compare-validator/src',
         ),
         'kartik\\widgets\\' => 
         array (

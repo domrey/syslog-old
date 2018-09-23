@@ -3,11 +3,16 @@ use kartik\datecontrol\Module;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
+$language='es-MX';
+$zone='America/Mexico_City';
+$dFormat='php:d-M-Y';
+$sFormat='php:Y-m-d';
 
 $config = [
-    'id' => 'syslog_app',
+    'id' => 'syslog',
     'name' => 'Departamento de Logística',
-    'language' => 'es-MX',
+    'language' => $language,
+    'timeZone' => $zone,
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'aliases' => [
@@ -30,7 +35,7 @@ $config = [
             'errorAction' => 'site/error',
         ],
         'formatter'=>[
-          'dateFormat'=>'medium',
+          'dateFormat'=>$dFormat,
           'decimalSeparator'=>'.',
           'thousandSeparator'=>',',
           'currencyCode'=>'MXN',
@@ -55,7 +60,6 @@ $config = [
 
         'urlManager' => [
             'enablePrettyUrl' => true,
-
             'showScriptName' => false,
             'rules' => [
             ],
@@ -73,7 +77,7 @@ $config = [
               'class' => 'kartik\datecontrol\Module',
               // format settings for displaying each date attribute
               'displaySettings' => [
-                Module::FORMAT_DATE => 'php:d-M-Y',
+                Module::FORMAT_DATE => $dFormat,
                 Module::FORMAT_TIME => 'H:i:s A',
                 Module::FORMAT_DATETIME => 'd-m-Y H:i:s a',
               ],
@@ -87,9 +91,8 @@ $config = [
                 Module::FORMAT_TIME => 'H:i:s',
                 Module::FORMAT_DATETIME => 'Y-m-d H:i:s',
               ],
-              'displayTimezone'=>'America/Mexico_City',
-              'saveTimezone'=>'America/Mexico_City',
-
+              'displayTimezone'=>$zone,
+              'saveTimezone'=>$zone,
               // automatically use kartik\widgets for each of the above formats
               'autoWidget' =>true,
               'ajaxConversion'=>true,
@@ -115,7 +118,7 @@ $config = [
                   Module::FORMAT_DATE => [
                     'class' => 'yii\jui\DatePicker', // example
                     'options' => [
-                        'dateFormat' => 'php:d-M-Y',
+                        'dateFormat' => $dFormat,
                         'options' => ['class'=>'form-control'],
                     ],
                   ],

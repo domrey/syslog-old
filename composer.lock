@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c1d8c2dba0696a2fbd1958ccb9717a11",
+    "content-hash": "aa022781dd121d1e6528c1553991af85",
     "packages": [
         {
             "name": "bower-asset/bootstrap",
@@ -108,6 +108,25 @@
             },
             "require": {
                 "bower-asset/jquery": ">=1.6"
+            },
+            "type": "bower-asset",
+            "license": [
+                "MIT"
+            ]
+        },
+        {
+            "name": "bower-asset/moment",
+            "version": "2.22.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/moment/moment.git",
+                "reference": "2e2a5b35439665d4b0200143d808a7c26d6cd30f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/moment/moment/zipball/2e2a5b35439665d4b0200143d808a7c26d6cd30f",
+                "reference": "2e2a5b35439665d4b0200143d808a7c26d6cd30f",
+                "shasum": null
             },
             "type": "bower-asset",
             "license": [
@@ -1937,6 +1956,53 @@
                 "object graph"
             ],
             "time": "2018-06-11T23:09:50+00:00"
+        },
+        {
+            "name": "nepstor/yii2-datetime-compare-validator",
+            "version": "2.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nepstor/yii2-datetime-compare-validator.git",
+                "reference": "8c136302e390e0a017ad0ffcce6cb9c910394f98"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nepstor/yii2-datetime-compare-validator/zipball/8c136302e390e0a017ad0ffcce6cb9c910394f98",
+                "reference": "8c136302e390e0a017ad0ffcce6cb9c910394f98",
+                "shasum": ""
+            },
+            "require": {
+                "bower-asset/moment": "^2.14",
+                "yiisoft/yii2": "*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.0.*"
+            },
+            "type": "yii2-extension",
+            "autoload": {
+                "psr-4": {
+                    "nepstor\\validators\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Krytskiy"
+                }
+            ],
+            "description": "Yii2 validator for compare datetime.",
+            "homepage": "https://github.com/nepstor/yii2-datetime-compare-validator",
+            "keywords": [
+                "datetime",
+                "datetime compare",
+                "extension",
+                "validator",
+                "yii2"
+            ],
+            "time": "2016-09-14T08:55:32+00:00"
         },
         {
             "name": "paragonie/random_compat",

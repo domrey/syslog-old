@@ -4,6 +4,7 @@ namespace app\modules\rh\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use nepstor\validators\DateTimeCompareValidator;
 
 /**
  * This is the model class for table "rh_ausencia".
@@ -27,6 +28,9 @@ use yii\helpers\ArrayHelper;
  */
 class RhAusencia extends \yii\db\ActiveRecord
 {
+    public $fec1;
+    public $fec2;
+
     /**
      * {@inheritdoc}
      */
@@ -35,17 +39,43 @@ class RhAusencia extends \yii\db\ActiveRecord
         return 'rh_ausencia';
     }
 
+    public function getInicio()
+    {
+      return Yii::$app->formatter->asDate($this->fec_inicio);
+    }
+
+    public function getTermino()
+    {
+      return Yii::$app->formatter->asDate($this->fec_termino, Yii::$app->formatter->dateFormat);
+    }
+
+    public function getTrabName()
+    {
+      return $this->trab->getFullName();
+    }
+
+    public function getMotivoCobertura()
+    {
+      return $this->motivo->descr;
+    }
     /**
      * {@inheritdoc}
      */
     public function rules()
     {
         return [
-            [['clave_trab', 'id_plaza', 'clave_plaza', 'id_motivo', 'fec_inicio', 'fec_termino'], 'required'],
+            [['clave_trab', 'id_plaza', 'clave_plaza', 'id_motivo', 'fec_inicio', 'fec_termino'], 'required', 'message'=>'Dato obligatorio'],
             [['clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
             [['fec_reanuda'], 'default', 'value'=>null],
             [['fec_inicio', 'fec_termino', 'fec_reanuda'], 'safe'],
-            //[['fec_inicio', 'fec_termino', 'fec_reanuda'], 'date'],
+            //[['fec_inicio', 'fec_termino', 'fec_reanuda'], 'date', 'format'=>'php:d-M-Y', 'locale'=>'es-MX'],
+            //['fec_inicio', 'nepstor\validators\DateTimeCompareValidator::className()', 'compareAttribute'=>'fec_termino', 'format'=>'php:d-M-Y', 'operator'=>'>='],
+            //[['fec_inicio', 'fec_termino', 'fec_reanuda'], 'date', 'message'=>'Formato inválido'],
+            //['fec_inicio', 'date', 'format'=>Yii::$app->formatter->dateFormat, 'timestampAttribute'=>'fec1'],
+            //['fec_termino', 'date', 'format'=>Yii::$app->formatter->dateFormat, 'timestampAttribute'=>'fec2'],
+            //['fec_inicio', 'compare', 'compareAttribute'=>'fec_termino', 'operator'=>'<=', 'enableClientValidation'=>false],
+            ['fec_inicio', 'compare', 'compareValue'=>date('Y-m-d'), 'operator'=>'>=', 'message'=>'Solo fechas recientes'],
+            ['fec_termino', 'compare', 'compareAttribute'=>'fec_inicio', 'operator'=>'>=', 'message'=>'Debe ser igual o mayor al inicio'],
             [['doc', 'obs'], 'string'],
             [['clave_plaza'], 'string', 'max' => 20],
             [['clave_motivo'], 'string', 'max' => 3],
@@ -104,6 +134,13 @@ class RhAusencia extends \yii\db\ActiveRecord
     {
       $data = RhAusenciaTipo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
       $options = ArrayHelper::map($data, 'id', 'item');
+      return $options;
+    }
+
+    public function ListaMotivosCobertura()
+    {
+      $data = RhAusenciaTipo::find()->select(['clave AS clave', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
+      $options = ArrayHelper::map($data, 'clave', 'item');
       return $options;
     }
 

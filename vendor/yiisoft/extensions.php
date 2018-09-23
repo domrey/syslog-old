@@ -291,4 +291,13 @@ return array (
       '@kartik/field' => $vendorDir . '/kartik-v/yii2-field-range/src',
     ),
   ),
+  'nepstor/yii2-datetime-compare-validator' => 
+  array (
+    'name' => 'nepstor/yii2-datetime-compare-validator',
+    'version' => '2.0.3.0',
+    'alias' => 
+    array (
+      '@nepstor/validators' => $vendorDir . '/nepstor/yii2-datetime-compare-validator/src',
+    ),
+  ),
 );

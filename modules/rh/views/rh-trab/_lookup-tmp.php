@@ -15,7 +15,7 @@ use yii\helpers\Url;
   $('document').on('pjax:complete', function(e) {
     console.log('pjax completado');
   });
-  $('[data-toggle=\"tooltip\"]').tooltip();
+  // $('[data-toggle=\"tooltip\"]').tooltip();
   $('#popup1').on('shown.bs.modal', function() {
     setTimeout(function() {
       $('#search').focus();
@@ -64,8 +64,8 @@ use yii\helpers\Url;
   {
     el.val(value);
     el.trigger('change');
-    el.focus();
     popup.modal('hide');
+    el.focus();
   }
   ", \yii\web\View::POS_READY); ?>
 <?php
@@ -75,7 +75,7 @@ Pjax::begin(['id'=>'pjax-container', 'enablePushState'=>false]);
   <?= Html::beginForm(['rh-trab/lookup'], 'get', ['data-pjax'=>true]); ?>
   <div class="form-group">
       <div class="col-md-4">
-        <?= Html::textInput('search', Yii::$app->request->get('search'), ['placeholder' => 'Texto de Búsqueda', 'data-toggle' => 'tooltip', 'title'=>'Buscar for ficha, nombre, apellido paterno, apodo, nombre corto', 'class'=>'form-control', 'id'=>'search']) ?>
+        <?= Html::textInput('search', Yii::$app->request->get('search'), ['placeholder' => 'Texto de Búsqueda',  'title'=>'Buscar for ficha, nombre, apellido paterno, apodo, nombre corto', 'class'=>'form-control', 'id'=>'search']) ?>
       </div>
     <?= Html::submitButton('Buscar', ['class' => 'btn btn-default btn-md', 'id'=>'btnBuscar']); ?>
   </div>
