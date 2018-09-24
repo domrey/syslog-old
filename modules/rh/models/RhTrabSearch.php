@@ -90,4 +90,17 @@ class RhTrabSearch extends RhTrab
 
         return $dataProvider;
     }
+
+    public static function getNextBirthdays()
+    {
+      $daysInterval=7;
+      $query = RhTrab::find()->select('clave, concat(nombre,  ap_pat) as trab, fec_nac')
+        ->from('rh_trab')
+        ->where('CONCAT(IF(CONCAT( YEAR(CURDATE()),substring(fec_nac, 5, length(fec_nac))) < CURDATE(), YEAR(CURDATE()) + 1, YEAR(CURDATE()) ), substring(fec_nac, 5, length(fec_nac))) BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)')
+        ->all();
+      $dataProvider = new ActiveDataProvider([
+        'query'=>$query,
+      ]);
+      return $dataProvider;
+    }
 }

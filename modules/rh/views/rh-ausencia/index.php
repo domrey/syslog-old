@@ -11,6 +11,7 @@ use kartik\date\DatePicker;
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
 $this->title = 'Ausencias';
+$this->params['breadcrumbs'][] = ['label' => 'Recursos Humanos', 'url' => ['/rh/default']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rh-ausencia-index">

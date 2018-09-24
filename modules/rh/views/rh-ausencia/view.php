@@ -9,6 +9,7 @@ use app\modules\rh\models\RhAusencia;
 /* @var $model app\modules\rh\models\RhAusencia */
 
 $this->title = $model->id;
+$this->params['breadcrumbs'][] = ['label' => 'Recursos Humanos', 'url' => ['/rh/default']];
 $this->params['breadcrumbs'][] = ['label' => 'Ausencias', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $model->id;
 

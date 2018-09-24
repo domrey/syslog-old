@@ -262,4 +262,19 @@ class RhTrabController extends Controller
       return $datos;
     }
 
+    public function actionGetNextBirthdays()
+    {
+      $daysInterval=7;
+      $sql = 'SELECT clave AS IdTrab, concat(nombre,\' \', ap_pat) AS NombreTrab, fec_nac AS FecNac ';
+      $sql .= 'FROM rh_trab WHERE CONCAT(IF(CONCAT( YEAR(CURDATE()), ';
+      $sql .= 'substring(`fec_nac`, 5, length(`fec_nac`))) < CURDATE(), ';
+      $sql .= 'YEAR(CURDATE()) + 1, YEAR(CURDATE()) ), substring(`fec_nac`, 5, length(`fec_nac`))) ';
+      $sql .= 'BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL :dint DAY)';
+
+      $data=['results'=>['IdTrab'=>'', 'NombreTrab'=>'', 'FecNac'=>'']];
+      $data['results'] = Yii::$app->db->createCommand($sql)->bindValue(':dint', $daysInterval)->queryAll();
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+    }
+
 }

@@ -145,4 +145,6 @@ class RhTrab extends \yii\db\ActiveRecord
     {
       return $this->getDisplayClave() . ' ' . $this->getFullName();
     }
+
+
 }
