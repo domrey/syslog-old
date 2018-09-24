@@ -7,19 +7,19 @@ use Yii;
 /**
  * This is the model class for table "rh_puesto".
  *
- * @property int $clave Clave de Puesto
- * @property string $descr Descripción del Puesto
- * @property string $nombre Puesto Corto
- * @property string $puesto_stps Puesto según STPS
- * @property int $clave_stps Clave según STPS
- * @property int $activo Activo
- * @property int $id_rev ID de Revisión Contractual
+ * @property int $clave
+ * @property string $descr
+ * @property string $nombre
+ * @property string $puesto_stps
+ * @property int $clave_stps
+ * @property int $activo
+ * @property int $id_rev
  * @property int $id_reg_cont
- * @property int $nivel Nivel
- * @property int $familia familia
- * @property int $labores Labores
- * @property string $regimen Régimen del Puesto
- * @property string $clasif Clasificación
+ * @property int $nivel
+ * @property int $familia
+ * @property int $labores
+ * @property string $regimen
+ * @property string $clasif
  *
  * @property RhPlaza[] $rhPlazas
  */
@@ -41,7 +41,9 @@ class RhPuesto extends \yii\db\ActiveRecord
         return [
             [['clave', 'descr', 'id_rev', 'id_reg_cont', 'nivel', 'familia', 'labores', 'regimen', 'clasif'], 'required'],
             [['clave', 'clave_stps', 'activo', 'id_rev', 'id_reg_cont', 'nivel', 'familia', 'labores'], 'integer'],
-            [['descr', 'nombre', 'puesto_stps'], 'string', 'max' => 55],
+            [['descr'], 'string', 'max' => 110],
+            [['nombre'], 'string', 'max' => 80],
+            [['puesto_stps'], 'string', 'max' => 55],
             [['regimen'], 'string', 'max' => 1],
             [['clasif'], 'string', 'max' => 8],
             [['clave'], 'unique'],
@@ -54,19 +56,19 @@ class RhPuesto extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'clave' => 'Clave de Puesto',
-            'descr' => 'Descripción del Puesto',
-            'nombre' => 'Puesto Corto',
-            'puesto_stps' => 'Puesto según STPS',
-            'clave_stps' => 'Clave según STPS',
+            'clave' => 'Clave',
+            'descr' => 'Descr',
+            'nombre' => 'Nombre',
+            'puesto_stps' => 'Puesto Stps',
+            'clave_stps' => 'Clave Stps',
             'activo' => 'Activo',
-            'id_rev' => 'ID de Revisión Contractual',
+            'id_rev' => 'Id Rev',
             'id_reg_cont' => 'Id Reg Cont',
             'nivel' => 'Nivel',
-            'familia' => 'familia',
+            'familia' => 'Familia',
             'labores' => 'Labores',
-            'regimen' => 'Régimen del Puesto',
-            'clasif' => 'Clasificación',
+            'regimen' => 'Regimen',
+            'clasif' => 'Clasif',
         ];
     }
 
@@ -80,11 +82,19 @@ class RhPuesto extends \yii\db\ActiveRecord
 
     public function StrPuesto()
     {
-        return $this->descr;
+      return $this->descr;
     }
 
     public function StrClasif()
     {
       return $this->clasif;
+    }
+    /**
+     * {@inheritdoc}
+     * @return RhPuestoQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhPuestoQuery(get_called_class());
     }
 }

@@ -6,7 +6,6 @@ use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use app\modules\rh\models\RhAusencia;
-use yii\helpers\ArrayHelper;
 
 /**
  * RhAusenciaSearch represents the model behind the search form of `app\modules\rh\models\RhAusencia`.
@@ -19,8 +18,8 @@ class RhAusenciaSearch extends RhAusencia
     public function rules()
     {
         return [
-            [['id', 'id_motivo', 'clave_trab',  'req_cobertura'], 'integer'],
-            [['clave_motivo', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'id_plaza'], 'safe'],
+            [['id', 'clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
+            [['clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'doc', 'descr'], 'safe'],
         ];
     }
 
@@ -43,8 +42,6 @@ class RhAusenciaSearch extends RhAusencia
     public function search($params)
     {
         $query = RhAusencia::find();
-        $query->joinWith('plaza');
-
 
         // add conditions that should always apply here
 
@@ -64,16 +61,18 @@ class RhAusenciaSearch extends RhAusencia
         $query->andFilterWhere([
             'id' => $this->id,
             'clave_trab' => $this->clave_trab,
-            //'id_plaza' => $this->id_plaza,
-            'rh_plaza.clave' => $this->id_plaza,
-            'DATE(fec_inicio)' => $this->fec_inicio,
+            'id_plaza' => $this->id_plaza,
+            'id_motivo' => $this->id_motivo,
+            'fec_inicio' => $this->fec_inicio,
             'fec_termino' => $this->fec_termino,
+            'fec_reanuda' => $this->fec_reanuda,
             'req_cobertura' => $this->req_cobertura,
         ]);
 
-        $query->andFilterWhere(['like', 'clave_motivo', $this->clave_motivo])
+        $query->andFilterWhere(['like', 'clave_plaza', $this->clave_plaza])
+            ->andFilterWhere(['like', 'clave_motivo', $this->clave_motivo])
             ->andFilterWhere(['like', 'doc', $this->doc])
-            ->andFilterWhere(['like', 'obs', $this->obs]);
+            ->andFilterWhere(['like', 'descr', $this->descr]);
 
         return $dataProvider;
     }

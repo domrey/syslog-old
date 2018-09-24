@@ -6,13 +6,12 @@ use Yii;
 use app\modules\rh\models\RhTrab;
 use app\modules\rh\models\RhTrabSearch;
 use app\modules\rh\models\RhTrabSimpleSearch;
-use app\modules\rh\models\RhTrabActivo;
 use app\modules\rh\models\RhMovimiento;
-use app\modules\rh\models\RhPlaza;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
 use yii\web\Response;
+
 
 /**
  * RhTrabController implements the CRUD actions for RhTrab model.
@@ -60,41 +59,6 @@ class RhTrabController extends Controller
         return $this->render('view', [
             'model' => $this->findModel($id),
         ]);
-    }
-
-    /**
-    * Muestra el fichero de Trabajadores
-    * @return mixed
-    */
-    public function actionList()
-    {
-      $searchModel = new RhTrabSimpleSearch();
-      $dataProvider = $searchModel -> search(Yii::$app->request->queryParams);
-
-      return $this->render('list-trabs', [
-        'searchModel' => $searchModel,
-        'dataProvider' => $dataProvider,
-      ]);
-    }
-
-
-    //public function actionLookup($searchStr)
-    public function actionLookup()
-    {
-      $searchModel = new RhTrabSimpleSearch();
-      $lookfor = Yii::$app->request->get('search');
-      $dataProvider = null;
-      //$search = Yii::$app->request->post('search');
-      //$dataProvider = $searchModel->lookup($search);
-      //$dataProvider = $searchModel->lookup(Yii::$app->request->queryParams);
-      if ($lookfor !== null) {
-        $dataProvider = $searchModel->lookup($lookfor);
-      }
-      //$dataProvider = $searchModel->lookup($searchStr);
-      return $this->renderAjax('_lookup-tmp', [
-        '$model' => $searchModel,
-        'dataProvider' => $dataProvider,
-      ]);
     }
 
     /**
@@ -165,25 +129,6 @@ class RhTrabController extends Controller
         throw new NotFoundHttpException('The requested page does not exist.');
     }
 
-    public function actionGetPlazaActual()
-    {
-      $datos=[];
-      $trab=null;
-      $movimiento=null;
-      $clave_trab = Yii::$app->request->get('clave_trab');
-      if ($clave_trab === null || ($trab=RhTrab::findOne($clave_trab))===null) {
-        return null;
-      }
-      $movimiento = RhMovimiento::UltimoMovimientoTrab($trab);
-      if ($movimiento != null) {
-        $plaza_actual = $movimiento->plaza;
-        $datos['Id'] = $plaza_actual->id;
-        $datos['Clave'] = $plaza_actual->clave;
-      }
-      Yii::$app->response->format=Response::FORMAT_JSON;
-      return $datos;
-    }
-
     /**
     * Obtiene la situacion actual del trabajador dada su clave
     * @param integer $clave_trab
@@ -250,4 +195,86 @@ class RhTrabController extends Controller
       //return $this->renderPartial('situacion-actual', ['datos'=>$datos]);
       //return $datos;
     }
+
+    /* Muestra el fichero de Trabajadores
+    * @return mixed
+    */
+    public function actionList()
+    {
+      $searchModel = new RhTrabSimpleSearch();
+      $dataProvider = $searchModel -> search(Yii::$app->request->queryParams);
+
+      return $this->render('list-trabs', [
+        'searchModel' => $searchModel,
+        'dataProvider' => $dataProvider,
+      ]);
+    }
+
+
+    //public function actionLookup($searchStr)
+    public function actionLookup()
+    {
+      $searchModel = new RhTrabSimpleSearch();
+      $lookfor = Yii::$app->request->get('search');
+      $dataProvider = null;
+      //$search = Yii::$app->request->post('search');
+      //$dataProvider = $searchModel->lookup($search);
+      //$dataProvider = $searchModel->lookup(Yii::$app->request->queryParams);
+      if ($lookfor !== null) {
+        $dataProvider = $searchModel->lookup($lookfor);
+      }
+      //$dataProvider = $searchModel->lookup($searchStr);
+      return $this->renderAjax('_lookup', [
+        '$model' => $searchModel,
+        'dataProvider' => $dataProvider,
+      ]);
+    }
+
+    public function actionGetDatosTrabPorId()
+    {
+      $datos=[];
+      $clave_trab=Yii::$app->request->get("id");
+      if ($clave_trab===null || ($trab=RhTrab::findOne($clave_trab))===null) {
+        return null;
+      }
+      $datos['Ficha']=$clave_trab;
+      $datos['Nombre']=$trab->getFullName();
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      return $datos;
+    }
+
+    public function actionGetPlazaActual()
+    {
+      $datos=[];
+      $trab=null;
+      $movimiento=null;
+      $clave_trab = Yii::$app->request->get('clave_trab');
+      if ($clave_trab === null || ($trab=RhTrab::findOne($clave_trab))===null) {
+        return null;
+      }
+      $movimiento = RhMovimiento::UltimoMovimientoTrab($trab);
+      if ($movimiento != null) {
+        $plaza_actual = $movimiento->plaza;
+        $datos['Id'] = $plaza_actual->id;
+        $datos['Clave'] = $plaza_actual->clave;
+      }
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      return $datos;
+    }
+
+    public function actionGetNextBirthdays()
+    {
+      $daysInterval=7;
+      $sql = 'SELECT clave AS IdTrab, concat(nombre,\' \', ap_pat) AS NombreTrab, fec_nac AS FecNac ';
+      $sql .= 'FROM rh_trab WHERE CONCAT(IF(CONCAT( YEAR(CURDATE()), ';
+      $sql .= 'substring(`fec_nac`, 5, length(`fec_nac`))) < CURDATE(), ';
+      $sql .= 'YEAR(CURDATE()) + 1, YEAR(CURDATE()) ), substring(`fec_nac`, 5, length(`fec_nac`))) ';
+      $sql .= 'BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL :dint DAY)';
+
+      $data=['results'=>['IdTrab'=>'', 'NombreTrab'=>'', 'FecNac'=>'']];
+      $data['results'] = Yii::$app->db->createCommand($sql)->bindValue(':dint', $daysInterval)->queryAll();
+      Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+    }
+
 }

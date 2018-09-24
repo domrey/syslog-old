@@ -4,13 +4,15 @@
  * @copyright  Copyright &copy; Kartik Visweswaran, Krajee.com, 2015 - 2018
  * @package    yii2-widgets
  * @subpackage yii2-widget-activeform
- * @version    1.5.1
+ * @version    1.5.4
  */
 
 namespace kartik\form;
 
+use kartik\base\BootstrapInterface;
 use kartik\base\BootstrapTrait;
 use yii\base\InvalidConfigException;
+use yii\base\Model;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm as YiiActiveForm;
 
@@ -40,29 +42,13 @@ use yii\widgets\ActiveForm as YiiActiveForm;
  * ]);
  * ~~~
  *
- * @method ActiveField field(\yii\base\Model $model, string $attribute, array $options = [])
+ * @method ActiveField field(Model $model, string $attribute, array $options = [])
  * @author Kartik Visweswaran <kartikv2@gmail.com>
  * @since  1.0
  */
-class ActiveForm extends YiiActiveForm
+class ActiveForm extends YiiActiveForm implements BootstrapInterface
 {
     use BootstrapTrait;
-
-    /**
-     * @var int|string the bootstrap library version.
-     *
-     * To use with bootstrap 3 - you can set this to any string starting with 3 (e.g. `3` or `3.3.7` or `3.x`)
-     * To use with bootstrap 4 - you can set this to any string starting with 4 (e.g. `4` or `4.1.1` or `4.x`)
-     *
-     * This property can be set up globally in Yii application params in your Yii2 application config file.
-     *
-     * For example:
-     * `Yii::$app->params['bsVersion'] = '4.x'` to use with Bootstrap 4.x globally
-     *
-     * If this property is set, this setting will override the `Yii::$app->params['bsVersion']`. If this is not set, and
-     * `Yii::$app->params['bsVersion']` is also not set, this will default to `3.x` (Bootstrap 3.x version).
-     */
-    public $bsVersion;
 
     /**
      * @var bool whether to render tooltip styled error and success messages. Applicable only for [[bsVersion]] 4.x
@@ -71,43 +57,32 @@ class ActiveForm extends YiiActiveForm
     public $tooltipStyleFeedback = false;
 
     /**
-     * The default label span. This will offset the adjacent input accordingly.
+     * @var int the default label span for horizontal forms which will offset the adjacent input accordingly.
      */
     const DEFAULT_LABEL_SPAN = 2;
+
     /**
-     * The bootstrap default full grid width.
+     * @var int the bootstrap default full grid width.
      */
     const FULL_SPAN = 12;
+
     /**
-     * Bootstrap styled vertical form layout (this is the default style)
+     * @var string bootstrap styled vertical form layout (this is the default style)
      */
     const TYPE_VERTICAL = 'vertical';
+
     /**
-     * Bootstrap styled horizontal form layout
+     * @var string bootstrap styled horizontal form layout
      */
     const TYPE_HORIZONTAL = 'horizontal';
+
     /**
-     * Bootstrap styled inline form layout
+     * @var string bootstrap styled inline form layout
      */
     const TYPE_INLINE = 'inline';
+
     /**
-     * Bootstrap **extra small** size modifier
-     */
-    const SIZE_TINY = 'xs';
-    /**
-     * Bootstrap **small** size modifier
-     */
-    const SIZE_SMALL = 'sm';
-    /**
-     * Bootstrap **medium** size modifier (this is the default size)
-     */
-    const SIZE_MEDIUM = 'md';
-    /**
-     * Bootstrap **large** size modifier
-     */
-    const SIZE_LARGE = 'lg';
-    /**
-     * Bootstrap screen reader style for labels
+     * @var string bootstrap screen reader style for labels
      */
     const SCREEN_READER = 'sr-only';
 
@@ -191,11 +166,6 @@ class ActiveForm extends YiiActiveForm
     ];
 
     /**
-     * @var bool flag to detect whether bootstrap 4.x version is set
-     */
-    private $_isBs4;
-
-    /**
      * @inheritdoc
      * @throws InvalidConfigException
      */
@@ -242,6 +212,7 @@ class ActiveForm extends YiiActiveForm
 
     /**
      * Registers the assets for the [[ActiveForm]] widget.
+     * @throws InvalidConfigException
      */
     public function registerAssets()
     {

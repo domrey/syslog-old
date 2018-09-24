@@ -69,4 +69,13 @@ class RhAusenciaClase extends \yii\db\ActiveRecord
     {
         return $this->hasMany(RhAusenciaTipo::className(), ['clave_clase' => 'clave']);
     }
+
+    /**
+     * {@inheritdoc}
+     * @return RhAusenciaClaseQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhAusenciaClaseQuery(get_called_class());
+    }
 }

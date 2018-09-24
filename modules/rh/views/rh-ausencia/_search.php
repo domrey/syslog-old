@@ -13,6 +13,9 @@ use yii\widgets\ActiveForm;
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
         'method' => 'get',
+        'options' => [
+            'data-pjax' => 1
+        ],
     ]); ?>
 
     <?= $form->field($model, 'id') ?>
@@ -21,9 +24,13 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id_plaza') ?>
 
-    <?= $form->field($model, 'clave_tipo') ?>
+    <?= $form->field($model, 'clave_plaza') ?>
 
-    <?= $form->field($model, 'fec_inicio') ?>
+    <?= $form->field($model, 'id_motivo') ?>
+
+    <?php // echo $form->field($model, 'clave_motivo') ?>
+
+    <?php // echo $form->field($model, 'fec_inicio') ?>
 
     <?php // echo $form->field($model, 'fec_termino') ?>
 
@@ -31,7 +38,7 @@ use yii\widgets\ActiveForm;
 
     <?php // echo $form->field($model, 'req_cobertura') ?>
 
-    <?php // echo $form->field($model, 'docs') ?>
+    <?php // echo $form->field($model, 'doc') ?>
 
     <?php // echo $form->field($model, 'obs') ?>
 

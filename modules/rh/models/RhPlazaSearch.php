@@ -18,8 +18,8 @@ class RhPlazaSearch extends RhPlaza
     public function rules()
     {
         return [
-            [['id', 'clave_puesto', 'activa', 'visible', 'depto', 'clave_jornada', 'sirhn', 'posfin'], 'integer'],
-            [['clave', 'descr', 'tipo', 'clave_descanso', 'fec_creacion', 'residencia', 'localidad', 'taller', 'instalacion', 'funcion', 'grupo'], 'safe'],
+            [['id', 'clave_puesto', 'activa', 'visible', 'depto', 'clave_jornada', 'sirhn', 'posfin', 'escalafon'], 'integer'],
+            [['clave', 'descr', 'tipo', 'clave_descanso', 'fec_creacion', 'residencia', 'localidad', 'taller', 'instalacion', 'funcion', 'actividad', 'grupo'], 'safe'],
         ];
     }
 
@@ -68,6 +68,7 @@ class RhPlazaSearch extends RhPlaza
             'fec_creacion' => $this->fec_creacion,
             'sirhn' => $this->sirhn,
             'posfin' => $this->posfin,
+            'escalafon' => $this->escalafon,
         ]);
 
         $query->andFilterWhere(['like', 'clave', $this->clave])
@@ -79,6 +80,7 @@ class RhPlazaSearch extends RhPlaza
             ->andFilterWhere(['like', 'taller', $this->taller])
             ->andFilterWhere(['like', 'instalacion', $this->instalacion])
             ->andFilterWhere(['like', 'funcion', $this->funcion])
+            ->andFilterWhere(['like', 'actividad', $this->actividad])
             ->andFilterWhere(['like', 'grupo', $this->grupo]);
 
         return $dataProvider;

@@ -1,5 +1,5 @@
 /*!
- * bootstrap-fileinput v4.4.9
+ * bootstrap-fileinput v4.5.0
  * http://plugins.krajee.com/file-input
  *
  * Author: Kartik Visweswaran
@@ -336,7 +336,10 @@
         uniqId: function () {
             return Math.round(new Date().getTime()) + '_' + Math.round(Math.random() * 100);
         },
-        htmlEncode: function (str) {
+        htmlEncode: function (str, undefVal) {
+            if (str === undefined) {
+                return undefVal || null;
+            }
             return str.replace(/&/g, '&amp;')
                 .replace(/</g, '&lt;')
                 .replace(/>/g, '&gt;')
@@ -3546,8 +3549,7 @@
         },
         _browse: function (e) {
             var self = this;
-            self._raise('filebrowse');
-            if (e && e.isDefaultPrevented()) {
+            if (e && e.isDefaultPrevented() || !self._raise('filebrowse')) {
                 return;
             }
             if (self.isError && !self.isAjaxUpload) {
@@ -3816,7 +3818,7 @@
                     return;
                 }
                 if (caption.length === 0) {
-                    msg = self.msgInvalidFileName.replace('{name}', $h.htmlEncode(file.name));
+                    msg = self.msgInvalidFileName.replace('{name}', $h.htmlEncode(file.name, '[unknown]'));
                     throwError(msg, file, previewId, i);
                     return;
                 }
@@ -4269,7 +4271,7 @@
         showUploadedThumbs: true,
         browseOnZoneClick: false,
         autoReplace: false,
-        autoOrientImage: true, // for JPEG images based on EXIF orientation tag
+        autoOrientImage: false, // if `true` applicable for JPEG images only
         required: false,
         rtl: false,
         hideThumbnailContent: false,
@@ -4461,7 +4463,7 @@
             close: 'Close detailed preview'
         },
         usePdfRenderer: function () {
-            return !!navigator.userAgent.match(/(iPod|iPhone|iPad)/);
+            return !!navigator.userAgent.match(/(iPod|iPhone|iPad|Android)/i);
         },
         pdfRendererUrl: '',
         pdfRendererTemplate: '<iframe class="kv-preview-data file-preview-pdf" src="{renderer}?file={data}" {style}></iframe>'

@@ -7,32 +7,32 @@ use Yii;
 /**
  * This is the model class for table "rh_trab".
  *
- * @property int $clave Ficha
- * @property string $nombre Nombre del trabajador
- * @property string $ap_pat Apellido Paterno
- * @property string $ap_mat Apellido Materno
- * @property string $ncorto Nombre Corto
- * @property string $apodo Sobrenombre
- * @property int $activo Activo
- * @property string $curp Clave Unica de Registro de Poblacion
- * @property string $rfc Registro Federal de Causantes
- * @property string $calle_no Calle y núm.
- * @property string $colonia Colonia
- * @property string $ciudad Ciudad/Municipio
- * @property string $estado Entidad Federativa
- * @property string $pais País
- * @property string $nacionalidad Nacionalidad
- * @property string $edo_civil Estado Civil
- * @property string $sexo Género
- * @property string $tel Teléfono(s)
- * @property string $email Correo electrónico
- * @property string $fec_cat Fecha firma en puesto actual
- * @property string $fec_depto Fecha adscripción al depto
- * @property string $fec_planta Fecha Firma Planta
- * @property string $fec_ingreso Fecha Ingreso
- * @property string $fec_nac Fecha de Nacimiento
- * @property string $reg_cont Régimen Contractual
- * @property string $reg_sind Régimen Sindical
+ * @property int $clave
+ * @property string $nombre
+ * @property string $ap_pat
+ * @property string $ap_mat
+ * @property string $ncorto
+ * @property string $apodo
+ * @property int $activo
+ * @property string $curp
+ * @property string $rfc
+ * @property string $calle_no
+ * @property string $colonia
+ * @property string $ciudad
+ * @property string $estado
+ * @property string $pais
+ * @property string $nacionalidad
+ * @property string $edo_civil
+ * @property string $sexo
+ * @property string $tel
+ * @property string $email
+ * @property string $fec_cat
+ * @property string $fec_depto
+ * @property string $fec_planta
+ * @property string $fec_ingreso
+ * @property string $fec_nac
+ * @property string $reg_cont
+ * @property string $reg_sind
  *
  * @property RhAusencia[] $rhAusencias
  * @property RhMovimiento[] $rhMovimientos
@@ -53,7 +53,7 @@ class RhTrab extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave', 'nombre', 'ap_pat', 'ncorto'], 'required'],
+            [['clave', 'nombre', 'ap_pat'], 'required'],
             [['clave', 'activo'], 'integer'],
             [['edo_civil', 'sexo', 'reg_cont', 'reg_sind'], 'string'],
             [['fec_cat', 'fec_depto', 'fec_planta', 'fec_ingreso', 'fec_nac'], 'safe'],
@@ -73,32 +73,32 @@ class RhTrab extends \yii\db\ActiveRecord
     public function attributeLabels()
     {
         return [
-            'clave' => 'Ficha',
-            'nombre' => 'Nombre del trabajador',
-            'ap_pat' => 'Apellido Paterno',
-            'ap_mat' => 'Apellido Materno',
+            'clave' => 'Clave',
+            'nombre' => 'Nombre',
+            'ap_pat' => 'Ap. Paterno',
+            'ap_mat' => 'Ap, Materno',
             'ncorto' => 'Nombre Corto',
-            'apodo' => 'Sobrenombre',
+            'apodo' => 'Apodo',
             'activo' => 'Activo',
-            'curp' => 'Clave Unica de Registro de Poblacion',
-            'rfc' => 'Registro Federal de Causantes',
-            'calle_no' => 'Calle y núm.',
+            'curp' => 'CURP',
+            'rfc' => 'RFC',
+            'calle_no' => 'Calle No',
             'colonia' => 'Colonia',
-            'ciudad' => 'Ciudad/Municipio',
-            'estado' => 'Entidad Federativa',
-            'pais' => 'País',
+            'ciudad' => 'Ciudad',
+            'estado' => 'Estado',
+            'pais' => 'Pais',
             'nacionalidad' => 'Nacionalidad',
-            'edo_civil' => 'Estado Civil',
-            'sexo' => 'Género',
-            'tel' => 'Teléfono(s)',
-            'email' => 'Correo electrónico',
-            'fec_cat' => 'Fecha firma en puesto actual',
-            'fec_depto' => 'Fecha adscripción al depto',
-            'fec_planta' => 'Fecha Firma Planta',
-            'fec_ingreso' => 'Fecha Ingreso',
-            'fec_nac' => 'Fecha de Nacimiento',
-            'reg_cont' => 'Régimen Contractual',
-            'reg_sind' => 'Régimen Sindical',
+            'edo_civil' => 'Edo. Civil',
+            'sexo' => 'Sexo',
+            'tel' => 'Tel.',
+            'email' => 'Email',
+            'fec_cat' => 'Fec. Categoria',
+            'fec_depto' => 'Fec. Depto',
+            'fec_planta' => 'Fec. Planta',
+            'fec_ingreso' => 'Fec. Ingreso',
+            'fec_nac' => 'Fec. Nacimiento',
+            'reg_cont' => 'Reg. Cont',
+            'reg_sind' => 'Reg. Sind',
         ];
     }
 
@@ -118,20 +118,33 @@ class RhTrab extends \yii\db\ActiveRecord
         return $this->hasMany(RhMovimiento::className(), ['clave_trab' => 'clave']);
     }
 
+    /**
+     * {@inheritdoc}
+     * @return RhTrabQuery the active query used by this AR class.
+     */
+    public static function find()
+    {
+        return new RhTrabQuery(get_called_class());
+    }
+
+    /**
+    * Regresa el nombre completo del TRABAJADOR
+    * @return string el nombre + ape pat + ape mat
+    */
     public function getFullName()
     {
       return $this->nombre . ' ' . $this->ap_pat . ' ' . $this->ap_mat;
     }
-
 
     public function getDisplayClave()
     {
       return 'F-' . $this->clave;
     }
 
+    public function getDisplayName()
+    {
+      return $this->getDisplayClave() . ' ' . $this->getFullName();
+    }
 
-     public function getDisplayName()
-     {
-       return $this->getDisplayClave() . ' ' . $this->getFullName();
-     }
+
 }

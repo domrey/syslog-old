@@ -19,7 +19,10 @@ $this->params['breadcrumbs'][] = $this->title;
 		'filterModel' => $searchModel,
 		'layout' => '{summary}{items}{pager}',
 		'showFooter' => false,
+    'floatHeader'=>true,
+    'hover'=>'true',
 		'filterPosition' => GridView::FILTER_POS_BODY,
+    'bootstrap'=>true,
     'autoXlFormat'=>true,
     'export'=>[
         'fontAwesome'=>true,
@@ -27,8 +30,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'target'=>GridView::TARGET_BLANK
     ],
     'panel' => [
-        'type' => 'primary',
-        'heading' => 'Listado de Trabajadores'
+        // 'type' => 'primary',
+        'type' => GridView::TYPE_INFO,
+        // 'heading' => '<h3 class="panel-title"><i class="glyphicon glyphicon-tasks></i>Listado de Trabajadores</h3>'
+        'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-tasks"></i>&nbsp;Listado de Trabajadores</h3>',
     ],
 		'columns' =>  [
 			[ 'class' => 'yii\grid\SerialColumn'],
