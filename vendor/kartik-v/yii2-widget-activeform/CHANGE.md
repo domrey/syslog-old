@@ -1,6 +1,37 @@
 Change Log: `yii2-widget-activeform`
 ====================================
 
+## Version 1.5.4
+
+**Date**: 22-Sep-2018
+
+- Refactor code via `kartik\base\BootstrapInterface`. 
+- (enh #113): Enhance checkbox styling for BS3.
+
+## Version 1.5.3
+
+**Date**: 20-Sep-2018
+
+- (enh #112): Enhance checkbox styling for enclosed label for both BS4 and BS3.
+- (enh #111): Enhance BS3 checkbox styling.
+- Enhance to use `Config::hasCssClass`.
+- Better styling for Bootstrap 4.x hint block.
+- (enh #109): Correct BS3 label styling and rendering for checkboxes and radios.
+- (enh #108): Add bootstrap grid column css size map configuration.
+- (enh #107): Add bootstrap 4 CSS highlight class for server validation errors.
+
+## Version 1.5.2
+
+**Date**: 05-Sep-2018
+
+- Add BS4 custom checkbox & custom radio controls support.
+- (kartik-v/yii2-krajee-base#94): Refactor code and consolidate / optimize properties within traits.
+- Add Bootstrap button default CSS and icon prefix parsing.
+- (enh #102): Enhance size modifier detection and input feedback icons.
+- (bug #101): Correct `addClass` assignment for HTML5 inputs.
+- (enh #100): Control ActiveField addons highlight for success & error states.
+- (enh #99): Correct ActiveField wrapper templates when `skipFormLayout` is set to `true`.
+
 ## Version 1.5.1
 
 **Date**: 16-Aug-2018

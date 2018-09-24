@@ -19,7 +19,7 @@ class RhAusenciaSearch extends RhAusencia
     {
         return [
             [['id', 'clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
-            [['clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'doc', 'obs'], 'safe'],
+            [['clave_plaza', 'clave_motivo', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'doc', 'descr'], 'safe'],
         ];
     }
 
@@ -72,7 +72,7 @@ class RhAusenciaSearch extends RhAusencia
         $query->andFilterWhere(['like', 'clave_plaza', $this->clave_plaza])
             ->andFilterWhere(['like', 'clave_motivo', $this->clave_motivo])
             ->andFilterWhere(['like', 'doc', $this->doc])
-            ->andFilterWhere(['like', 'obs', $this->obs]);
+            ->andFilterWhere(['like', 'descr', $this->descr]);
 
         return $dataProvider;
     }

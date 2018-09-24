@@ -1,6 +1,21 @@
 Change Log: `bootstrap-fileinput`
 =================================
 
+## version 4.5.0
+
+**Date:** 30-Aug-2018
+
+- (enh #1292): Update DOMPurify plugin to the latest release.
+- (enh #1291): Update Dutch Translations.
+- (enh #1290): Enhance `htmlEncode` to parse undefined variables.
+- (enh #1288): Update Dutch Translations.
+- (enh #1287): Correct full screen modal styling.
+- (enh #1286): Default `autoOrientImage` to `false`.
+- (enh #1285): Update Danish Translations.
+- (bug #1282): Allow `filebrowse` event to be prevented.
+- (enh #1279): Enhance `usePdfRenderer` callback check to detect android phones.
+- Correct nuget batch file.
+
 ## version 4.4.9
 
 **Date:** 25-Jul-2018

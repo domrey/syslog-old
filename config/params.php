@@ -1,8 +1,8 @@
 <?php
-use kartik\datecontrol\Module;
 
 return [
     'adminEmail' => 'admin@example.com',
+    'bsVersion' => '3.x',
     //'dateControlDisplay'=>[
     //  Module::FORMAT_DATE=>'dd-MM-yyyy',
     //  Module::FORMAT_TIME=>'hh:mm:ss a',

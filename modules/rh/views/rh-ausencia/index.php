@@ -15,12 +15,12 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rh-ausencia-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3>Ausencias de los trabajadores</h3>
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Registrar Una Ausencia', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Registrar Una Ausencia', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
 
     <?= GridView::widget([
@@ -30,26 +30,20 @@ $this->params['breadcrumbs'][] = $this->title;
         // 'perfectScrollbar'=>true,
         'resizableColumns'=>true,
         'floatHeader'=>true,
-        'showPageSummary'=>true,
+        'showPageSummary'=>false,
         'showHeader'=>true,
+        'export'=>[
+            // 'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
         'panel' => [
-            'type' => 'primary',
+            // 'type' => 'info',GridView::TYPE_INFO
+            'type' => GridView::TYPE_INFO,
             //'heading' => 'Ausencias Registradas'
             'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Ausencias Registradas</h3>',
         ],
         'toolbar' => [
-          [
-            'content' => Html::button('<i class="glyphicon glyphicon-option-horizontal"></i>', [
-                    'type'=>'button',
-                    'title' => 'Add Book',
-                    'class'=>'btn btn-primary'
-                ]) . ' '.
-                Html::a('<i class="glyphicon glyphicon-repeat"></i>', ['grid-demo'], [
-                    'class' => 'btn btn-default',
-                    'title' => 'Reset Grid'
-                ]),
-              'options' => ['class' => 'btn-group-sm']
-          ],
           '{export}',
           '{toggleData}',
           'toggleDataContainer' => ['class' => 'btn-group-sm'],

@@ -224,10 +224,23 @@ class RhTrabController extends Controller
         $dataProvider = $searchModel->lookup($lookfor);
       }
       //$dataProvider = $searchModel->lookup($searchStr);
-      return $this->renderAjax('_lookup-tmp', [
+      return $this->renderAjax('_lookup', [
         '$model' => $searchModel,
         'dataProvider' => $dataProvider,
       ]);
+    }
+
+    public function actionGetDatosTrabPorId()
+    {
+      $datos=[];
+      $clave_trab=Yii::$app->request->get("id");
+      if ($clave_trab===null || ($trab=RhTrab::findOne($clave_trab))===null) {
+        return null;
+      }
+      $datos['Ficha']=$clave_trab;
+      $datos['Nombre']=$trab->getFullName();
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      return $datos;
     }
 
     public function actionGetPlazaActual()

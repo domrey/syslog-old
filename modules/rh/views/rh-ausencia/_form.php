@@ -10,7 +10,6 @@ use yii\bootstrap\Modal;
 use kartik\widgets\ActiveForm;
 use kartik\datecontrol\DateControl;
 use kartik\widgets\DatePicker;
-use kartik\field\FieldRange;
 use app\modules\rh\models\RhAusencia;
 
 /* @var $this yii\web\View */
@@ -33,6 +32,7 @@ use app\modules\rh\models\RhAusencia;
 <?php
 $urlGetSituacionTrab = Url::to(['rh-trab/get-situacion-trab']);
 $urlGetDatosPlazaPorId = Url::to(['rh-plaza/get-datos-plaza-por-id']);
+$urlGetDatosTrabPorId = Url::to(['rh-trab/get-datos-trab-por-id']);
 $urlGetIdPlaza = Url::to(['rh-plaza/get-id-plaza']);
 $unaAusencia = Yii::$app->request->get("id");
 
@@ -56,13 +56,6 @@ $theScript = <<< JS
     }
   });
 
-  function changeTabIndex()
-  {
-    document.getElementById('fec_inicio').tabIndex="3";
-    document.getElementById('fec_termino').tabIndex="4";
-    document.getElementById('obs').tabIndex="5";
-  }
-
   jQuery(function($) {
     //changeTabIndex();
     //Si se pasa como parámetro el id de una ausencia se despliegan
@@ -71,9 +64,11 @@ $theScript = <<< JS
     if (idAusencia) {
       // alert('Editando...' + idAusencia);
       // En este momento ya se hallan completado los campos del formulario
-      // así que clave_trab ya tiene un valor. Utilizar este para traer
+      // así que clave_plaza y clave_trab ya tiene un valor. Utilizar este para traer
       // la informaciónote
-      $('#clave_trab').change();
+      $('#clave_plaza').change();
+      actualizaNombreTrab($('#clave_trab').val());
+      // $('#clave_trab').change();
     }
   });
 
@@ -111,13 +106,19 @@ $theScript = <<< JS
       return elementText;
     }
 
-    function blankFields()
+    function blankInfo()
     {
       $('#infoPlaza').html('');
       $('#nombreTrab').html('');
-      $('#clave_plaza').val('');
-      $('#id_plaza').val('');
     }
+
+    function blankFields()
+    {
+      $('#id_plaza').val('');
+      $('#clave_plaza').val('');
+      blankInfo();
+    }
+
 
     // Buscar los datos del trabajador por su ficha
    $('#clave_trab').on('change',
@@ -150,6 +151,24 @@ $theScript = <<< JS
      });
     }
   );
+
+  function actualizaNombreTrab(idTrab)
+  {
+    url='$urlGetDatosTrabPorId';
+    jQuery.ajax(url, {
+      'dataType':'json',
+      'method':'get',
+      'success':function(result) {
+        $('#nombreTrab').html(result.Nombre);
+      },
+      'error': function(e) {
+        console.log('Error!');
+      },
+      'cache': false,
+      'data':{id:idTrab},
+    });
+  }
+
 
   function actualizaDatosPlaza(idPlaza)
   {
@@ -190,9 +209,18 @@ $theScript = <<< JS
     }
   });
 
-  $('#btnReset').on('click', function(e) {
-    blankFields();
+  // Capturar el evento 'reset' del formulario
+  // para recuperar la información de trabajador y PLAZA
+  // de los valores originales del registro
+  // (es preferible enlazarlo al reset del formulario, que al botón de Reset)
+  $('#frm-ausencia-registrar').on('reset', function(e) {
+    setTimeout(function() {
+      blankInfo();
+      $('#clave_plaza').trigger('change');
+      actualizaNombreTrab($('#clave_trab').val());
+    }, 0);
   });
+
 
 JS;
   $this->registerJs($theScript, \yii\web\View::POS_READY);
@@ -327,17 +355,17 @@ JS;
       ?>
     </div>
 
-    <?= Html::activeLabel($model, 'obs', ['label'=>'COMENTARIOS:', 'class'=>'col-sm-2 control-label']) ?>
+    <?= Html::activeLabel($model, 'descr', ['label'=>'DESCRIPCION:', 'class'=>'col-sm-2 control-label']) ?>
     <div class="col-lg-4 col-md-4 col-sm-4">
       <?=
-      $form->field($model, 'obs')->textarea([
+      $form->field($model, 'descr')->textarea([
         'rows' => 2,
         'cols'=>40,
         'style'=>'width:100%',
-        'tabindex'=>false,
-        'placeholder'=>'Información adicional...',
+        // 'tabindex'=>false,
+        'placeholder'=>'Comentarios y Observaciones...',
         ]
-        )->label('COMENTARIOS:');
+      );
       ?>
     </div>
 
@@ -350,7 +378,7 @@ JS;
 
 <div class="form-group" style="margin-bottom:0">
     <div class="col-sm-offset-2 col-sm-10">
-        <?= Html::submitButton('Registrar', ['class' => 'btn btn-primary']) ?>
+        <?= Html::submitButton(Yii::$app->request->get('id') ? 'Guardar' : 'Registrar', ['class' => 'btn btn-primary']) ?>
         <?= Html::resetButton('Reestablecer', ['class' => 'btn btn-default', 'id'=>'btnReset']) ?>
     </div>
 </div>

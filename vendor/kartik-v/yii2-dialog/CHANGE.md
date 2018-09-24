@@ -1,6 +1,13 @@
 Change Log: `yii2-dialog`
 ===================================
 
+## Version 1.0.4
+
+**Date:** 07-Sep-2018
+
+- Enhancements to support Bootstrap v4.x.
+- Move all source code to `src` directory.
+
 ## Version 1.0.3
 
 **Date:** 06-Nov-2017

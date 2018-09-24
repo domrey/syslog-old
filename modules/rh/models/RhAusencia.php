@@ -24,7 +24,7 @@ use nepstor\validators\DateTimeCompareValidator;
  *
  * @property RhTrab $claveTrab
  * @property RhPlaza $plaza
- * @property RhAusenciaTipo $motivo
+ * @property RhAusenciaMotivo $motivo
  */
 class RhAusencia extends \yii\db\ActiveRecord
 {
@@ -81,7 +81,7 @@ class RhAusencia extends \yii\db\ActiveRecord
             [['clave_motivo'], 'string', 'max' => 3],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
-            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaTipo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
+            [['id_motivo'], 'exist', 'skipOnError' => true, 'targetClass' => RhAusenciaMotivo::className(), 'targetAttribute' => ['id_motivo' => 'id']],
         ];
     }
 
@@ -127,19 +127,19 @@ class RhAusencia extends \yii\db\ActiveRecord
      */
     public function getMotivo()
     {
-        return $this->hasOne(RhAusenciaTipo::className(), ['id' => 'id_motivo']);
+        return $this->hasOne(RhAusenciaMotivo::className(), ['id' => 'id_motivo']);
     }
 
     public function listaIdsCobertura()
     {
-      $data = RhAusenciaTipo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
+      $data = RhAusenciaMotivo::find()->select(['id AS id', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
       $options = ArrayHelper::map($data, 'id', 'item');
       return $options;
     }
 
     public function ListaMotivosCobertura()
     {
-      $data = RhAusenciaTipo::find()->select(['clave AS clave', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
+      $data = RhAusenciaMotivo::find()->select(['clave AS clave', 'CONCAT(descr,"-",clave) AS item'])->orderBy('orden ASC')->asArray()->all();
       $options = ArrayHelper::map($data, 'clave', 'item');
       return $options;
     }
