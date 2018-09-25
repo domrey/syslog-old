@@ -15,6 +15,10 @@ $this->params['breadcrumbs'][] = 'Recursos Humanos';
 
       <div class="row">
         <div class="col-lg-3 col-md-3 col-sm-6">
+           <p>&nbsp</p>
+           <p>&nbsp</p>
+           <p>&nbsp</p>
+           <hr />
           <div class="panel panel-primary">
             <div class="panel-heading">Catálogos</div>
             <div class="panel-body">

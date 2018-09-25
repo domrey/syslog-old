@@ -1,9 +1,9 @@
 <?php
 
 namespace app\modules\rh\models;
+use yii\db\Expression;
 
 use Yii;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "rh_movimiento".
@@ -57,16 +57,16 @@ class RhMovimiento extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
-            'clave_trab' => 'TRABAJADOR',
-            'clave_plaza' => 'PLAZA',
-            'id_plaza' => 'ID PLAZA',
-            'id_ausencia' => 'ID AUSENCIA',
-            'fec_inicio' => 'FECHA INICIO',
-            'fec_termino' => 'FECHA TERMINO',
-            'descr' => 'DESCRIPCOIN',
-            'doc' => 'DOCUMENTO',
-            'ref_motivo' => 'REF. MOTIVO',
-            'ref_origen' => 'REF. ORIGEN',
+            'clave_trab' => 'Clave Trab',
+            'clave_plaza' => 'Clave Plaza',
+            'id_plaza' => 'Id Plaza',
+            'id_ausencia' => 'Id Ausencia',
+            'fec_inicio' => 'Fec Inicio',
+            'fec_termino' => 'Fec Termino',
+            'descr' => 'Descr',
+            'doc' => 'Doc',
+            'ref_motivo' => 'Ref Motivo',
+            'ref_origen' => 'Ref Origen',
         ];
     }
 
@@ -118,12 +118,4 @@ class RhMovimiento extends \yii\db\ActiveRecord
 
 
 
-    /**
-     * {@inheritdoc}
-     * @return RhMovimientoQuery the active query used by this AR class.
-     */
-    public static function find()
-    {
-        return new RhMovimientoQuery(get_called_class());
-    }
 }
