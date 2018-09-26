@@ -1,7 +1,6 @@
 <?php
 
 namespace app\modules\rh\models;
-use yii\db\Expression;
 
 use Yii;
 
@@ -13,12 +12,18 @@ use Yii;
  * @property string $clave_plaza
  * @property int $id_plaza
  * @property int $id_ausencia
+ * @property int $id_mov_padre
  * @property string $fec_inicio
  * @property string $fec_termino
  * @property string $descr
- * @property string $doc
+ * @property string $doc_num
+ * @property string $doc_form
  * @property string $ref_motivo
  * @property string $ref_origen
+ * @property string $tipo
+ * @property int $term_ant
+ * @property string $term_descr
+ * @property string $term_motivo
  *
  * @property RhTrab $claveTrab
  * @property RhPlaza $plaza
@@ -40,11 +45,14 @@ class RhMovimiento extends \yii\db\ActiveRecord
     {
         return [
             [['clave_trab', 'clave_plaza', 'id_plaza', 'fec_inicio', 'fec_termino'], 'required'],
-            [['clave_trab', 'id_plaza', 'id_ausencia'], 'integer'],
+            [['clave_trab', 'id_plaza', 'id_ausencia', 'id_mov_padre', 'term_ant'], 'integer'],
             [['fec_inicio', 'fec_termino'], 'safe'],
+            [['tipo', 'term_motivo'], 'string'],
             [['clave_plaza'], 'string', 'max' => 30],
             [['descr'], 'string', 'max' => 200],
-            [['doc', 'ref_motivo', 'ref_origen'], 'string', 'max' => 100],
+            [['doc_num', 'doc_form'], 'string', 'max' => 20],
+            [['ref_motivo', 'ref_origen'], 'string', 'max' => 100],
+            [['term_descr'], 'string', 'max' => 255],
             [['clave_trab'], 'exist', 'skipOnError' => true, 'targetClass' => RhTrab::className(), 'targetAttribute' => ['clave_trab' => 'clave']],
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
         ];
@@ -61,12 +69,18 @@ class RhMovimiento extends \yii\db\ActiveRecord
             'clave_plaza' => 'Clave Plaza',
             'id_plaza' => 'Id Plaza',
             'id_ausencia' => 'Id Ausencia',
+            'id_mov_padre' => 'Id Mov Padre',
             'fec_inicio' => 'Fec Inicio',
             'fec_termino' => 'Fec Termino',
             'descr' => 'Descr',
-            'doc' => 'Doc',
+            'doc_num' => 'Doc Num',
+            'doc_form' => 'Doc Form',
             'ref_motivo' => 'Ref Motivo',
             'ref_origen' => 'Ref Origen',
+            'tipo' => 'Tipo',
+            'term_ant' => 'Term Ant',
+            'term_descr' => 'Term Descr',
+            'term_motivo' => 'Term Motivo',
         ];
     }
 
@@ -85,6 +99,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
     {
         return $this->hasOne(RhPlaza::className(), ['id' => 'id_plaza']);
     }
+
 
     /**
     * Obtiene los movimientos de un trabajador especificado
@@ -115,7 +130,5 @@ class RhMovimiento extends \yii\db\ActiveRecord
       ->andWhere(['>=', 'fec_termino', new Expression('NOW()')])->orderBy('fec_inicio DESC')->one();
       return $movimiento;
     }
-
-
 
 }

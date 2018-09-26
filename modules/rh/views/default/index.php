@@ -45,6 +45,7 @@ $this->params['breadcrumbs'][] = 'Recursos Humanos';
                 <h4><?= Html::a('Vacaciones', ['rh-movimiento/index']) ?></h4>
                 <h4><?= Html::a('Permisos', ['rh-movimiento/index']) ?></h4>
                 <h3><?= Html::a('Movimientos', ['rh-movimiento/index']) ?></h3>
+                  <h4><?= Html::a('Terminacion', ['rh-movimiento/terminate']) ?></h4>
                 <h3><?= Html::a('Iniciacion de labores', ['rh-movimiento/index']) ?></h3>
                 <h3><?= Html::a('Lista de Asistencia', ['rh-movimiento/index']) ?></h3>
                 <h3><?= Html::a('Reporte de Ausencias', ['rh-movimiento/index']) ?></h3>

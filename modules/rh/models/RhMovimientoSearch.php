@@ -18,8 +18,8 @@ class RhMovimientoSearch extends RhMovimiento
     public function rules()
     {
         return [
-            [['id', 'clave_trab', 'id_plaza', 'id_ausencia'], 'integer'],
-            [['clave_plaza', 'fec_inicio', 'fec_termino', 'descr', 'doc', 'ref_motivo', 'ref_origen'], 'safe'],
+            [['id', 'clave_trab', 'id_plaza', 'id_ausencia', 'id_mov_padre', 'term_ant'], 'integer'],
+            [['clave_plaza', 'fec_inicio', 'fec_termino', 'descr', 'doc_num', 'doc_form', 'ref_motivo', 'ref_origen', 'tipo', 'term_descr', 'term_motivo'], 'safe'],
         ];
     }
 
@@ -63,15 +63,21 @@ class RhMovimientoSearch extends RhMovimiento
             'clave_trab' => $this->clave_trab,
             'id_plaza' => $this->id_plaza,
             'id_ausencia' => $this->id_ausencia,
+            'id_mov_padre' => $this->id_mov_padre,
             'fec_inicio' => $this->fec_inicio,
             'fec_termino' => $this->fec_termino,
+            'term_ant' => $this->term_ant,
         ]);
 
         $query->andFilterWhere(['like', 'clave_plaza', $this->clave_plaza])
             ->andFilterWhere(['like', 'descr', $this->descr])
-            ->andFilterWhere(['like', 'doc', $this->doc])
+            ->andFilterWhere(['like', 'doc_num', $this->doc_num])
+            ->andFilterWhere(['like', 'doc_form', $this->doc_form])
             ->andFilterWhere(['like', 'ref_motivo', $this->ref_motivo])
-            ->andFilterWhere(['like', 'ref_origen', $this->ref_origen]);
+            ->andFilterWhere(['like', 'ref_origen', $this->ref_origen])
+            ->andFilterWhere(['like', 'tipo', $this->tipo])
+            ->andFilterWhere(['like', 'term_descr', $this->term_descr])
+            ->andFilterWhere(['like', 'term_motivo', $this->term_motivo]);
 
         return $dataProvider;
     }

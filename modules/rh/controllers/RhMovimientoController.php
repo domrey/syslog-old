@@ -124,4 +124,21 @@ class RhMovimientoController extends Controller
 
         throw new NotFoundHttpException('The requested page does not exist.');
     }
+
+
+    /**
+      * Da or terminado un movimiento del personal (comùnmente una renuncia)
+      *
+    **/
+
+    public function actionTerminate($idMov)
+    {
+      $model = $this->findModel($idMov);
+
+      if ($model->load(Yii::$app->request->post()) && $model->save()) {
+          return $this->redirect(['view', 'id' => $model->id]);
+      }
+      return $this->render('terminate', ['model'=>$model]);
+    }
+
 }
