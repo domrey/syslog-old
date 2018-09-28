@@ -131,9 +131,9 @@ class RhMovimientoController extends Controller
       *
     **/
 
-    public function actionTerminate($idMov)
+    public function actionTerminate($id)
     {
-      $model = $this->findModel($idMov);
+      $model = $this->findModel($id);
 
       if ($model->load(Yii::$app->request->post()) && $model->save()) {
           return $this->redirect(['view', 'id' => $model->id]);

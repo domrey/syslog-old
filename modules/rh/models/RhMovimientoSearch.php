@@ -41,7 +41,7 @@ class RhMovimientoSearch extends RhMovimiento
      */
     public function search($params)
     {
-        $query = RhMovimiento::find();
+        $query = RhMovimiento::find()->orderBy('fec_inicio DESC, fec_termino DESC');
 
         // add conditions that should always apply here
 

@@ -6,8 +6,9 @@ use yii\helpers\Html;
 /* @var $this yii\web\View */
 /* @var $model app\modules\rh\models\RhMovimiento */
 
-$this->title = 'Create Rh Movimiento';
-$this->params['breadcrumbs'][] = ['label' => 'Rh Movimientos', 'url' => ['index']];
+$this->title = 'Registrar';
+$this->params['breadcrumbs'][] = ['label' => 'Recursos Humanos', 'url' => ['/rh/default']];
+$this->params['breadcrumbs'][] = ['label' => 'Movimientos', 'url' => ['index']];
 $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="rh-movimiento-create">

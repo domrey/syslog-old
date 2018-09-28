@@ -6,6 +6,7 @@ use Yii;
 use app\modules\rh\models\RhTrab;
 use app\modules\rh\models\RhTrabSearch;
 use app\modules\rh\models\RhTrabSimpleSearch;
+use yii\web\JsExpression;
 use app\modules\rh\models\RhMovimiento;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -146,6 +147,10 @@ class RhTrabController extends Controller
       $datos['Jornada']='';
       $datos['Categoria']='';
       $datos['Clasificacion']='';
+      $datos['TipoMov']='';
+      $datos['MovDesde']='';
+      $datos['MovHasta']='';
+      $datos['MovVigente']=0;
 
       $trab;        // model RhTrab
       $movimiento; // modelo RhMovimiento
@@ -156,6 +161,9 @@ class RhTrabController extends Controller
       $jornada_actual='';
       $descanso_actual='';
       $clasif_actual='';
+      $tipo_mov='';
+      $mov_desde='';
+      $mov_hasta='';
 
       // Buscar la clave
       $clave_trab=Yii::$app->request->get('clave_trab');
@@ -178,6 +186,9 @@ class RhTrabController extends Controller
             $jornada_actual = $plaza->jornada->StrJornada();
             $puesto_actual = $plaza->puesto->StrPuesto();
             $clasif_actual = $plaza->puesto->StrClasif();
+            $tipo_mov = $movimiento->tipo;
+            $mov_desde= $movimiento->fec_inicio;
+            $mov_hasta= $movimiento->fec_termino;
 
             // Llenar la información
             $datos['Categoria'] = $puesto_actual;
@@ -187,6 +198,11 @@ class RhTrabController extends Controller
             $datos['Jornada']=$jornada_actual;
             $datos['Descanso']=$descanso_actual;
             $datos['Clasificacion']=$clasif_actual;
+            $datos['TipoMov']=$tipo_mov;
+            $datos['MovDesde']=$mov_desde;
+            $datos['MovHasta']=$mov_hasta;
+            $datos['MovVigente']=$mov_hasta>=date('Y-m-d');
+            $datos['IdMov']=$movimiento->id;
           }
         }
         Yii::$app->response->format=Response::FORMAT_JSON;

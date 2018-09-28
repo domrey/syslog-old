@@ -7,8 +7,29 @@ use yii\widgets\Pjax;
 /* @var $searchModel app\modules\rh\models\RhMovimientoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
 
-$this->title = 'Rh Movimientos';
+$this->title = 'Movimientos de trabajadores';
+$this->params['breadcrumbs'][] = ['label' => 'Recursos Humanos', 'url' => ['/rh/default']];
 $this->params['breadcrumbs'][] = $this->title;
+$actionCol= [
+            'class' => 'yii\grid\ActionColumn',
+            'header'=>'Acciones',
+            'headerOptions'=>['width'=>'120'],
+            'template' => '{view} {update}&nbsp;&nbsp;&nbsp;&nbsp;{terminate}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{delete}',
+            'buttons' => [
+                'update' => function ($url,$model) {
+                    return Html::a(
+                        '<span class="glyphicon glyphicon-pencil"></span>',
+                        $url);
+                },
+                'terminate' => function ($url,$model,$key) {
+                    if ($model->fec_termino>=date('Y-m-d'))
+                      return Html::a('<span class="glyphicon glyphicon-off"></span>', $url);
+                    else
+                      return '&nbsp;&nbsp;&nbsp; ';
+
+                },
+	          ],
+          ];
 ?>
 <div class="rh-movimiento-index">
 
@@ -19,56 +40,11 @@ $this->params['breadcrumbs'][] = $this->title;
     <p>
         <?= Html::a('Create Rh Movimiento', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
-    <?php
-      $actionCol = [
-          'class'=>'yii\Grid\ActionGrid',
-          'header'=>'Operaciones',
-          'headerOptions'=>['style'=>'color: #337a7b;'],
-          'template'=>'{view}{update}{delete}{terminate}',
-          'buttons'=>[
-              'view' => function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-eye-open"></span>', $url, [
-                            'title' => Yii::t('app', 'lead-view'),
-                          ]);
-                },
-
-            'update' => function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-pencil"></span>', $url, [
-                            'title' => Yii::t('app', 'lead-update'),
-                ]);
-              },
-            'delete' => function ($url, $model) {
-                return Html::a('<span class="glyphicon glyphicon-trash"></span>', $url, [
-                            'title' => Yii::t('app', 'lead-delete'),
-                ]);
-            }
-
-          ],
-          'urlCreator' => function ($action, $model, $key, $index) {
-            if ($action === 'view') {
-                $url ='index.php?r=client-login/lead-view&id='.$model->id;
-                return $url;
-            }
-
-            if ($action === 'update') {
-                $url ='index.php?r=client-login/lead-update&id='.$model->id;
-                return $url;
-            }
-            if ($action === 'delete') {
-                $url ='index.php?r=client-login/lead-delete&id='.$model->id;
-                return $url;
-            }
-
-          }
-
-        ];
-    ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\SerialColumn'],
-
             'id',
             'clave_trab',
             'clave_plaza',
@@ -87,7 +63,8 @@ $this->params['breadcrumbs'][] = $this->title;
             //'term_descr',
             //'term_motivo',
 
-            ['class' => 'yii\grid\ActionColumn'],
+            // ['class' => 'yii\grid\ActionColumn'],
+            $actionCol,
         ],
     ]); ?>
     <?php Pjax::end(); ?>

@@ -1,7 +1,8 @@
 <?php
 
 namespace app\modules\rh\models;
-
+use yii\web\JsExpression;
+use yii\db\Expression;
 use Yii;
 
 /**
