@@ -324,7 +324,19 @@ JS;
           Html::activeDropDownList($model, 'id_motivo', RhAusencia::listaIdsCobertura(), [
             'id'=>'id_motivo',
             'class'=>'form-control',
-            'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); ',
+            'onchange'=>'
+              val1=$(this).find("option:selected").text().split("-")[1];
+              val2=$(this).find("option:selected").text().split("-")[0];
+              $("#clave_motivo").val(val1);
+              ficha=$("#clave_trab").val();
+              if (ficha) {
+                $("#referencia").val(val2 + \' DE F-\' + ficha);
+              }
+              else {
+                $("#referencia").val(val2);
+              }
+            ',
+            // 'onchange'=>'val=$(this).find("option:selected").text().split("-")[1]; $("#clave_motivo").val(val); $("#descr").val();',
              'options'=>[
                'label'=>'MOTIVO:',
                'style'=>'width: 200px;',
@@ -336,6 +348,12 @@ JS;
          $form->field($model, 'clave_motivo')->hiddenInput([
              'id'=>'clave_motivo',
              'value'=>'???',
+             'tabindex'=>false,
+         ])->label(false);
+          ?>
+          <?=
+         $form->field($model, 'referencia')->hiddenInput([
+             'id'=>'referencia',
              'tabindex'=>false,
          ])->label(false);
           ?>
@@ -359,6 +377,7 @@ JS;
     <div class="col-lg-4 col-md-4 col-sm-4">
       <?=
       $form->field($model, 'descr')->textarea([
+        'id'=>'descr',
         'rows' => 2,
         'cols'=>40,
         'style'=>'width:100%',

@@ -15,6 +15,7 @@ use yii\helpers\ArrayHelper;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\Response;
 
 /**
  * RhAusenciaController implements the CRUD actions for RhAusencia model.
@@ -83,66 +84,6 @@ class RhAusenciaController extends Controller
         ]);
      }
 
-    public function actionCreate2($id=null)
-    {
-        $model = new RhAusencia();
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
-        $model_trab = new RhTrab();
-        $model_plaza = new RhPlaza();
-        $model_motivo = new RhAusenciaTipo();
-        $motivos = ArrayHelper::map(RhAusenciaTipo::find()->all(), 'id', 'nombre');
-        $status_cobertura = RhAusencia::ListaStatusCobertura();
-        $plazas = RhPlaza::PlazasActivas();
-        $jd = '';
-        $puesto='';
-        $jornada='';
-        $descanso='';
-        $nombreTrab='';
-        $plaza_actual='';
-
-        // Verificar si se está solicitando un trabajador en particular
-        //$clave_trab=Yii::$app->request->get('id');
-        if ($id !== null) {
-            $model_trab = RhTrab::findOne($id);
-            if ($model_trab!==null) {
-              $nombreTrab=$model_trab->getFullName();
-
-            // Ahora averiguar en qué plaza se encuentra actualmente este Trabajador
-            $model_movimiento = RhMovimiento::UltimoMovimientoTrab($model_trab);
-            // De ese movimiento se deduce la plaza actual del Trabajador
-            if ($model_movimiento !== null){
-              $model_plaza=$model_movimiento->plaza;
-              $plaza_actual=$model_plaza->clave;
-              // Determinar los detalles de la plaza supuesta - jornada y descanso
-              if ($model_plaza !== null) {
-                $descanso = $model_plaza->descanso->strDescanso();
-                $jornada = $model_plaza->jornada->StrJornada();
-                $jd = $jornada . ' Descanso:' . $descanso;
-                $puesto = $model_plaza->puesto->StrPuesto();
-              }
-            }
-          }
-        }
-
-        return $this->render('create', [
-            'model' => $model,
-            'model_trab'=>$model_trab,
-            'model_plaza' => $model_plaza,
-            'model_motivo' => $model_motivo,
-            //'jornada_descanso' => $jd,
-            'puesto' => $puesto,
-            'jornada' => $jornada,
-            'descanso' => $descanso,
-            'nombreTrab' => $nombreTrab,
-            'motivos' => $motivos,
-            'status_cobertura'=>$status_cobertura,
-            'plazas'=>$plazas,
-            'plaza_actual'=>$plaza_actual,
-        ]);
-    }
-
     /**
      * Updates an existing RhAusencia model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -191,5 +132,24 @@ class RhAusenciaController extends Controller
         }
 
         throw new NotFoundHttpException('The requested page does not exist.');
+    }
+
+
+    /**
+
+    */
+    public function actionGetDatosAusencia()
+    {
+      $idAusencia=Yii::$app->request->get('id');
+      $ausencia=$this->findModel($idAusencia);
+      $datos=[];
+      $datos['IdPlaza'] = $ausencia->id_plaza;
+      $datos['Plaza'] = $ausencia->clave_plaza;
+      $datos['Desde'] = $ausencia->fec_inicio;
+      $datos['Hasta'] = $ausencia->fec_termino;
+      $datos['Referencia'] = $ausencia->referencia;
+      $datos['Trabajador'] = $ausencia->trab->getFullName();
+      Yii::$app->response->format=Response::FORMAT_JSON;
+      return $datos;
     }
 }
