@@ -4,6 +4,7 @@ namespace app\modules\rh\models;
 
 use Yii;
 use yii\helpers\ArrayHelper;
+use yii\db\Expression;
 use nepstor\validators\DateTimeCompareValidator;
 
 /**
@@ -145,6 +146,19 @@ class RhAusencia extends \yii\db\ActiveRecord
     }
 
 
+    /**
+    ** Método estático para regresar un objeto ausencia
+    ** para una plaza especificada
+    **/
+    public static function GetVigenteForPlaza($plaza)
+    {
+      return RhAusencia::find()
+      ->where(['id_plaza'=>$plaza->id])
+      ->andWhere(['>=', 'fec_termino', new Expression('NOW()')])
+      ->one();
+    }
+
+
     public static function ListaVigentes()
     {
       // $data = RhAusencia::find()->joinWith('trab')
@@ -159,7 +173,7 @@ class RhAusencia extends \yii\db\ActiveRecord
       // $sql .= 'a.clave_plaza AS Plaza, c.descr AS Motivo, a.descr AS Descr ';
       $sql .= 'FROM rh_ausencia a LEFT JOIN rh_trab b ON a.clave_trab=b.clave ';
       $sql .= 'LEFT JOIN rh_ausencia_motivo c ON a.id_motivo=c.id ';
-      $sql .= 'WHERE a.fec_termino >= NOW()';
+      $sql .= 'WHERE a.fec_termino >= NOW() ';
       $sql .= 'ORDER BY a.fec_inicio DESC';
 
       // $data=['results'=>['IdTrab'=>'', 'NombreTrab'=>'', 'FecNac'=>'']];

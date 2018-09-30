@@ -10,8 +10,12 @@ use app\modules\rh\models\RhAusencia;
 /* @var $model app\modules\rh\models\RhMovimiento */
 /* @var $form yii\widgets\ActiveForm */
 
+
+/* @var $tiposMov - array con los tipos de movimiento, en params.php */
+
 $urlGetSituacionTrab = Url::to(['rh-trab/get-situacion-trab']);
 $urlGetDatosAusencia = Url::to(['rh-ausencia/get-datos-ausencia']);
+$urlGetDatosPlazaPorClave = Url::to(['rh-plaza/get-datos-plaza-por-clave']);
 $tiposMov=['DEFINITIVO'=>'DEFINITIVO', 'TEMPORAL'=>'TEMPORAL'];
 
 $theScript = <<< JS
@@ -23,6 +27,29 @@ $theScript = <<< JS
     $('#saDel').html(info.MovDesde);
     $('#saAl').html(info.MovHasta);
   }
+
+  $('#clave_plaza').on('change', function() {
+    var url='$urlGetDatosPlazaPorClave';
+    var clavePlaza = $('#clave_plaza').val();
+    jQuery.ajax(url, {
+      'dataType':'json',
+      'method':'get',
+      'success': function(result) {
+        if(result.IdPlaza) {
+          $('#id_plaza').val(result.IdPlaza);
+          console.log(result.IdPlaza);
+        }
+        else {
+          alert('Problemas con esta plaza');
+          console.log('Plaza inválida');
+        }
+      },
+      'error': function(e) { console.log('Hubo en error en ' + url); },
+      'cache': false,
+      'data': {clave:clavePlaza},
+    });
+
+  });
 
   $('#ausencias').on('change', function() {
     var id_ausencia=$('#ausencias').val();
@@ -117,9 +144,9 @@ $this->registerJs($theScript, \yii\web\View::POS_READY);
     <?= Html::label('Cubriendo una ausencia:'); ?>
     <?= Html::dropdownList('ausencias', '', RhAusencia::ListaVigentes(), ['id'=>'ausencias', 'class'=>'form-control', 'prompt'=>'Ninguna']); ?>
     <?= $form->field($model, 'clave_plaza')->textInput(['id'=>'clave_plaza', 'maxlength' => true]) ?>
-    <?= $form->field($model, 'id_plaza')->hiddenInput(['id'=>'id_plaza'])->label(false); ?>
+    <?= $form->field($model, 'id_plaza')->textInput(['id'=>'id_plaza'])->label(false); ?>
 
-    <?= $form->field($model, 'id_ausencia')->hiddenInput(['id'=>'id_ausencia'])->label(false); ?>
+    <?= $form->field($model, 'id_ausencia')->textInput(['id'=>'id_ausencia'])->label(false); ?>
 
     <?= $form->field($model, 'id_mov_padre')->textInput() ?>
 

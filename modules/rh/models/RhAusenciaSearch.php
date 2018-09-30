@@ -41,7 +41,7 @@ class RhAusenciaSearch extends RhAusencia
      */
     public function search($params)
     {
-        $query = RhAusencia::find();
+        $query = RhAusencia::find()->orderBy('fec_inicio DESC, fec_termino DESC');
 
         // add conditions that should always apply here
 

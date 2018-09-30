@@ -5,6 +5,7 @@ namespace app\modules\rh\controllers;
 use Yii;
 use app\modules\rh\models\RhPlaza;
 use app\modules\rh\models\RhPlazaSearch;
+use app\modules\rh\models\RhMovimiento;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -180,4 +181,18 @@ class RhPlazaController extends Controller
       return $data;
 
     }
+
+    // Obtiene la información de jornada, clasificacion, categoria y descanso para la plaza_actual'
+    // especificando la clave el parámetro
+    public function actionGetDatosPlazaPorClave()
+    {
+      $data=[];
+      $clave_plaza = Yii::$app->request->get('clave');
+      $data = Yii::$app->db->createCommand("SELECT a.id as IdPlaza, a.clave AS Plaza, a.tipo AS Tipo, c.descr AS Descanso, LPAD(a.clave_jornada, 2, '0') AS Jornada, b.descr AS Categoria, b.clasif As Clasificacion FROM rh_plaza a LEFT OUTER JOIN rh_puesto b ON a.clave_puesto=b.clave LEFT JOIN rh_descanso c ON a.clave_descanso=c.clave WHERE a.clave=:CLAVE")
+        ->bindValue(":CLAVE", $clave_plaza)->queryOne();
+        Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+      return $data;
+
+    }
+
 }
