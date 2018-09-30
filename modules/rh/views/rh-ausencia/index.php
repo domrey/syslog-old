@@ -53,7 +53,13 @@ $this->params['breadcrumbs'][] = $this->title;
         'columns' => [
             // ['class' => 'kartik\grid\SerialColumn'],
 
-            //'id',
+            // 'id',
+            [
+              'attribute'=>'id',
+              'label'=>'ID',
+              'width'=>'80px',
+              'hAlign'=>GridView::ALIGN_RIGHT,
+            ],
             [
               'attribute'=>'clave_trab',
               'label'=>'FICHA',

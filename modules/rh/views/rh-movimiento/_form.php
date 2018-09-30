@@ -66,7 +66,7 @@ $theScript = <<< JS
         $('#afec_inicio').val(result.Desde);
         $('#fec_termino').val(result.Hasta);
         $('#afec_termino').val(result.Hasta);
-        $('#ref_motivo').val('COBERTURA POR ' + result.Referencia + ' ' + result.Trabajador)
+        $('#ref_motivo').val('COBERTURA POR ' + ((result.Referencia) ? result.Referencia : '' + ' ') + result.Trabajador)
         $('#tipo').val('TEMPORAL');
       },
       'error': function(e) {},

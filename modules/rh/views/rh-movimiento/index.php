@@ -33,12 +33,12 @@ $actionCol= [
 ?>
 <div class="rh-movimiento-index">
 
-    <h1><?= Html::encode($this->title) ?></h1>
+    <h3><?= Html::encode($this->title) ?></h3>
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Create Rh Movimiento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Registrar Movimiento', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,

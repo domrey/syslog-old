@@ -34,6 +34,9 @@ error_reporting(E_ALL | E_STRICT);
  */
 class RhMovimiento extends \yii\db\ActiveRecord
 {
+
+  const SCENARIO_REGISTRAR = 'registrar';
+
     /**
      * {@inheritdoc}
      */
@@ -48,7 +51,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['clave_plaza'], 'validatePlaza', 'on'=>'create'],
+            [['clave_plaza'], 'validatePlaza', 'on'=>RhMovimiento::SCENARIO_REGISTRAR],
             [['clave_trab', 'clave_plaza', 'id_plaza', 'fec_inicio', 'fec_termino'], 'required'],
             [['clave_trab', 'id_plaza', 'id_ausencia', 'id_mov_padre', 'term_ant'], 'integer'],
             [['fec_inicio', 'fec_termino'], 'safe'],
@@ -66,11 +69,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
         ];
     }
-    public function console_log( $data ){
-      echo '<script>';
-      echo 'console.log('. json_encode( $data ) .')';
-      echo '</script>';
-    }
+    
     /**
      * {@inheritdoc}
      */
@@ -180,9 +179,10 @@ class RhMovimiento extends \yii\db\ActiveRecord
           if ($vigente) {
             // La plaza tiene un movimiento vigente,
             // Determinar si esta plaza se haya actualmente en una ausencia
-            $this->addError('id_plaza', 'Plaza tiene un movimiento vigente: ' .$vigente->id);
+            // $this->addError('id_plaza', 'Plaza tiene un movimiento vigente: ' .$vigente->id);
             $posibleAusencia = RhAusencia::GetVigenteForPlaza($plaza);
-            $this->addError('id_plaza', 'Posible ausencia de la plaza: ' . $posibleAusencia->id);
+
+            // $this->addError('id_plaza', 'Posible ausencia de la plaza: ' . (($posibleAusencia)?$posibleAusencia->id:'(no hay posibles ausencias)'));
             if ($posibleAusencia) {
               // $this->addError('id_plaza', 'Plaza tiene un movimiento vigente: ' .$vigente->id);
               // Si hay una ausencia de esa plaza, checar la vigencia
@@ -212,8 +212,9 @@ class RhMovimiento extends \yii\db\ActiveRecord
                 // Comparar las plazas, deben ser diferentes para que sea otro movimiento
                 if ($trabMovimiento->id_plaza != $this->id_plaza) {
                   // Si es un movimiento diferente
-                    $this->addError('id_plaza', 'Trabajador ' . $trabMovimiento->clave_trab . ' si tiene un movimiento vigente, verificar fechas...');
+                    // $this->addError('id_plaza', 'Trabajador ' . $trabMovimiento->clave_trab . ' si tiene un movimiento vigente, verificar fechas...');
                     // coinciden los periodos del movimiento del trabajador con el del nuevo movimiento?
+                    // $this->addError('id_plaza', 'Comparar fechas: ' . $this->fec_inicio . ' con ' . $trabMovimiento->fec_inicio . '. Y ' . ' movimiento id=' . $trabMovimiento->id);
                     if ($this->fec_inicio >= $trabMovimiento->fec_inicio &&
                         $this->fec_termino<=$trabMovimiento->fec_termino) {
                           // si es posible registrar el movimiento
@@ -238,6 +239,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
             $this->id_mov_padre=NULL;
             // buscar la terminación más reciente de este movimiento, y asignar el motivo
             // a la referencia del nuevo movimiento
+            $this->addError('clave_plaza', 'Plaza libre, checar la terminación má reciente y asignarla como motivo');
             $movTerminado=RhMovimiento::find()
             ->where(['id_plaza'=>$this->id_plaza])
             ->andWhere(['term_ant'=>1])

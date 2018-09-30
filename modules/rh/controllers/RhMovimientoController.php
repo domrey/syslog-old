@@ -64,7 +64,7 @@ class RhMovimientoController extends Controller
      */
     public function actionCreate()
     {
-        $model = new RhMovimiento();
+        $model = new RhMovimiento(['scenario'=>RhMovimiento::SCENARIO_REGISTRAR]);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
