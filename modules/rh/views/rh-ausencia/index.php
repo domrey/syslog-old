@@ -28,7 +28,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'hover'=>'true',
-        // 'perfectScrollbar'=>true,
+        'perfectScrollbar'=>true,
         'resizableColumns'=>true,
         'floatHeader'=>true,
         'showPageSummary'=>false,
@@ -58,7 +58,7 @@ $this->params['breadcrumbs'][] = $this->title;
               'attribute'=>'id',
               'label'=>'ID',
               'width'=>'80px',
-              'hAlign'=>GridView::ALIGN_RIGHT,
+              'hAlign'=>GridView::ALIGN_CENTER,
             ],
             [
               'attribute'=>'clave_trab',
@@ -70,8 +70,10 @@ $this->params['breadcrumbs'][] = $this->title;
                 'hAlign'=>GridView::ALIGN_RIGHT,
             ],
             [
-              'attribute' => 'obs',
-              'value' => 'trabName',
+              // 'attribute' => 'obs',
+              // 'value' => 'trabName',
+              'attribute'=>'trabName',
+              'value' => 'rh_trab.nombre',
               'label' => 'TRABAJADOR',
             ],
             [

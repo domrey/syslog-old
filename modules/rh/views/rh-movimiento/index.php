@@ -1,8 +1,11 @@
 <?php
 
 use yii\helpers\Html;
-use yii\grid\GridView;
+// use yii\grid\GridView;
+use kartik\grid\GridView;
 use yii\widgets\Pjax;
+use kartik\date\DatePicker;
+
 /* @var $this yii\web\View */
 /* @var $searchModel app\modules\rh\models\RhMovimientoSearch */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -38,21 +41,97 @@ $actionCol= [
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <p>
-        <?= Html::a('Registrar Movimiento', ['create'], ['class' => 'btn btn-success']) ?>
+        <?= Html::a('Registrar Un Movimiento', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
+        'hover'=>true,
+        // 'perfectScrollbar'=>true,
+        'floatHeader'=>true,
+        'showPageSummary'=>false,
+        'showHeader'=>true,
+        'export'=>[
+            // 'fontAwesome'=>true,
+            'showConfirmAlert'=>false,
+            'target'=>GridView::TARGET_BLANK
+        ],
+        'panel' => [
+            // 'type' => 'info',GridView::TYPE_INFO
+            'type' => GridView::TYPE_INFO,
+            //'heading' => 'Ausencias Registradas'
+            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-new-window"></i>&nbsp;Movimientos Registrados</h3>',
+        ],
         'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            'id',
-            'clave_trab',
-            'clave_plaza',
-            'id_plaza',
+            // ['class' => 'yii\grid\SerialColumn'],
+            // 'id',
+            [
+              'attribute'=>'id',
+              'label'=>'ID',
+              'width'=>'80px',
+              'hAlign'=>GridView::ALIGN_CENTER,
+            ],
+            // 'clave_trab',
+            [
+              'attribute'=>'clave_trab',
+              'label'=>'FICHA',
+              'value' => function($model) {
+                    return sprintf('%07d', $model->clave_trab);
+                  },
+                'width' => '80px',
+                'hAlign'=>GridView::ALIGN_CENTER,
+            ],
+            [
+              'value' => 'trabName',
+              'label' => 'TRABAJADOR',
+            ],
+            // 'clave_plaza',
+            [
+              'attribute'=>'clave_plaza',
+              'label'=>'EN PLAZA',
+            ],
+            // 'id_plaza',
             // 'id_ausencia',
             //'id_mov_padre',
-            'fec_inicio',
-            'fec_termino',
+            // 'fec_inicio',
+            [
+              'attribute'=>'fec_inicio',
+              'label'=>'DESDE EL',
+              'format'=>['date', Yii::$app->formatter->dateFormat],
+              'width'=>'100px',
+              // 'format' => 'raw',
+              'filter' => DatePicker::widget([
+                  'model' => $searchModel,
+                  'attribute' => 'fec_inicio',
+                  'options' => ['placeholder' => 'Elija la fecha...'],
+                  'type' => DatePicker::TYPE_INPUT,
+                     'removeButton'=>true,
+                   'pluginOptions' => [
+                     'format' => 'yyyy-mm-d',
+                     'autoClose' => true,
+                     'todayHighlight' =>false,
+                   ]
+              ]),
+            ],
+            // 'fec_termino',
+            [
+              'attribute'=>'fec_termino',
+              'label'=>'HASTA EL',
+              'format'=>['date', Yii::$app->formatter->dateFormat],
+              'width'=>'100px',
+              // 'format' => 'raw',
+              'filter' => DatePicker::widget([
+                  'model' => $searchModel,
+                  'attribute' => 'fec_termino',
+                  'options' => ['placeholder' => 'Elija la fecha...'],
+                  'type' => DatePicker::TYPE_INPUT,
+                   'pluginOptions' => [
+                     'format' => 'yyyy-mm-d',
+                     'autoClose' => true,
+                     'todayHighlight' =>false,
+                   ]
+              ]),
+            ],
             //'descr',
             'doc_form',
             'doc_num',

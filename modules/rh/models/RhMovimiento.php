@@ -69,7 +69,7 @@ class RhMovimiento extends \yii\db\ActiveRecord
             [['id_plaza'], 'exist', 'skipOnError' => true, 'targetClass' => RhPlaza::className(), 'targetAttribute' => ['id_plaza' => 'id']],
         ];
     }
-    
+
     /**
      * {@inheritdoc}
      */
@@ -102,6 +102,11 @@ class RhMovimiento extends \yii\db\ActiveRecord
     public function getClaveTrab()
     {
         return $this->hasOne(RhTrab::className(), ['clave' => 'clave_trab']);
+    }
+
+    public function getTrabName()
+    {
+        return $this->claveTrab->getFullName();
     }
 
     /**
