@@ -240,18 +240,27 @@ class RhMovimiento extends \yii\db\ActiveRecord
           }
           else {
             // la plaza no está ocupada actualmente, seguramente por una terminación anticipada (renuncia)
+            // O la vigencia de la misma venció
             // si se puede registrar el nuevo movimiento
             $this->id_mov_padre=NULL;
             // buscar la terminación más reciente de este movimiento, y asignar el motivo
             // a la referencia del nuevo movimiento
-            $this->addError('clave_plaza', 'Plaza libre, checar la terminación má reciente y asignarla como motivo');
+            // $this->addError('clave_plaza', 'Plaza libre, checar la terminación má reciente y asignarla como motivo');
             $movTerminado=RhMovimiento::find()
             ->where(['id_plaza'=>$this->id_plaza])
-            ->andWhere(['term_ant'=>1])
+            // ->andWhere(['term_ant'=>1])
             ->orderBy('fec_termino DESC')
             ->one();
             if ($movTerminado) {
-              $this->ref_origen=$movTerminado->term_motivo . ' F-' . $movTerminado->clave_trab;
+              // checar si fue terminacion anticipada
+              if ($movTerminado->term_ant=1) {
+                $this->ref_origen=$movTerminado->term_motivo . ' F-' . $movTerminado->clave_trab;
+              }
+              // o simplemente venció la vigencia de la plaza
+              else {
+                $this->ref_origen = "OBRA DETERMINADA" ;
+              }
+              // $this->ref_origen=$movTerminado->term_motivo . ' F-' . $movTerminado->clave_trab;
             }
             else {
               $this->ref_origen='';
