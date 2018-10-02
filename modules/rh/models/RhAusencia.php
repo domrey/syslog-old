@@ -52,7 +52,7 @@ class RhAusencia extends \yii\db\ActiveRecord
 
     public function getTrabName()
     {
-      return $this->trab->getFullName();
+      return $this->trab->nlargo;
     }
 
     public function getMotivoCobertura()
@@ -94,6 +94,7 @@ class RhAusencia extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'clave_trab' => 'Clave Trab',
+            'trabName'=>'Nombre del Trabajador',
             'id_plaza' => 'Id Plaza',
             'clave_plaza' => 'Clave Plaza',
             'id_motivo' => 'Id Motivo',

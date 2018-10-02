@@ -31,6 +31,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'ap_pat',
             'ap_mat',
             'ncorto',
+            'nlargo',
             //'apodo',
             //'activo',
             //'curp',

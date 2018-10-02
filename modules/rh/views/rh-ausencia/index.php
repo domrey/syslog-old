@@ -13,22 +13,34 @@ use kartik\date\DatePicker;
 $this->title = 'Ausencias';
 $this->params['breadcrumbs'][] = ['label' => 'Recursos Humanos', 'url' => ['/rh/default']];
 $this->params['breadcrumbs'][] = $this->title;
+
+$panelHeading='<i class="glyphicon glyphicon-log-out"></i>&nbsp;Ausencias Registradas';
+$btnAdd=Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], [
+            'class'=> 'btn btn-primary',
+            'title'=> 'Registrar Ausencia',
+            // 'onclick'=>'alert("this is click");'
+            'data-pjax'=>0,
+            ]);
 ?>
 <div class="rh-ausencia-index">
 
-    <h3>Ausencias de los trabajadores</h3>
+    <!-- <h3>Ausencias de los trabajadores</h3> -->
     <?php Pjax::begin(); ?>
     <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
-
+<!--
     <p>
         <?= Html::a('Registrar Una Ausencia', ['create'], ['class' => 'btn btn-primary']) ?>
     </p>
-
+-->
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
-        'hover'=>'true',
-        'perfectScrollbar'=>true,
+        'hover'=>true,
+        'striped'=>false,
+        'bordered'=>false,
+        'condensed'=>true,
+        'pjax'=>true,
+        // 'perfectScrollbar'=>true,
         'resizableColumns'=>true,
         'floatHeader'=>true,
         'showPageSummary'=>false,
@@ -42,14 +54,23 @@ $this->params['breadcrumbs'][] = $this->title;
             // 'type' => 'info',GridView::TYPE_INFO
             'type' => GridView::TYPE_INFO,
             //'heading' => 'Ausencias Registradas'
-            'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Ausencias Registradas</h3>',
+            // 'heading'=>'<h3 class="panel-title"><i class="glyphicon glyphicon-log-out"></i>&nbsp;Ausencias Registradas</h3>',
+            'heading'=>$panelHeading,
+            'before'=>'<em>Muestra todas las ausencias de los trabajadores registradas</em>',
         ],
         'toolbar' => [
+          [
+            'content'=> $btnAdd,
+            'options'=>['class'=>'btn-group mr-2'],
+          ],
           '{export}',
           '{toggleData}',
           'toggleDataContainer' => ['class' => 'btn-group-sm'],
           'exportContainer' => ['class' => 'btn-group-sm']
         ],
+        'containerOptions' => ['style' => 'overflow: auto'], // only set when $responsive = false
+        'headerRowOptions' => ['class' => 'kartik-sheet-style'],
+        'filterRowOptions' => ['class' => 'kartik-sheet-style'],
         'columns' => [
             // ['class' => 'kartik\grid\SerialColumn'],
 
@@ -67,34 +88,43 @@ $this->params['breadcrumbs'][] = $this->title;
                     return sprintf('%07d', $model->clave_trab);
                   },
                 'width' => '80px',
-                'hAlign'=>GridView::ALIGN_RIGHT,
+                'hAlign'=>GridView::ALIGN_CENTER,
             ],
+            // [
+              // 'attribute'=>'apodo',
+              // 'value' => 'trab.apodo',
+              // 'label' => 'SOBRENOMBRE',
+            // ],
+
             [
-              // 'attribute' => 'obs',
-              // 'value' => 'trabName',
               'attribute'=>'trabName',
-              'value' => 'rh_trab.nombre',
+              // 'value' => 'trab.apodo',
               'label' => 'TRABAJADOR',
+                'hAlign'=>GridView::ALIGN_CENTER,
             ],
             [
               'attribute'=>'clave_plaza',
               'label'=>'EN PLAZA',
+                'hAlign'=>GridView::ALIGN_CENTER,
             ],
             // 'id_motivo',
             // 'clave_motivo',
             [
                 'attribute' => 'clave_motivo',
                 //'value' => 'tipo.nombre',
-                'label' => 'Motivo',
+                'label' => 'MOTIVO',
                 'class' => '\kartik\grid\DataColumn',
                 'value' => 'motivoCobertura',
                 'filter' => Html::activeDropDownList($searchModel, 'clave_motivo', RhAusencia::ListaMotivosCobertura(), ['class'=>'form-control','prompt' => 'All'])
+                // 'hAlign'=>'center',
+                // 'hAlign'=>GridView::ALIGN_CENTER,
             ],
             [
               'attribute'=>'fec_inicio',
               'label'=>'DESDE EL',
+              'hAlign'=>GridView::ALIGN_CENTER,
               'format'=>['date', Yii::$app->formatter->dateFormat],
-              'width'=>'100px',
+              'width'=>'120px',
               // 'format' => 'raw',
               'filter' => DatePicker::widget([
                   'model' => $searchModel,
@@ -112,8 +142,9 @@ $this->params['breadcrumbs'][] = $this->title;
             [
               'attribute'=>'fec_termino',
               'label'=>'HASTA EL',
+              'hAlign'=>GridView::ALIGN_CENTER,
               'format'=>['date', Yii::$app->formatter->dateFormat],
-              'width'=>'100px',
+              'width'=>'120px',
               // 'format' => 'raw',
               'filter' => DatePicker::widget([
                   'model' => $searchModel,

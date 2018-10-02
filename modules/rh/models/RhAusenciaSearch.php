@@ -16,14 +16,17 @@ class RhAusenciaSearch extends RhAusencia
      * {@inheritdoc}
      */
 
+     public $trabajador;
+     public $apodo;
      public $trabName;
+
 
 
     public function rules()
     {
         return [
             [['id', 'clave_trab', 'id_plaza', 'id_motivo', 'req_cobertura'], 'integer'],
-            [['clave_plaza', 'clave_motivo', 'trabName', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'doc', 'descr'], 'safe'],
+            [['clave_plaza', 'clave_motivo', 'trabajador', 'trabName', 'apodo', 'fec_inicio', 'fec_termino', 'fec_reanuda', 'doc', 'descr'], 'safe'],
         ];
     }
 
@@ -53,9 +56,19 @@ class RhAusenciaSearch extends RhAusencia
             'query' => $query,
         ]);
 
-        $dataProvider->sort->attributes['trabName']= [
+        $dataProvider->sort->attributes['trabajador']= [
           'asc'=>['rh_trab.nombre'=>SORT_ASC],
           'desc'=>['rh_trab.nombre'=>SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['trabName']= [
+          'asc'=>['rh_trab.nlargo'=>SORT_ASC],
+          'desc'=>['rh_trab.nlargo'=>SORT_DESC],
+        ];
+
+        $dataProvider->sort->attributes['apodo']= [
+          'asc'=>['rh_trab.apodo'=>SORT_ASC],
+          'desc'=>['rh_trab.apodo'=>SORT_DESC],
         ];
 
         $this->load($params);
@@ -69,7 +82,7 @@ class RhAusenciaSearch extends RhAusencia
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'clave_trab' => $this->clave_trab,
+            // 'clave_trab' => $this->clave_trab,
             // 'nom_trab' => $this->trabName,
             'id_plaza' => $this->id_plaza,
             'id_motivo' => $this->id_motivo,
@@ -82,7 +95,12 @@ class RhAusenciaSearch extends RhAusencia
         $query->andFilterWhere(['like', 'clave_plaza', $this->clave_plaza])
             ->andFilterWhere(['like', 'clave_motivo', $this->clave_motivo])
             ->andFilterWhere(['like', 'doc', $this->doc])
-            ->andFilterWhere(['like', 'rh_trab.nombre', $this->trabName])
+            // ->andFilterWhere(['like', 'rh_trab.nombre', $this->trabajador])
+            ->andFilterWhere(['or',
+                      ['like', 'rh_trab.nombre', $this->trabName],
+                      ['like', 'rh_trab.ap_pat', $this->trabName]
+                    ])
+            ->andFilterWhere(['like', 'rh_trab.apodo', $this->apodo])
             ->andFilterWhere(['like', 'descr', $this->descr]);
 
         return $dataProvider;

@@ -79,6 +79,7 @@ class RhTrab extends \yii\db\ActiveRecord
             'ap_mat' => 'Ap, Materno',
             'ncorto' => 'Nombre Corto',
             'apodo' => 'Apodo',
+            'nlargo'=> 'Nombre Completo',
             'activo' => 'Activo',
             'curp' => 'CURP',
             'rfc' => 'RFC',
@@ -132,6 +133,11 @@ class RhTrab extends \yii\db\ActiveRecord
     * @return string el nombre + ape pat + ape mat
     */
     public function getFullName()
+    {
+      return $this->nombre . ' ' . $this->ap_pat . ' ' . $this->ap_mat;
+    }
+
+    public function getNlargo()
     {
       return $this->nombre . ' ' . $this->ap_pat . ' ' . $this->ap_mat;
     }
