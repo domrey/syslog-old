@@ -15,11 +15,14 @@ class RhTrabSimpleSearch extends RhTrab
     /**
      * {@inheritdoc}
      */
+    // para la búsqueda y filtrado del nlargo a través de varios criterios (nombre, apodo, apellido)
+    public $nlargo;
+
     public function rules()
     {
         return [
             [['clave', 'activo'], 'integer'],
-            [['nombre', 'ap_pat', 'ap_mat', 'ncorto', 'apodo', 'curp', 'rfc', 'reg_cont', 'reg_sind'], 'safe'],
+            [['nombre', 'ap_pat', 'ap_mat', 'ncorto', 'apodo', 'nlargo', 'curp', 'rfc', 'reg_cont', 'reg_sind'], 'safe'],
         ];
     }
 
@@ -120,6 +123,10 @@ class RhTrabSimpleSearch extends RhTrab
             'query' => $query,
         ]);
 
+        $dataProvider->sort->attributes['nlargo']= [
+          'asc'=>['nombre'=>SORT_ASC, 'ap_pat'=>SORT_ASC, 'ap_mat'=>SORT_ASC],
+          'desc'=>['nombre'=>SORT_DESC, 'ap_pat'=>SORT_DESC, 'ap_mat'=>SORT_DESC],
+        ];
         $this->load($params);
 
         if (!$this->validate()) {
@@ -138,6 +145,12 @@ class RhTrabSimpleSearch extends RhTrab
             ->andFilterWhere(['like', 'ap_pat', $this->ap_pat])
             ->andFilterWhere(['like', 'ap_mat', $this->ap_mat])
             ->andFilterWhere(['like', 'ncorto', $this->ncorto])
+            ->andFilterWhere(['or',
+                              ['like', 'nombre', $this->nlargo],
+                              ['like', 'ap_pat', $this->nlargo],
+                              ['like', 'apodo', $this->nlargo],
+                              ['like', 'ncorto', $this->nlargo],
+                            ])
             ->andFilterWhere(['like', 'apodo', $this->apodo])
             ->andFilterWhere(['like', 'curp', $this->curp])
             ->andFilterWhere(['like', 'rfc', $this->rfc])

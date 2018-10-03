@@ -1,5 +1,6 @@
 <?php
 use kartik\datecontrol\Module;
+use kartik\mpdf\Pdf;
 
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
@@ -33,6 +34,12 @@ $config = [
         ],
         'errorHandler' => [
             'errorAction' => 'site/error',
+        ],
+        'pdf' => [
+          'class'=>Pdf::classname(),
+          'format'=>Pdf::FORMAT_LETTER,
+          'orientation'=>Pdf::ORIENT_PORTRAIT,
+          'mode'=>Pdf::MODE_UTF8,
         ],
         'formatter'=>[
           'dateFormat'=>$dFormat,

@@ -18,7 +18,6 @@ $panelHeading='<i class="glyphicon glyphicon-log-out"></i>&nbsp;Ausencias Regist
 $btnAdd=Html::a('<i class="glyphicon glyphicon-plus"></i>', ['create'], [
             'class'=> 'btn btn-primary',
             'title'=> 'Registrar Ausencia',
-            // 'onclick'=>'alert("this is click");'
             'data-pjax'=>0,
             ]);
 ?>
